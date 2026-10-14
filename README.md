@@ -6,7 +6,11 @@
 
 下载本仓库，使用浏览器直接打开 `index.html`。网页包含内嵌样式和 JavaScript，无需安装依赖或构建，也可放到静态网站服务器。
 
-GitHub 的文件浏览页面显示源码，不直接运行网页。目前未启用 GitHub Pages；如需在线访问，可在仓库 Settings → Pages 中选择从 `main` 分支根目录部署。
+GitHub 的文件浏览页面显示源码，不直接运行网页。已加入 `.github/workflows/pages.yml` 自动发布流程。
+
+首次部署需要在仓库 Settings → Pages → Build and deployment → Source 选择 **GitHub Actions**。然后在 Actions 中打开 `Deploy research atlas to GitHub Pages`，使用 Run workflow 启动，或重跑先前失败的部署。部署成功后的预期访问地址为：https://cafelzj.github.io/research/ 。以 GitHub Pages 返回的实际地址为准。
+
+此后每次修改 `main` 分支的 `index.html` 都会自动发布。仅上传网页文件作为站点内容，不发布 README 或研究笔记。
 
 ## 内容
 
