@@ -101,6 +101,8 @@ function defaults() {
     zero: true,
     smooth: false,
     labels: false,
+    legendShow: true,
+    legendPosition: "bottom",
   };
 }
 function readConfig() {
@@ -121,6 +123,8 @@ function readConfig() {
     zero: $("zero").checked,
     smooth: $("smooth").checked,
     labels: $("labels").checked,
+    legendShow: $("legendShow").checked,
+    legendPosition: $("legendPosition").value,
   };
 }
 function setConfig(c) {
@@ -137,9 +141,10 @@ function setConfig(c) {
     "customColor",
     "xTitle",
     "yTitle",
+    "legendPosition",
   ])
     if (c[key] !== undefined) $(key).value = String(c[key]);
-  for (let key of ["zero", "smooth", "labels"])
+  for (let key of ["zero", "smooth", "labels", "legendShow"])
     if (c[key] !== undefined) $(key).checked = !!c[key];
   if (c.products)
     $("products")
@@ -238,7 +243,9 @@ function buildOption(c, data) {
     aria: { enabled: true },
     legend: {
       type: "scroll",
-      bottom: 8,
+      show: c.legendShow,
+      top: c.legendPosition === "top" ? 8 : null,
+      bottom: c.legendPosition === "bottom" ? 8 : null,
       left: 12,
       right: 12,
       textStyle: { fontSize: 12, color: "#50647c" },
@@ -310,7 +317,7 @@ function buildOption(c, data) {
   option.grid = {
     left: mobile ? 55 : 76,
     right: mobile ? 22 : 40,
-    top: 48,
+    top: c.legendShow && c.legendPosition === "top" ? 80 : 48,
     bottom: 105,
     containLabel: false,
   };
@@ -588,7 +595,7 @@ function importCSV(text) {
     throw Error("最多15产品、120个月、20个数值列");
   return parsed.sort((a, b) => a.date.localeCompare(b.date));
 }
-function parsePrompt(text) {
+function parsePromptConfig(text) {
   let c = readConfig(),
     recognized = false;
   const typeRules = [
@@ -685,28 +692,198 @@ function parsePrompt(text) {
   if (["pie", "donut"].includes(c.type)) {
     if (!month) c.month = getDates().slice(-1)[0];
   }
+  if (/点大小|气泡最大直径|图例|#[0-9a-f]{6}/i.test(text)) recognized = true;
   if (!recognized)
     throw Error(
       "暂未识别需求。请描述图表类型与指标，例如“价格与产量散点图，蓝色”。",
     );
   return c;
 }
+function parsePrompt(text) {
+  const normalized = text
+    .trim()
+    .replace(/Ｘ/g, "X")
+    .replace(/Ｙ/g, "Y")
+    .replace(/：/g, ":");
+  if (/子图|分面|双\s*[yY]\s*轴|双轴|多面板|左右两图|上下两图/.test(normalized))
+    throw Error(
+      "当前仅支持单图，不支持子图、分面或双Y轴。请分别生成单图；此要求未执行。",
+    );
+  if (/图例\s*(?:按|以)\s*(?!\s*产品)[^，,；;]+/.test(normalized))
+    throw Error(
+      "当前图例固定按产品分组。可设置显示/隐藏及顶部/底部；其他图例分组尚不支持。",
+    );
+  let clauses = normalized.split(/[，,；;\n。]+/).filter(Boolean);
+  const aliases = numericFields.map((key) => ({
+    key,
+    names: [key, knownFields[key]?.label].filter(Boolean),
+  }));
+  const mappingPatterns = [
+    /(?:x\s*轴|横轴)\s*(?:为|是|按|=|:)?\s*([^，,；;]+)/i,
+    /(?:y\s*轴|纵轴)\s*(?:为|是|按|=|:)?\s*([^，,；;]+)/i,
+    /(?:气泡大小|大小|面积)\s*(?:为|是|按|=|:)?\s*([^，,；;]+)/i,
+  ];
+  for (let re of mappingPatterns) {
+    const match = normalized.match(re);
+    if (
+      match &&
+      !/^\d/.test(match[1].trim()) &&
+      !aliases.some((f) =>
+        f.names.some((n) =>
+          match[1].trim().toLowerCase().startsWith(n.toLowerCase()),
+        ),
+      ) &&
+      !/^(月份|date|产品|product)/i.test(match[1].trim())
+    )
+      throw Error(
+        "无法映射字段“" +
+          match[1].trim() +
+          "”。请使用当前数据字段：" +
+          numericFields.map(fieldName).join("、"),
+      );
+  }
+  const typeMatches = [
+    ["bubble", /气泡图/],
+    ["scatter", /散点图/],
+    ["donut", /环形图|圆环图/],
+    ["pie", /饼图/],
+    ["bar", /柱状图|柱形图/],
+    ["line", /折线图/],
+  ].filter(([key, re]) => re.test(normalized));
+  if (typeMatches.length > 1)
+    throw Error("一条指令只能选择一种图形。子图暂不支持，请分别生成。");
+  const colorMatches =
+    normalized.replace(/红蓝/g, "").match(/紫色|绿色|蓝色|红色/g) || [];
+  if (new Set(colorMatches).size > 1)
+    throw Error("一次请选择一种配色方案；当前不支持逐产品指定多个颜色。");
+  const c = parsePromptConfig(normalized),
+    warnings = [];
+  const size = normalized.match(
+    /(?:点大小|气泡最大直径)\s*(?:为|是|=|:)?\s*(\d+(?:\.\d+)?)\s*(?:px|像素)?/i,
+  );
+  if (size) {
+    c.size = +size[1];
+    if (c.size < 8 || c.size > 64)
+      throw Error("点大小 / 气泡最大直径必须在8–64px之间。");
+  }
+  const hex = normalized.match(/#[0-9a-f]{6}\b/i);
+  if (hex) {
+    c.palette = "custom";
+    c.customColor = hex[0];
+  }
+  if (/隐藏图例|不显示图例/.test(normalized)) c.legendShow = false;
+  else if (/显示图例/.test(normalized)) c.legendShow = true;
+  if (/图例(?:在|放在|位于)?顶部/.test(normalized)) c.legendPosition = "top";
+  if (/图例(?:在|放在|位于)?底部/.test(normalized)) c.legendPosition = "bottom";
+  if (/(?:x\s*轴|横轴)\s*(?:为|是|按|=|:)?\s*(?:月份|date)/i.test(normalized))
+    c.x = "date";
+  if (
+    /(?:x\s*轴|横轴)\s*(?:为|是|按|=|:)?\s*(?:产品|product)/i.test(normalized)
+  )
+    c.x = "product";
+  if (
+    /(?:y\s*轴|纵轴)\s*(?:为|是|按|=|:)?\s*(?:月份|date|产品|product)/i.test(
+      normalized,
+    )
+  )
+    throw Error("Y轴必须为数值字段，不能使用月份或产品。");
+  let lexemes = [...getProducts(), ...aliases.flatMap((f) => f.names)].sort(
+    (a, b) => b.length - a.length,
+  );
+  for (let clause of clauses) {
+    let rest = clause;
+    for (let word of lexemes)
+      rest = rest.replace(
+        new RegExp(word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"),
+        "",
+      );
+    rest = rest
+      .replace(
+        /(?:近|最近)\s*\d+\s*个?月|\d{4}[-年]\d{1,2}月?|#[0-9a-f]{6}|(?:点大小|气泡最大直径)\s*(?:为|是|=|:)?\s*\d+(?:\.\d+)?\s*(?:px|像素)?/gi,
+        "",
+      )
+      .replace(
+        /堆叠柱状图|堆叠|气泡图|散点图|环形图|圆环图|饼图|柱状图|柱形图|折线图|气泡|散点|折线|圆角方形|三角形|菱形|方形|圆形|红蓝|紫色|绿色|蓝色|红色|(?:隐藏|不显示|显示)图例|图例(?:在|放在|位于)?(?:顶部|底部)|图例按产品/g,
+        "",
+      )
+      .replace(
+        /x\s*轴|y\s*轴|横轴|纵轴|气泡大小|大小|面积|颜色|主色|配色|全部产品|所有产品|全部|所有|最新月份|月份|产品|product|date|请帮我|帮我|请|生成|展示|画一张|画|一个|一张|的|用|看|按|为|是|和|与|及|[:=\s]/gi,
+        "",
+      );
+    if (rest)
+      warnings.push(
+        "未识别片段“" + rest + "”：未作为参数执行，请使用术语表或配置区。",
+      );
+  }
+  if (
+    !["pie", "donut"].includes(c.type) &&
+    !/(?:x\s*轴|横轴|y\s*轴|纵轴)/i.test(normalized)
+  )
+    warnings.push(
+      "未明确指定坐标轴：散点按指标提及顺序推断，折线/柱状默认月份X轴；请核对配置。",
+    );
+  if (c.type === "line" && c.size > 18)
+    warnings.push("折线标记实际最大直径为18px，散点/气泡上限为64px。");
+  if (
+    ["pie", "donut"].includes(c.type) &&
+    /x\s*轴|y\s*轴|横轴|纵轴|大小按|三角|菱形|方形/i.test(normalized)
+  )
+    warnings.push("饼图无坐标轴，不应用点形状或气泡大小参数。");
+  return { config: c, normalized, warnings };
+}
+function showParseReport(text, result, error) {
+  $("parseReport").hidden = false;
+  $("parseReport").open = true;
+  $("parseSource").textContent =
+    "原句：" + text + (result ? "\n规范化：" + result.normalized : "");
+  $("parseSummary").textContent = error
+    ? "解析 / 校验未通过；本次请求未生成新图表。"
+    : "规范化 → 规则匹配 → 配置校验 → ECharts option → 渲染。下方为生成时配置快照；随后手动调整以配置区为准。未指定项沿用当前选择，图形相关默认值已应用。";
+  $("parseWarnings").textContent = error
+    ? error
+    : result.warnings.length
+      ? result.warnings.join("\n")
+      : "未发现未识别片段。请核对字段映射与单位。";
+  $("parseJson").textContent = result
+    ? JSON.stringify(result.config, null, 2)
+    : "未生成配置";
+}
 function ask(text) {
+  let result;
   try {
-    const c = parsePrompt(text);
+    result = parsePrompt(text);
+    const c = result.config;
+    validateConfig(c);
+    const data = selectedRows(c);
+    if (!data.length) throw Error("所选产品或月份没有数据。");
+    buildOption(c, data);
     if (![...$("period").options].some((o) => +o.value === c.period))
       $("period").add(new Option("近" + c.period + "个月", c.period));
     setConfig(c);
     render();
-    if (lastOption)
-      $("chartTitle").scrollIntoView({ behavior: "smooth", block: "start" });
+    showParseReport(text, result);
+    if (result.warnings.length)
+      announce(
+        "已生成图表，但有 " +
+          result.warnings.length +
+          " 条解析提示，请查看展开的解析报告。",
+      );
+    $("parseReport").scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (err) {
+    showParseReport(text, result, err.message);
     announce(err.message, true);
   }
 }
 function validateConfig(c) {
   if (!c || typeof c !== "object" || Array.isArray(c))
     throw Error("配置应为 JSON 对象");
+  if (c.legendShow === undefined) c.legendShow = true;
+  if (c.legendPosition === undefined) c.legendPosition = "bottom";
+  if (
+    typeof c.legendShow !== "boolean" ||
+    !["top", "bottom"].includes(c.legendPosition)
+  )
+    throw Error("图例配置无效");
   if (
     !Object.prototype.hasOwnProperty.call(types, c.type) ||
     !["date", "product", ...numericFields].includes(c.x) ||

@@ -481,3 +481,37 @@ output {
     scroll-behavior: auto !important;
   }
 }
+
+.language-help {
+  margin-top: 14px;
+  border-top: 1px solid #dfe6ef;
+  padding-top: 12px;
+}
+.language-help summary {
+  cursor: pointer;
+  color: #2377ad;
+  font-size: 13px;
+  font-weight: 650;
+}
+.language-help p {
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.language-help pre {
+  background: #f2f5fa;
+  max-height: 300px;
+  overflow: auto;
+  padding: 14px;
+  font-size: 12px;
+  border-radius: 5px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+#parseWarnings {
+  background: #fff5dd;
+  color: #795817;
+  padding: 10px;
+  font-size: 12px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

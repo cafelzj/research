@@ -63,6 +63,90 @@
           本地规则解析，未接入大模型。支持图表类型、字段、产品、近 N
           个月、颜色和点形状；生成后可在配置区继续调整。
         </p>
+        <details class="language-help">
+          <summary>自然语言如何变成图表？支持哪些标准术语？</summary>
+          <p>
+            流程：原句规范化 → 识别术语与字段 → 生成结构化配置 JSON →
+            校验数据和图形约束 → 转换为 ECharts option →
+            渲染。当前使用本地规则，不会让模型编写或执行代码。
+          </p>
+          <p>
+            <b>推荐模板：</b
+            >全部产品近12个月气泡图，X轴价格，Y轴开工率，大小按产量，点大小40px，三角形，紫色，图例在顶部。
+          </p>
+          <div class="tablewrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>参数</th>
+                  <th>支持的表达</th>
+                  <th>规则 / 默认行为</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>图形</td>
+                  <td>
+                    散点图、气泡图、折线图、柱状图、堆叠柱状图、饼图、环形图
+                  </td>
+                  <td>一条指令一个图形；未指定沿用当前类型</td>
+                </tr>
+                <tr>
+                  <td>X / Y</td>
+                  <td>X轴价格、横轴price；Y轴产量、纵轴output</td>
+                  <td>
+                    使用当前数据真实字段名或已登记中文名；散点/气泡需数值 X
+                  </td>
+                </tr>
+                <tr>
+                  <td>大小</td>
+                  <td>大小按产量；点大小24px；气泡最大直径48px</td>
+                  <td>8–64px；前者是指标映射，后两者是像素参数</td>
+                </tr>
+                <tr>
+                  <td>形状</td>
+                  <td>圆形、方形、三角形、菱形、圆角方形</td>
+                  <td>应用于散点、气泡和折线标记，不改变柱或饼的形状</td>
+                </tr>
+                <tr>
+                  <td>颜色</td>
+                  <td>红蓝、紫色、绿色、蓝色、红色；颜色#2377ad</td>
+                  <td>配色方案按产品分组；十六进制主色自动生成同色系</td>
+                </tr>
+                <tr>
+                  <td>图例</td>
+                  <td>显示图例、隐藏图例；图例在顶部、图例在底部</td>
+                  <td>
+                    分组固定为产品，点击图例可筛选；不能用图例代替大小字段
+                  </td>
+                </tr>
+                <tr>
+                  <td>范围 / 产品</td>
+                  <td>
+                    近1至24个月（写具体数字）；2026-09；甲醇和尿素；全部产品
+                  </td>
+                  <td>月份用于饼图；未指定产品/范围时沿用当前选择</td>
+                </tr>
+                <tr>
+                  <td>子图 / 双轴</td>
+                  <td>当前尚不支持自然语言生成子图、分面或双Y轴</td>
+                  <td>会明确报错，不会把两幅图的要求合并成一幅</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="small">
+            用逗号或分号分开参数更可靠。“更大一点、好看一些”等主观描述不作为确定参数。未指定项会沿用当前配置；散点字段可按提及顺序推断，折线和柱状默认以月份为
+            X 轴；饼图未指定月份时取最新月。下方解析报告会展示实际配置和提示。
+          </p>
+        </details>
+        <details id="parseReport" class="language-help" hidden>
+          <summary>本次解析报告：原句 → 配置 → 校验</summary>
+          <p id="parseSource"></p>
+          <p id="parseSummary"></p>
+          <div id="parseWarnings" role="status"></div>
+          <pre id="parseJson" aria-label="解析后的图表配置 JSON"></pre>
+        </details>
       </section>
       <div id="status" class="status" role="status" aria-live="polite">
         正在加载本地图表引擎…
@@ -143,7 +227,7 @@
             <div>
               <label for="size"
                 >点大小 / 气泡上限 <output id="sizeValue">36 px</output></label
-              ><input id="size" type="range" min="8" max="64" value="36" />
+              ><input id="size" step="any" type="range" min="8" max="64" value="36" />
             </div>
             <div>
               <label for="palette">配色方案</label
@@ -169,6 +253,15 @@
               ><input id="yTitle" placeholder="留空：字段名称与单位" />
             </div>
           </div>
+          <label for="legendPosition">图例位置</label
+          ><select id="legendPosition">
+            <option value="bottom">底部</option>
+            <option value="top">顶部</option>
+          </select>
+          <label class="check"
+            ><input id="legendShow" type="checkbox" checked />
+            显示图例（按产品分组）</label
+          >
           <label class="check"
             ><input id="zero" type="checkbox" checked /> 数值轴从零开始</label
           ><label class="check"
