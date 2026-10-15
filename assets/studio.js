@@ -848,7 +848,240 @@ function showParseReport(text, result, error) {
     ? JSON.stringify(result.config, null, 2)
     : "未生成配置";
 }
+function isSettingsQuestion(text) {
+  return (
+    /[?？]|怎么|如何|哪些|什么|多少|区别|支持|能否|能不能|可不可以|帮助|说明|不懂|不知道|不会|教我|介绍|解释|查看|列出|吗|呢|可选|允许|能设置|可设置/.test(
+      text,
+    ) || /(?:当前|现在).*(?:设置|配置|参数|字段|图表)/.test(text)
+  );
+}
+
+function settingsKnowledge() {
+  const c = readConfig(),
+    fields = numericFields.map((k) => fieldName(k) + " [" + k + "]").join("、");
+  const options = (id) =>
+    Array.from($(id).options)
+      .map((o) => o.textContent)
+      .join("、");
+  const first = numericFields.includes("price") ? "price" : numericFields[0];
+  const second = numericFields.includes("output")
+    ? "output"
+    : numericFields[1] || first;
+  const example =
+    "全部产品近6个月散点图，X轴" + first + "，Y轴" + second + "，圆形，蓝色";
+  return [
+    {
+      name: "图表类型",
+      match: /图表类型|图形|什么图|哪些图|散点|折线|柱状|饼图|环形/,
+      answer:
+        "可选图表：" +
+        options("type") +
+        "。散点看两个数值指标的关系，气泡再用面积编码第三个指标；折线看趋势，柱状比较数值，饼图/环形图看单月构成。当前图表为" +
+        types[c.type] +
+        "。",
+      example,
+    },
+    {
+      name: "坐标轴与字段",
+      match: /坐标|[xXyY]\s*轴|横轴|纵轴|字段|指标/,
+      answer:
+        "当前数据的数值字段：" +
+        fields +
+        "。散点/气泡的X和Y都需数值；折线/柱状通常以月份为X。可说“X轴" +
+        first +
+        "，Y轴" +
+        second +
+        "”。轴标题、交换X/Y、零起点通过配置区设置；轴标题与零起点尚无自然语言指令。未知字段会报错。",
+      example,
+    },
+    {
+      name: "大小",
+      match: /大小|尺寸|直径|面积|像素/,
+      answer:
+        "“大小按" +
+        second +
+        "”把气泡面积映射到数值；“点大小24px”设置散点直径；“气泡最大直径48px”设置最大气泡直径。范围" +
+        $("size").min +
+        "–" +
+        $("size").max +
+        "px，折线标记最大18px；气泡零值不可见，负大小排除。当前尺寸为" +
+        c.size +
+        "px，大小字段为" +
+        fieldName(c.sizeField) +
+        "。",
+      example:
+        "气泡图，X轴" +
+        first +
+        "，Y轴" +
+        second +
+        "，大小按" +
+        second +
+        "，气泡最大直径48px",
+    },
+    {
+      name: "颜色",
+      match: /颜色|配色|色系|主色/,
+      answer:
+        "配色方案：" +
+        options("palette") +
+        "。可说“紫色”或“颜色#2377ad”；自定义主色自动生成同色系。颜色按产品区分；逐产品指定颜色、透明度或渐变尚无自然语言接口。当前方案为" +
+        $("palette").selectedOptions[0].textContent +
+        "。",
+      example: "散点图，X轴" + first + "，Y轴" + second + "，颜色#2377ad",
+    },
+    {
+      name: "形状",
+      match: /形状|标记|三角|菱形|方形|圆形/,
+      answer:
+        "点形状可选：" +
+        options("symbol") +
+        "。可直接说“三角形”或“菱形”，应用于散点、气泡和折线标记。柱状图和饼图不使用点形状。当前形状为" +
+        $("symbol").selectedOptions[0].textContent +
+        "。",
+      example: "散点图，X轴" + first + "，Y轴" + second + "，菱形",
+    },
+    {
+      name: "图例",
+      match: /图例|分组/,
+      answer:
+        "图例固定按产品分组，支持“显示图例”“隐藏图例”“图例在顶部”“图例在底部”，也可在配置区选择。点击图例可筛选系列。按月份或其他字段分组、图例左右位置尚不支持。当前图例" +
+        (c.legendShow ? "显示" : "隐藏") +
+        "，位置为" +
+        (c.legendPosition === "top" ? "顶部" : "底部") +
+        "。",
+      example:
+        "散点图，X轴" + first + "，Y轴" + second + "，显示图例，图例在顶部",
+    },
+    {
+      name: "时间与产品",
+      match: /时间|日期|月份|区间|范围|产品|筛选/,
+      answer:
+        "自然语言支持近1–24个月，使用阿拉伯数字，如“近6个月”；饼图可指定YYYY-MM。当前数据范围为" +
+        getDates()[0] +
+        "至" +
+        getDates().slice(-1)[0] +
+        "；产品有" +
+        getProducts().join("、") +
+        "。可使用准确产品名或“全部产品”。未指定时沿用当前选择。",
+      example,
+    },
+    {
+      name: "子图与双轴",
+      match: /子图|分面|双\s*[yY]?\s*轴|双图|多图|多面板/,
+      answer:
+        "当前工作台仅支持单图，尚不支持子图、分面、双Y轴或多面板。请分别生成单图并导出PNG。提问可以查看这项说明；直接要求生成子图会明确报错，保留原图。",
+      example: null,
+    },
+    {
+      name: "标签与平滑",
+      match: /标签|平滑|零起点|轴标题/,
+      answer:
+        "配置区支持“显示数值标签”“平滑折线”“数值轴从零开始”和X/Y轴标题。平滑仅适用于折线，饼图无坐标轴。这些选项目前通过控件或配置JSON修改，尚不支持对应的自然语言命令。",
+      example: null,
+    },
+    {
+      name: "数据与导出",
+      match: /导入|导出|数据|csv|json|png|下载|保存/i,
+      answer:
+        "CSV需要date、product及至少一个数值列，额外数值列自动成为字段。日期格式YYYY-MM；上限2MB、15产品、120个月、1800条、20个数值列。可导出PNG、当前数据CSV和配置JSON，再导入配置复用。导入数据仅在当前页面内存中，刷新后恢复模拟数据。",
+      example: null,
+    },
+    {
+      name: "当前设置",
+      match: /当前|现在|目前/,
+      answer:
+        "当前设置：" +
+        types[c.type] +
+        "；X=" +
+        fieldName(c.x) +
+        "，Y=" +
+        fieldName(c.y) +
+        "；产品=" +
+        c.products.join("、") +
+        "；近" +
+        c.period +
+        "个月；饼图月份=" +
+        c.month +
+        "；大小字段=" +
+        fieldName(c.sizeField) +
+        "；尺寸=" +
+        c.size +
+        "px。饼图不使用坐标轴，非气泡图不使用大小字段。",
+      example: null,
+    },
+    {
+      name: "解析方式与绘图库",
+      match: /原理|解析|自然语言|模型|AI|库|引擎|实现/i,
+      answer:
+        "绘图使用Apache ECharts " +
+        echarts.version +
+        "。生成流程是：术语/字段匹配→配置JSON→数据与范围校验→ECharts option→渲染。设置问答先识别提问意图，再从本地功能说明和当前数据生成答案；没有调用大模型，不提供任意领域问答。未匹配的生成片段会列在解析报告中。",
+      example,
+    },
+  ];
+}
+
+function answerSettingsQuestion(text) {
+  const knowledge = settingsKnowledge();
+  const overview =
+    /设置什么|设置哪些|哪些参数|什么参数|可用参数|支持什么|有什么功能|参数|设置项|帮助|不知道|不懂|不会|怎么设置|如何设置/.test(
+      text,
+    );
+  const matches = knowledge.filter((topic) => topic.match.test(text));
+  let answer, example;
+  if (matches.length) {
+    answer = matches
+      .map((topic) => topic.name + "：\n" + topic.answer)
+      .join("\n\n");
+    example = matches.find((t) => t.example)?.example;
+  } else if (overview) {
+    answer =
+      "可设置：图表类型、X/Y字段、大小映射与像素尺寸、配色、点形状、图例、时间范围、产品筛选；配置区还可修改轴标题、零起点、平滑折线和数值标签。\n可导入CSV、导出PNG和配置JSON。子图/分面/双Y轴尚未实现。\n可以继续问“颜色有哪些？”“气泡大小怎么设置？”“当前有哪些字段？”；下方有具体主题。";
+    example = knowledge[0].example;
+  } else {
+    answer =
+      "这条问题尚未匹配到设置主题。当前本地帮助可以回答图表类型、坐标轴、字段、大小、颜色、形状、图例、时间、产品、子图边界及导入导出。请选择下方主题或换成具体参数问题；开放式数据分析问题需要后续接入模型服务。";
+  }
+  $("helpAnswers").hidden = false;
+  const item = document.createElement("article");
+  item.className = "help-message";
+  const question = document.createElement("h4");
+  question.textContent = text;
+  item.append(question);
+  const body = document.createElement("p");
+  body.textContent = answer;
+  item.append(body);
+  if (example) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = "填入生成示例";
+    button.onclick = () => {
+      $("prompt").value = example;
+      $("prompt").focus();
+    };
+    item.append(button);
+  }
+  $("helpMessages").append(item);
+  while ($("helpMessages").children.length > 8)
+    $("helpMessages").firstElementChild.remove();
+  $("helpTopics").replaceChildren();
+  for (const topic of knowledge) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = topic.name;
+    button.onclick = () =>
+      answerSettingsQuestion(topic.name + "可以设置什么？");
+    $("helpTopics").append(button);
+  }
+  announce("已回答设置问题；当前图表与配置保持不变。");
+  item.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
 function ask(text) {
+  if (isSettingsQuestion(text)) {
+    answerSettingsQuestion(text);
+    return;
+  }
   let result;
   try {
     result = parsePrompt(text);
@@ -926,6 +1159,17 @@ function boot() {
   }
   instance = echarts.init($("chart"), null, { renderer: "canvas" });
   initData(demoData());
+  document.querySelectorAll("[data-help]").forEach(
+    (button) =>
+      (button.onclick = () => {
+        $("prompt").value = button.dataset.help;
+        answerSettingsQuestion(button.dataset.help);
+      }),
+  );
+  $("clearHelp").onclick = () => {
+    $("helpMessages").replaceChildren();
+    $("helpAnswers").hidden = true;
+  };
   document.querySelectorAll(".panel select,.panel input").forEach((el) =>
     el.addEventListener("input", () => {
       if (el.id === "type") {

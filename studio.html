@@ -32,14 +32,14 @@
       </div>
       <section class="ask">
         <form id="ask">
-          <label for="prompt">用自然语言生成图表</label>
+          <label for="prompt">询问设置，或用自然语言生成图表</label>
           <div class="askrow">
             <input
               id="prompt"
               maxlength="500"
-              placeholder="例：气泡图，X轴价格，Y轴开工率，大小按产量，三角形，紫色"
+              placeholder="可以问：能设置哪些参数？也可以输入图表生成要求"
               required
-            /><button class="primary">生成图表 ↗</button>
+            /><button class="primary">发送 ↗</button>
           </div>
         </form>
         <div class="examples">
@@ -59,6 +59,43 @@
             产量构成饼图
           </button>
         </div>
+        <div class="examples help-examples" aria-label="设置帮助快捷问题">
+          <button type="button" data-help="可以设置哪些参数？">
+            可以设置什么？
+          </button>
+          <button
+            type="button"
+            data-help="气泡大小和点大小有什么区别，怎么设置？"
+          >
+            大小怎么设置？
+          </button>
+          <button
+            type="button"
+            data-help="当前数据有哪些字段可以用作X轴和Y轴？"
+          >
+            可用字段有哪些？
+          </button>
+          <button type="button" data-help="支持子图和双Y轴吗？">
+            支持子图吗？
+          </button>
+        </div>
+        <section
+          id="helpAnswers"
+          class="help-answers"
+          hidden
+          aria-label="设置问答"
+        >
+          <div class="help-heading">
+            <h3>设置问答 · 本地功能说明</h3>
+            <button id="clearHelp" type="button">清空问答</button>
+          </div>
+          <p class="small">
+            根据实际功能和当前数据回答。提问只查看说明；使用“填入生成示例”后发送，可生成图表。本地帮助支持下方主题，未接入开放式
+            AI 问答。
+          </p>
+          <div id="helpMessages" role="log" aria-live="polite"></div>
+          <div id="helpTopics" class="examples" aria-label="继续询问设置"></div>
+        </section>
         <p class="small">
           本地规则解析，未接入大模型。支持图表类型、字段、产品、近 N
           个月、颜色和点形状；生成后可在配置区继续调整。
@@ -227,7 +264,14 @@
             <div>
               <label for="size"
                 >点大小 / 气泡上限 <output id="sizeValue">36 px</output></label
-              ><input id="size" step="any" type="range" min="8" max="64" value="36" />
+              ><input
+                id="size"
+                step="any"
+                type="range"
+                min="8"
+                max="64"
+                value="36"
+              />
             </div>
             <div>
               <label for="palette">配色方案</label

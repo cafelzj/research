@@ -515,3 +515,54 @@ output {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+.help-examples {
+  margin-top: 10px;
+}
+.help-examples button {
+  border-style: dashed;
+  color: #456c90;
+}
+.help-answers {
+  margin: 16px 0;
+  padding: 15px;
+  background: #f5f8fd;
+  border: 1px solid #d6e1ee;
+  border-radius: 6px;
+}
+.help-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.help-heading button,
+.help-message button {
+  font-size: 11px;
+}
+.help-message {
+  background: white;
+  border: 1px solid #e0e7f0;
+  border-radius: 5px;
+  margin: 12px 0;
+  padding: 13px;
+}
+.help-message h4 {
+  font-size: 13px;
+  margin: 0 0 7px;
+  overflow-wrap: anywhere;
+}
+.help-message p {
+  white-space: pre-wrap;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.help-message button {
+  margin-top: 8px;
+}
+#helpTopics {
+  margin-top: 12px;
+}
+#helpTopics button {
+  font-size: 11px;
+  padding: 5px 8px;
+}
