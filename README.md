@@ -1,8 +1,21 @@
 # 化工观测与研究地图
 
-首页 `index.html` 为研报风格的交互图表演示，使用模拟化工月度数据，无外部依赖，手机单列布局、固定表格首列。原版研究地图保存在 `atlas.html`，首页底部可进入。
+首页 `index.html` 为研报风格的交互图表演示，使用模拟化工月度数据，手机单列布局、固定表格首列。原版研究地图保存在 `atlas.html`，首页底部可进入。
 
 支持价格折线图、月度价格对比、产量堆叠图、开工率趋势，以及价格、同比、环比、产量、开工率和产量占比表格。点击价格图例隐藏系列，点击或轻触数据点查看数值，可播放月度走势。
+
+## 图表工作台
+
+公网入口：https://cafelzj.github.io/research/studio.html 。从首页导航也可进入。
+
+- 绘图库：**Apache ECharts 5.6.0**，Canvas 渲染。本地托管固定版本，不依赖第三方 CDN；库及 Apache 2.0 许可证位于 `assets/vendor/`，`provenance.json` 记录来源及经核对的 npm SHA-512 完整性值。首页旧看板继续使用原生 SVG。
+- 类型：散点图、气泡图、折线图、柱状图、堆叠柱状图、饼图和环形图。
+- 映射：可选择 X、Y、气泡大小字段，交换数值坐标轴，修改轴标题、零起点和时间范围，按产品筛选。饼图选择单个月份，避免将不同月份混合为构成。
+- 样式：红蓝、紫、绿、蓝、红及自定义主色；圆形、方形、三角形、菱形、圆角方形；点大小、气泡最大直径、平滑折线和数值标签。
+- 导出 / 复用：PNG 图像、图表配置 JSON、数据 CSV；配置可重新导入。CSV 必须包含 `date,product` 及至少一个数值列，额外数值列自动成为可映射字段（上限20个）。已知字段单位见网页说明，未知数值列显示原始字段名；可用坐标轴标题补充单位。产品最多15个，最多120个月、1800条记录，CSV 上限2 MB。
+- 自然语言示例：`全部产品近12个月气泡图，X轴价格，Y轴开工率，大小按产量，三角形，紫色`、`最新月份全部产品产量饼图`。这是规则解析演示，未连接模型服务。
+
+扩展入口为 `assets/studio.js` 的 `buildOption(config, data)`：数据导入、配置读取与图表生成分开，添加图形无需重写 CSV 解析。新增指标可直接从 CSV 数值列进入；可在 `knownFields` 注册中文名称和单位。气泡面积按所选非负数值缩放，负大小排除，零值不显示；饼图拒绝负值或全零。JSON 只接受工作台支持的配置字段，不执行脚本。
 
 手机访问：优先通过发布后的网站地址使用。聊天附件预览、部分文件预览器可能不执行 JavaScript；首页已内嵌模拟数据的静态图表和表格，此时仍可查看内容，但交互需在支持 JavaScript 的浏览器中使用。脚本避免依赖 `Array.at()`，兼容未提供该方法的手机浏览器。更改内置模拟数据或默认图表时，需同步更新 HTML 中的静态预览。
 
@@ -20,9 +33,9 @@ GitHub 的文件浏览页面显示源码，不直接运行网页。已加入 `.g
 
 首次部署需要在仓库 Settings → Pages → Build and deployment → Source 选择 **GitHub Actions**。然后在 Actions 中打开 `Deploy research atlas to GitHub Pages`，使用 Run workflow 启动，或重跑先前失败的部署。部署成功后的预期访问地址为：https://cafelzj.github.io/research/ 。以 GitHub Pages 返回的实际地址为准。
 
-此后每次修改 `main` 分支的 `index.html` 或 `atlas.html` 都会自动发布。仅上传这两个网页作为站点内容，不发布 README 或研究笔记。
+此后每次推送到 `main` 都会自动发布。站点发布 `index.html`、`atlas.html`、`studio.html` 和 `assets/`；不发布 README、验证脚本或研究笔记。
 
-部署后，Actions 的 `Verify public website matches this commit` 步骤会通过公网分别请求两个页面，检查 HTTP 200、HTML 类型及文件内容是否与本次提交完全一致，等待 CDN 更新后重试，持续失败会使工作流失败。可在具备访问权限的环境手动执行 `python3 scripts/verify_public_site.py https://cafelzj.github.io/research/`。这验证公网内容发布结果，交互行为还需浏览器检查。
+部署后，Actions 的 `Verify public website matches this commit` 步骤会通过公网请求三个页面及所有站点资源，检查 HTTP 200、网页的 HTML 类型及文件内容是否与本次提交完全一致，等待 CDN 更新后重试，持续失败会使工作流失败。可在具备访问权限的环境手动执行 `python3 scripts/verify_public_site.py https://cafelzj.github.io/research/`。这验证公网内容发布结果，交互行为还需浏览器检查。
 
 ## 内容
 

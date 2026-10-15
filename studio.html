@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>图表工作台 · 化工观测</title>
+    <link rel="stylesheet" href="assets/studio.css" />
+    <script defer src="assets/vendor/echarts-5.6.0.min.js"></script>
+    <script defer src="assets/studio.js"></script>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="index.html"
+        >化工观测 <small>RESEARCH / CHART STUDIO</small></a
+      >
+      <nav aria-label="网站导航">
+        <a href="index.html">行业看板</a
+        ><a href="studio.html" aria-current="page">图表工作台</a
+        ><a href="atlas.html">研究地图</a>
+      </nav>
+    </header>
+    <main>
+      <div class="intro">
+        <div>
+          <div class="eyebrow">BUILD YOUR OWN PERSPECTIVE</div>
+          <h1>一个数据集，多种研究视角。</h1>
+          <p>
+            散点、气泡、折线、柱状、饼图与环形图。选字段、调样式，用一句话开始。
+          </p>
+        </div>
+        <span class="pill">Apache ECharts <b>5.6.0</b></span>
+      </div>
+      <section class="ask">
+        <form id="ask">
+          <label for="prompt">用自然语言生成图表</label>
+          <div class="askrow">
+            <input
+              id="prompt"
+              maxlength="500"
+              placeholder="例：气泡图，X轴价格，Y轴开工率，大小按产量，三角形，紫色"
+              required
+            /><button class="primary">生成图表 ↗</button>
+          </div>
+        </form>
+        <div class="examples">
+          <button
+            data-prompt="全部产品近6个月散点图，X轴价格，Y轴产量，菱形，蓝色"
+          >
+            价格 × 产量散点图</button
+          ><button
+            data-prompt="全部产品近12个月气泡图，X轴价格，Y轴开工率，大小按产量，三角形，紫色"
+          >
+            开工率气泡图</button
+          ><button data-prompt="甲醇和尿素近6个月价格折线图，红色">
+            双产品价格折线图</button
+          ><button data-prompt="全部产品近6个月产量柱状图，堆叠">
+            产量堆叠柱状图</button
+          ><button data-prompt="最新月份全部产品产量饼图，绿色">
+            产量构成饼图
+          </button>
+        </div>
+        <p class="small">
+          本地规则解析，未接入大模型。支持图表类型、字段、产品、近 N
+          个月、颜色和点形状；生成后可在配置区继续调整。
+        </p>
+      </section>
+      <div id="status" class="status" role="status" aria-live="polite">
+        正在加载本地图表引擎…
+      </div>
+      <noscript
+        ><div class="status error">
+          交互工作台需要 JavaScript。请用系统浏览器访问网站；<a
+            href="index.html"
+            >首页有静态图表预览</a
+          >。
+        </div></noscript
+      >
+      <div class="workspace">
+        <aside class="panel">
+          <div class="paneltitle">
+            <h2>图表配置</h2>
+            <button id="reset" type="button">重置</button>
+          </div>
+          <label for="type">图表类型</label
+          ><select id="type">
+            <option value="scatter">散点图</option>
+            <option value="bubble">气泡图</option>
+            <option value="line">折线图</option>
+            <option value="bar">柱状图</option>
+            <option value="stack">堆叠柱状图</option>
+            <option value="pie">饼图</option>
+            <option value="donut">环形图</option>
+          </select>
+          <div class="pair">
+            <div>
+              <label for="period">时间范围</label
+              ><select id="period">
+                <option value="1">近1个月</option>
+                <option value="3">近3个月</option>
+                <option value="6">近6个月</option>
+                <option value="12" selected>近12个月</option>
+                <option value="24">近24个月</option>
+              </select>
+            </div>
+            <div>
+              <label for="month">饼图月份</label
+              ><select id="month" aria-describedby="pieHelp"></select>
+            </div>
+          </div>
+          <p id="pieHelp" class="small">
+            饼图按所选月份的产品构成计算，不跨月累加。
+          </p>
+          <label>产品 / 颜色分组</label>
+          <div id="products" class="products"></div>
+          <div class="pair">
+            <div>
+              <label for="x">X 轴字段</label
+              ><select id="x"></select>
+            </div>
+            <div>
+              <label for="y">Y 轴 / 饼图数值</label
+              ><select id="y"></select>
+            </div>
+          </div>
+          <button id="swap" class="wide" type="button">⇄ 交换 X / Y</button>
+          <div class="pair">
+            <div>
+              <label for="sizeField">气泡大小字段</label
+              ><select id="sizeField"></select>
+            </div>
+            <div>
+              <label for="symbol">点的形状</label
+              ><select id="symbol">
+                <option value="circle">圆形</option>
+                <option value="rect">方形</option>
+                <option value="triangle">三角形</option>
+                <option value="diamond">菱形</option>
+                <option value="roundRect">圆角方形</option>
+              </select>
+            </div>
+          </div>
+          <div class="pair">
+            <div>
+              <label for="size"
+                >点大小 / 气泡上限 <output id="sizeValue">36 px</output></label
+              ><input id="size" type="range" min="8" max="64" value="36" />
+            </div>
+            <div>
+              <label for="palette">配色方案</label
+              ><select id="palette">
+                <option value="research">研报红蓝</option>
+                <option value="purple">紫色</option>
+                <option value="green">绿色</option>
+                <option value="blue">蓝色</option>
+                <option value="red">红色</option>
+                <option value="custom">自定义主色</option>
+              </select>
+            </div>
+          </div>
+          <label for="customColor">自定义主色（自动生成同色系）</label
+          ><input id="customColor" type="color" value="#2377ad" />
+          <div class="pair">
+            <div>
+              <label for="xTitle">X 轴标题</label
+              ><input id="xTitle" placeholder="留空：字段名称与单位" />
+            </div>
+            <div>
+              <label for="yTitle">Y 轴标题</label
+              ><input id="yTitle" placeholder="留空：字段名称与单位" />
+            </div>
+          </div>
+          <label class="check"
+            ><input id="zero" type="checkbox" checked /> 数值轴从零开始</label
+          ><label class="check"
+            ><input id="smooth" type="checkbox" /> 平滑折线</label
+          ><label class="check"
+            ><input id="labels" type="checkbox" /> 显示数值标签</label
+          >
+          <p class="small" id="configHelp"></p>
+        </aside>
+        <section class="chartpanel">
+          <div class="charthead">
+            <div>
+              <span class="eyebrow" id="chartTag">SCATTER / RESEARCH</span>
+              <h2 id="chartTitle">指标关联分析</h2>
+              <p id="chartSubtitle"></p>
+            </div>
+            <div class="chartactions">
+              <button id="download" type="button">↓ PNG</button
+              ><button id="saveConfig" type="button">↓ 配置 JSON</button>
+            </div>
+          </div>
+          <div id="chart" role="img" aria-label="交互图表"></div>
+          <div id="chartNote" class="chartnote"></div>
+          <div class="datahead">
+            <h3>数据预览</h3>
+            <span id="count"></span>
+          </div>
+          <div id="table" class="tablewrap"></div>
+        </section>
+      </div>
+      <section class="panel data">
+        <div>
+          <h2>换一份数据，继续使用同一套图表。</h2>
+          <p>
+            CSV 必须包含
+            date、product，以及至少一个数值列。额外数值列会自动出现在字段列表中。
+          </p>
+          <p class="small">
+            date 格式 YYYY-MM，每个产品每月一行。已知单位：price / cost
+            元/吨，output / inventory 万吨，rate
+            %；其他列按原始数值显示。仅在当前浏览器内存处理。
+          </p>
+        </div>
+        <div class="dataactions">
+          <label class="upload"
+            >↑ 导入 CSV<input
+              id="upload"
+              type="file"
+              accept=".csv,text/csv"
+              hidden /></label
+          ><button id="template">↓ 当前数据 CSV</button
+          ><label class="upload"
+            >↑ 导入图表配置<input
+              id="loadConfig"
+              type="file"
+              accept=".json,application/json"
+              hidden /></label
+          ><button id="demo">恢复模拟数据</button>
+        </div>
+      </section>
+      <section class="about">
+        <h2>绘图引擎与扩展方式</h2>
+        <p>
+          本工作台使用
+          <a
+            href="https://echarts.apache.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Apache ECharts 5.6.0</a
+          >，采用 Canvas 渲染。库文件随网站托管，不请求第三方
+          CDN。首页历史图表使用原生 SVG。
+        </p>
+        <p>
+          通过「数据 → 字段映射 → 图表配置 → ECharts
+          option」生成图表。同一份数据可以切换图形、颜色、形状、大小与坐标轴；配置
+          JSON 可导出、修改、再导入。新增图表可扩展
+          <code>buildOption()</code>，无需重写数据导入逻辑。
+        </p>
+        <p class="small">
+          气泡面积与所选正数指标成比例，最大直径由滑块控制；负数大小不绘制。饼图只接受非负且合计大于零的数据。模拟数据不代表实际市场或投资建议。<a
+            href="assets/vendor/ECHARTS-LICENSE.txt"
+            >Apache License 2.0</a
+          >
+        </p>
+      </section>
+      <footer>
+        化工观测 · 数据图表实验室 / <a href="index.html">返回行业看板</a>
+      </footer>
+    </main>
+  </body>
+</html>

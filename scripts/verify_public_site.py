@@ -14,7 +14,9 @@ def verify(base_url, attempts=12, delay=10):
     if parsed.scheme != "https" or not parsed.netloc:
         raise ValueError("The public site URL must use HTTPS")
     root = Path(__file__).resolve().parents[1]
-    pending = {name: (root / name).read_bytes() for name in ("index.html", "atlas.html")}
+    files = ["index.html", "atlas.html", "studio.html"]
+    files.extend(str(path.relative_to(root)) for path in sorted((root / "assets").rglob("*")) if path.is_file())
+    pending = {name: (root / name).read_bytes() for name in files}
     for attempt in range(attempts):
         for name, expected in list(pending.items()):
             digest = hashlib.sha256(expected).hexdigest()
@@ -26,7 +28,7 @@ def verify(base_url, attempts=12, delay=10):
                     actual = response.read()
                     if response.status != 200:
                         raise ValueError(f"HTTP {response.status}")
-                    if response.headers.get_content_type() != "text/html":
+                    if name.endswith(".html") and response.headers.get_content_type() != "text/html":
                         raise ValueError("Response is not HTML")
                     if actual != expected:
                         raise ValueError("Public content does not match this commit")
