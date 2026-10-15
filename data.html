@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>数据明细 · 数据与图表 · 化工观测</title>
+    <link rel="stylesheet" href="assets/studio.css" />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script defer src="assets/data-core.js"></script>
+    <script defer src="assets/data-browser.js"></script>
+  </head>
+  <body class="data-page">
+    <header class="site-header">
+      <a class="site-brand" href="index.html"
+        >化工观测<small>CHEMICAL INDUSTRY / RESEARCH</small></a
+      >
+      <nav class="site-nav" aria-label="网站主导航">
+        <a href="atlas.html">产业链总览</a><a href="index.html">行业看板</a
+        ><a href="data.html" aria-current="page">数据与图表</a>
+      </nav>
+    </header>
+    <main>
+      <nav class="section-tabs" aria-label="数据与图表子栏目">
+        <a href="data.html" aria-current="page">数据明细</a
+        ><a href="studio.html">图表制作</a>
+      </nav>
+      <div class="intro">
+        <div>
+          <div class="eyebrow">DATA & CHARTS / EXPLORE YOUR DATA</div>
+          <h1>先看清数据，再提出分析。</h1>
+          <p>查看明细、核对口径、筛选样本。选好数据后，带入图表制作。</p>
+        </div>
+        <span class="pill" id="sourceBadge">模拟数据</span>
+      </div>
+      <div class="section-guide">
+        浏览与分析使用同一份数据：筛选月份和产品 → 核对明细 →
+        <a href="#dataset">使用筛选数据绘图</a
+        >。当前数据为模拟数据或用户导入，未接入实时行情。
+      </div>
+      <p id="dataStatus" class="status" role="status" aria-live="polite">
+        正在加载明细数据…
+      </p>
+      <noscript
+        ><p class="status error">
+          明细筛选需要JavaScript，请用浏览器打开。行业看板提供静态图表预览。
+        </p></noscript
+      >
+      <section class="panel" aria-label="数据筛选">
+        <div class="data-filters">
+          <div>
+            <label for="start">开始月份</label><input id="start" type="month" />
+          </div>
+          <div>
+            <label for="end">结束月份</label><input id="end" type="month" />
+          </div>
+          <div>
+            <label for="product">产品</label
+            ><select id="product">
+              <option>全部产品</option>
+            </select>
+          </div>
+          <div>
+            <label for="search">查找产品或月份</label
+            ><input
+              id="search"
+              type="search"
+              placeholder="例：甲醇 或 2026-09"
+            />
+          </div>
+        </div>
+        <div class="filter-tools">
+          <span class="small"
+            >筛选影响表格、导出内容及带入图表的观测样本；字段勾选仅控制表格显示。</span
+          ><button id="clearFilters" type="button">清除筛选</button>
+        </div>
+        <label>显示的数值字段</label>
+        <div id="fields" class="field-list"></div>
+      </section>
+      <div id="summary" class="summary-cards"></div>
+      <section id="dataset" class="chartpanel">
+        <div class="dataset-toolbar">
+          <div>
+            <h2>观测明细</h2>
+            <p id="sourceDetail" class="source-detail"></p>
+          </div>
+          <div class="actions">
+            <label class="upload"
+              >↑ 导入CSV<input
+                id="upload"
+                type="file"
+                accept=".csv,text/csv"
+                hidden /></label
+            ><button id="export" type="button">↓ 导出筛选数据</button
+            ><button id="analyze" type="button" class="primary">
+              使用筛选数据绘图 ↗
+            </button>
+          </div>
+        </div>
+        <div class="tablewrap" id="records"></div>
+        <div class="pagination">
+          <div>
+            <button id="prev" type="button">上一页</button>
+            <span id="pageInfo"></span>
+            <button id="next" type="button">下一页</button>
+          </div>
+          <label
+            >每页
+            <select id="pageSize">
+              <option value="25">25条</option>
+              <option value="50">50条</option>
+              <option value="100">100条</option>
+            </select></label
+          >
+        </div>
+      </section>
+      <details class="panel">
+        <summary>字段与数据口径</summary>
+        <div id="dictionary"></div>
+        <p class="small">
+          每个产品每个月一条记录。price / cost为元/吨，output /
+          inventory为万吨，rate为%；其他导入列按原始字段名显示，需自行核对单位。模拟序列仅用于展示分析流程，不能当作实际行情。气泡图、饼图等会继续校验字段与数值约束。
+        </p>
+      </details>
+      <section class="panel data">
+        <div>
+          <h2>继续探索</h2>
+          <p>
+            产业链总览解释业务联系，行业看板观察整体变化；图表制作提供字段映射、自然语言绘图和设置问答。
+          </p>
+          <p class="small">
+            导入数据暂存在当前浏览器标签页会话中，刷新和站内跳转后仍可使用；关闭标签页后结束，不上传服务器。浏览器禁用会话存储时，会提示导出后手动导入。
+          </p>
+        </div>
+        <div class="dataactions">
+          <a class="upload" href="atlas.html">产业链总览</a
+          ><a class="upload" href="index.html">行业看板</a
+          ><a class="upload" href="studio.html">图表制作</a
+          ><button id="restore" type="button">恢复模拟数据</button
+          ><a class="upload" href="data.html" id="fullData" hidden
+            >返回完整数据</a
+          >
+        </div>
+      </section>
+      <footer>化工观测 · 数据与图表 / 浏览明细与专业图表制作</footer>
+    </main>
+  </body>
+</html>

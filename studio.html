@@ -3,23 +3,36 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>图表工作台 · 化工观测</title>
+    <title>图表制作 · 数据与图表 · 化工观测</title>
     <link rel="stylesheet" href="assets/studio.css" />
+    <link rel="stylesheet" href="assets/site.css" />
     <script defer src="assets/vendor/echarts-5.6.0.min.js"></script>
+    <script defer src="assets/data-core.js"></script>
     <script defer src="assets/studio.js"></script>
   </head>
   <body>
-    <header>
-      <a class="brand" href="index.html"
-        >化工观测 <small>RESEARCH / CHART STUDIO</small></a
+    <header class="site-header">
+      <a class="site-brand" href="index.html"
+        >化工观测<small>CHEMICAL INDUSTRY / RESEARCH</small></a
       >
-      <nav aria-label="网站导航">
-        <a href="index.html">行业看板</a
-        ><a href="studio.html" aria-current="page">图表工作台</a
-        ><a href="atlas.html">研究地图</a>
+      <nav class="site-nav" aria-label="网站主导航">
+        <a href="atlas.html">产业链总览</a><a href="index.html">行业看板</a
+        ><a href="data.html" aria-current="page">数据与图表</a>
       </nav>
     </header>
     <main>
+      <nav class="section-tabs" aria-label="数据与图表子栏目">
+        <a href="data.html">数据明细</a
+        ><a href="studio.html" aria-current="page">图表制作</a>
+      </nav>
+      <div class="section-guide">
+        专业分析工作区 · 可自由映射字段、调整图形，或用自然语言描述分析。
+        <div class="journey-links">
+          <button id="viewData" type="button">查看本次数据明细 ↗</button
+          ><a href="data.html">回到数据筛选</a>
+        </div>
+        <p id="dataSource" class="small"></p>
+      </div>
       <div class="intro">
         <div>
           <div class="eyebrow">BUILD YOUR OWN PERSPECTIVE</div>
@@ -346,7 +359,7 @@
           <p class="small">
             date 格式 YYYY-MM，每个产品每月一行。已知单位：price / cost
             元/吨，output / inventory 万吨，rate
-            %；其他列按原始数值显示。仅在当前浏览器内存处理。
+            %；其他列按原始数值显示。数据在当前标签页会话暂存，支持刷新与站内跳转；不上传服务器。
           </p>
         </div>
         <div class="dataactions">
@@ -392,7 +405,7 @@
         </p>
       </section>
       <footer>
-        化工观测 · 数据图表实验室 / <a href="index.html">返回行业看板</a>
+        化工观测 · 数据图表实验室 / <a href="index.html">行业看板</a>
       </footer>
     </main>
   </body>

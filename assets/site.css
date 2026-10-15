@@ -1,0 +1,282 @@
+.site-header {
+  background: #102d60 !important;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px max(24px, calc((100vw - 1280px) / 2)) !important;
+  margin: 0 !important;
+  min-height: 78px;
+  position: relative;
+  z-index: 5;
+  border: 0;
+  max-width: none;
+}
+.site-header .site-brand {
+  color: white;
+  font-size: 21px;
+  font-weight: 750;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  line-height: 1.5;
+}
+.site-header .site-brand small {
+  display: block;
+  color: #b9cbe2;
+  font: 9px monospace;
+  letter-spacing: 2px;
+}
+.site-header .site-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+.site-header .site-nav a {
+  display: inline-block;
+  color: #bfcee3;
+  font-size: 13px;
+  padding: 7px 0;
+  margin: 0;
+  border-radius: 0;
+  white-space: nowrap;
+  background: transparent;
+}
+.site-header .site-nav a[aria-current="page"] {
+  color: white;
+  border-bottom: 2px solid #ed7179;
+}
+.site-header .site-nav a:hover {
+  color: white;
+  background: transparent;
+}
+.section-tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0 0 22px;
+}
+.section-tabs a {
+  border: 1px solid #cfdbea;
+  border-radius: 5px;
+  background: white;
+  color: #516880;
+  padding: 8px 15px;
+  font-size: 13px;
+}
+.section-tabs a[aria-current="page"] {
+  background: #102d60;
+  color: white;
+  border-color: #102d60;
+}
+.section-guide {
+  padding: 16px 18px;
+  background: #eaf0fa;
+  border: 1px solid #d2deee;
+  border-radius: 6px;
+  margin: 20px 0;
+  color: #375377;
+  font-size: 13px;
+}
+.section-guide a {
+  font-weight: 650;
+  color: #2377ad;
+}
+.journey-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.page-atlas > aside {
+  top: 82px;
+  bottom: 0;
+}
+.page-atlas .site-header {
+  min-height: 82px;
+}
+.page-atlas .site-header + .atlas-links {
+  margin-left: 224px;
+  padding: 14px 44px 0;
+}
+.page-atlas .site-header + .atlas-links a {
+  font-size: 12px;
+}
+.page-atlas main .hero h1 {
+  font-size: 34px;
+}
+.data-page .data-filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1.3fr;
+  gap: 14px;
+}
+.data-page .data-filters input,
+.data-page .data-filters select {
+  width: 100%;
+  min-width: 0;
+}
+.data-page .summary-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 20px 0;
+}
+.data-page .summary-cards article {
+  background: white;
+  padding: 18px;
+  border: 1px solid #dfe6ef;
+  border-top: 3px solid #102d60;
+  border-radius: 5px;
+}
+.data-page .summary-cards small {
+  color: #708096;
+}
+.data-page .summary-cards strong {
+  display: block;
+  font-size: 24px;
+  margin-top: 5px;
+  font-variant-numeric: tabular-nums;
+}
+.data-page .summary-cards strong.date-range {
+  font-size: 15px;
+}
+.data-page .dataset-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 18px;
+}
+.data-page .dataset-toolbar .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.data-page .field-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.data-page .field-list label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #f3f6fa;
+  border-radius: 4px;
+  padding: 5px 8px;
+  margin: 0;
+}
+.data-page .pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 18px;
+  flex-wrap: wrap;
+}
+.data-page .tablewrap {
+  max-height: 650px;
+}
+.data-page .tablewrap table {
+  min-width: 800px;
+}
+.data-page th button {
+  padding: 0;
+  background: transparent;
+  color: white;
+  border: 0;
+  font-size: 12px;
+  text-align: inherit;
+}
+.data-page .source-detail {
+  font-size: 12px;
+  color: #708096;
+  overflow-wrap: anywhere;
+}
+.data-page details.panel {
+  margin-top: 18px;
+}
+.data-page details summary {
+  cursor: pointer;
+  font-weight: 650;
+}
+.data-page .record-action {
+  color: #2377ad;
+  font-size: 12px;
+}
+.data-page .empty-cell {
+  text-align: center;
+  padding: 40px;
+}
+.data-page .filter-tools {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+@media (max-width: 1100px) {
+  .page-atlas .site-header + .atlas-links {
+    margin-left: 185px;
+    padding-left: 24px;
+  }
+}
+@media (max-width: 720px) {
+  .site-header {
+    padding: 14px 16px !important;
+    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 100px;
+  }
+  .site-header .site-brand {
+    font-size: 18px;
+  }
+  .site-header .site-nav {
+    justify-content: space-between;
+    width: 100%;
+    gap: 15px;
+    overflow: visible;
+  }
+  .site-header .site-nav a {
+    font-size: 13px;
+    padding: 5px 0;
+  }
+  .page-atlas > aside {
+    top: auto;
+    bottom: auto;
+  }
+  .page-atlas .site-header + .atlas-links {
+    margin-left: 0;
+    padding: 12px 18px;
+  }
+  .page-atlas main .hero h1 {
+    font-size: 28px;
+  }
+  .data-page .data-filters {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .data-page .summary-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .data-page .summary-cards article {
+    padding: 13px;
+  }
+  .data-page .dataset-toolbar {
+    padding: 14px;
+  }
+  .section-tabs {
+    gap: 8px;
+  }
+  .section-tabs a {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+}

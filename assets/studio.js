@@ -8,13 +8,7 @@ const escapeHTML = (text) =>
         c
       ],
   );
-const knownFields = {
-  price: { label: "价格", unit: "元/吨" },
-  output: { label: "产量", unit: "万吨" },
-  rate: { label: "开工率", unit: "%" },
-  cost: { label: "成本", unit: "元/吨" },
-  inventory: { label: "库存", unit: "万吨" },
-};
+const knownFields = ChemData.knownFields;
 const types = {
   scatter: "散点图",
   bubble: "气泡图",
@@ -33,34 +27,7 @@ const palettes = {
 };
 let rows, numericFields, instance, lastOption, activeConfig;
 function demoData() {
-  const products = ["甲醇", "尿素", "纯碱", "聚乙烯", "聚丙烯"];
-  let data = [];
-  for (let m = 0; m < 24; m++) {
-    let date = new Date(Date.UTC(2024, 9 + m, 1)).toISOString().slice(0, 7);
-    products.forEach((product, j) => {
-      let price = Math.round(
-          [2450, 2050, 1750, 7800, 7350][j] *
-            (1 +
-              0.09 * Math.sin(m * 0.64 + j) +
-              0.003 * m +
-              0.025 * Math.cos(m * 1.9 + j)),
-        ),
-        output = +(
-          [610, 520, 295, 240, 265][j] *
-          (1 + 0.08 * Math.sin(m * 0.8 + j) + m * 0.002)
-        ).toFixed(1);
-      data.push({
-        date,
-        product,
-        price,
-        output,
-        rate: +(73 + j * 2 + 6 * Math.sin(m * 0.48 + j)).toFixed(1),
-        cost: Math.round(price * (0.76 + 0.06 * Math.cos(m * 0.6 + j))),
-        inventory: +(output * (0.16 + 0.05 * Math.sin(m * 0.4 + j))).toFixed(1),
-      });
-    });
-  }
-  return data;
+  return ChemData.demoData();
 }
 function fieldName(key) {
   if (key === "date") return "月份";
@@ -515,85 +482,8 @@ function download(content, name, type) {
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
-function parseCSV(text) {
-  let result = [],
-    row = [],
-    cell = "",
-    quoted = false;
-  for (let i = 0; i < text.length; i++) {
-    let c = text[i];
-    if (c === '"') {
-      if (quoted && text[i + 1] === '"') {
-        cell += '"';
-        i++;
-      } else quoted = !quoted;
-    } else if (c === "," && !quoted) {
-      row.push(cell);
-      cell = "";
-    } else if ((c === "\n" || c === "\r") && !quoted) {
-      if (c === "\r" && text[i + 1] === "\n") i++;
-      row.push(cell);
-      if (row.some((c) => c.trim())) result.push(row);
-      row = [];
-      cell = "";
-    } else cell += c;
-  }
-  if (quoted) throw Error("CSV 引号未闭合");
-  row.push(cell);
-  if (row.some((c) => c.trim())) result.push(row);
-  return result;
-}
 function importCSV(text) {
-  let matrix = parseCSV(text.replace(/^\ufeff/, "")),
-    headers = matrix.shift()?.map((s) => s.trim());
-  if (
-    !headers ||
-    !headers.includes("date") ||
-    !headers.includes("product") ||
-    headers.length < 3
-  )
-    throw Error("CSV 需要 date、product 和至少一个数值列");
-  if (
-    new Set(headers).size !== headers.length ||
-    headers.some(
-      (h) => !h || ["__proto__", "constructor", "prototype"].includes(h),
-    )
-  )
-    throw Error("字段名不可为空、重复或使用保留名称");
-  let seen = new Set();
-  if (matrix.length > 1800) throw Error("最多支持1800条记录");
-  let parsed = matrix.map((cells, i) => {
-    if (cells.length !== headers.length)
-      throw Error("第" + (i + 2) + "行列数不一致");
-    let row = {};
-    headers.forEach((k, j) => {
-      let v = cells[j].trim();
-      if (k === "date") {
-        if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(v))
-          throw Error("日期格式应为 YYYY-MM");
-        row[k] = v;
-      } else if (k === "product") {
-        if (!v || v.length > 40) throw Error("产品名称不能为空或超过40字");
-        row[k] = v;
-      } else {
-        if (!v || !Number.isFinite(+v))
-          throw Error("第" + (i + 2) + "行 " + k + " 不是有效数值");
-        row[k] = +v;
-      }
-    });
-    let key = row.date + "|" + row.product;
-    if (seen.has(key)) throw Error("产品月份重复：" + key);
-    seen.add(key);
-    return row;
-  });
-  if (!parsed.length) throw Error("没有数据");
-  if (
-    new Set(parsed.map((r) => r.product)).size > 15 ||
-    new Set(parsed.map((r) => r.date)).size > 120 ||
-    headers.length > 22
-  )
-    throw Error("最多15产品、120个月、20个数值列");
-  return parsed.sort((a, b) => a.date.localeCompare(b.date));
+  return ChemData.importCSV(text);
 }
 function parsePromptConfig(text) {
   let c = readConfig(),
@@ -985,7 +875,7 @@ function settingsKnowledge() {
       name: "数据与导出",
       match: /导入|导出|数据|csv|json|png|下载|保存/i,
       answer:
-        "CSV需要date、product及至少一个数值列，额外数值列自动成为字段。日期格式YYYY-MM；上限2MB、15产品、120个月、1800条、20个数值列。可导出PNG、当前数据CSV和配置JSON，再导入配置复用。导入数据仅在当前页面内存中，刷新后恢复模拟数据。",
+        "CSV需要date、product及至少一个数值列，额外数值列自动成为字段。日期格式YYYY-MM；上限2MB、15产品、120个月、1800条、20个数值列。可导出PNG、当前数据CSV和配置JSON，再导入配置复用。导入数据暂存在当前浏览器标签页会话中，支持跨页面和刷新继续使用，关闭标签页后结束；不上传服务器。",
       example: null,
     },
     {
@@ -1174,7 +1064,21 @@ function boot() {
     return;
   }
   instance = echarts.init($("chart"), null, { renderer: "canvas" });
-  initData(demoData());
+  let stored, storageError;
+  const selected =
+    new URLSearchParams(location.search).get("dataset") === "selection";
+  try {
+    stored = ChemData.load(selected);
+  } catch (error) {
+    storageError = error.message;
+  }
+  initData(stored ? stored.rows : demoData());
+  $("dataSource").textContent = stored
+    ? "当前数据：" + stored.source + " · 本标签页会话暂存"
+    : "当前数据：化工模拟月度数据";
+  if (selected && !stored)
+    announce("未找到筛选数据，当前显示模拟数据。请回到明细页重新选择。", true);
+  else if (storageError) announce(storageError, true);
   document.querySelectorAll("[data-help]").forEach(
     (button) =>
       (button.onclick = () => {
@@ -1276,7 +1180,12 @@ function boot() {
       let f = e.target.files[0];
       if (!f) return;
       if (f.size > 2000000) throw Error("CSV 上限2 MB");
-      initData(importCSV(await f.text()));
+      const next = importCSV(await f.text());
+      ChemData.save(next, "导入文件：" + f.name);
+      history.replaceState(null, "", "studio.html");
+      initData(next);
+      $("dataSource").textContent =
+        "当前数据：导入文件 " + f.name + " · 本标签页会话暂存";
     } catch (err) {
       announce("导入失败：" + err.message, true);
     } finally {
@@ -1296,7 +1205,28 @@ function boot() {
       "text/csv;charset=utf-8",
     );
   };
-  $("demo").onclick = () => initData(demoData());
+  $("demo").onclick = () => {
+    try {
+      ChemData.clear();
+      history.replaceState(null, "", "studio.html");
+      initData(demoData());
+      $("dataSource").textContent = "当前数据：化工模拟月度数据";
+    } catch (error) {
+      announce(error.message, true);
+    }
+  };
+  $("viewData").onclick = () => {
+    try {
+      ChemData.save(
+        rows,
+        $("dataSource").textContent.replace(/^当前数据：/, ""),
+        true,
+      );
+      location.href = "data.html?view=analysis";
+    } catch (error) {
+      announce(error.message, true);
+    }
+  };
   let resize;
   window.addEventListener("resize", () => {
     clearTimeout(resize);
