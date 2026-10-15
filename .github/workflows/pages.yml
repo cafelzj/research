@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - index.html
+      - atlas.html
       - .github/workflows/pages.yml
   workflow_dispatch:
 
@@ -31,7 +32,7 @@ jobs:
       - name: Prepare static website
         run: |
           mkdir -p _site
-          cp index.html _site/index.html
+          cp index.html atlas.html _site/
       - name: Upload website
         uses: actions/upload-pages-artifact@v3
         with:
