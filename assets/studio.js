@@ -852,7 +852,9 @@ function isSettingsQuestion(text) {
   return (
     /[?？]|怎么|如何|哪些|什么|多少|区别|支持|能否|能不能|可不可以|帮助|说明|不懂|不知道|不会|教我|介绍|解释|查看|列出|吗|呢|可选|允许|能设置|可设置/.test(
       text,
-    ) || /(?:当前|现在).*(?:设置|配置|参数|字段|图表)/.test(text)
+    ) ||
+    /(?:当前|现在).*(?:设置|配置|参数|字段|图表)/.test(text) ||
+    /^(?:参数|设置|设置项|参数列表)$/.test(text.trim())
   );
 }
 
@@ -1024,12 +1026,26 @@ function settingsKnowledge() {
 function answerSettingsQuestion(text) {
   const knowledge = settingsKnowledge();
   const overview =
-    /设置什么|设置哪些|哪些参数|什么参数|可用参数|支持什么|有什么功能|参数|设置项|帮助|不知道|不懂|不会|怎么设置|如何设置/.test(
+    /设置什么|设置哪些|哪些参数|什么参数|可用参数|支持什么|有什么功能|参数|设置项|哪些设置|哪些选项|帮助|不知道|不懂|不会|怎么设置|如何设置|怎么用|如何使用/.test(
       text,
     );
   const matches = knowledge.filter((topic) => topic.match.test(text));
   let answer, example;
-  if (matches.length) {
+  if (overview && matches.length === 1 && matches[0].name === "图表类型") {
+    if (/饼图|环形/.test(text))
+      answer =
+        "饼图/环形图可设置：数值字段、产品筛选、单个月份、配色方案、图例显示和顶部/底部位置。图表导出为PNG，配置导出为JSON。饼图没有X/Y轴，不使用点形状、点大小或气泡大小字段；数值必须非负且合计大于零。";
+    else if (/折线/.test(text))
+      answer =
+        "折线图可设置：X/Y字段、产品、时间范围、配色、标记形状和大小（最大18px）、图例。配置区还可设置平滑折线、数值标签、轴标题、零起点与交换数值轴；平滑、标签和轴标题目前使用控件或JSON。";
+    else if (/柱状/.test(text))
+      answer =
+        "柱状图可设置：X/Y字段、产品、时间范围、配色、图例，以及普通或堆叠类型。配置区还可修改轴标题、零起点、标签和交换数值轴。柱状图不使用点形状或点大小；当前堆叠值须非负。";
+    else
+      answer =
+        "散点图可设置：数值X轴、数值Y轴、点形状、点大小（8–64px）、配色、图例、时间范围和产品筛选。配置区还可修改轴标题、零起点、标签与交换X/Y。气泡图在此基础上增加大小指标映射和最大气泡直径。";
+    example = matches[0].example;
+  } else if (matches.length) {
     answer = matches
       .map((topic) => topic.name + "：\n" + topic.answer)
       .join("\n\n");
