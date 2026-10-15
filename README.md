@@ -22,6 +22,8 @@ GitHub 的文件浏览页面显示源码，不直接运行网页。已加入 `.g
 
 此后每次修改 `main` 分支的 `index.html` 或 `atlas.html` 都会自动发布。仅上传这两个网页作为站点内容，不发布 README 或研究笔记。
 
+部署后，Actions 的 `Verify public website matches this commit` 步骤会通过公网分别请求两个页面，检查 HTTP 200、HTML 类型及文件内容是否与本次提交完全一致，等待 CDN 更新后重试，持续失败会使工作流失败。可在具备访问权限的环境手动执行 `python3 scripts/verify_public_site.py https://cafelzj.github.io/research/`。这验证公网内容发布结果，交互行为还需浏览器检查。
+
 ## 内容
 
 - 六条原料与工艺主链：石油化工、煤化工、天然气与化肥、盐化工与氯碱、氟硅与无机材料、精细与功能化学品。

@@ -6,6 +6,7 @@ on:
     paths:
       - index.html
       - atlas.html
+      - scripts/verify_public_site.py
       - .github/workflows/pages.yml
   workflow_dispatch:
 
@@ -40,3 +41,7 @@ jobs:
       - name: Publish website
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify public website matches this commit
+        env:
+          SITE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: python3 scripts/verify_public_site.py "$SITE_URL"
