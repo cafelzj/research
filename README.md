@@ -2,12 +2,13 @@
 
 ## 栏目结构
 
-三个主栏目采用统一导航：
+四个主栏目采用统一导航：
 
-手机和平板宽度（不超过900px）下，四个页面右下角提供按需打开的“大纲”按钮：显示本页主要章节与当前位置，点击章节后跳转并自动收起，可回到页首；跳往折叠说明时会自动展开。支持关闭按钮、遮罩、Escape和键盘焦点操作；桌面端默认隐藏浮动按钮。大纲只导航当前页面，不改动筛选数据或图表配置。
+手机和平板宽度（不超过900px）下，原有四个页面右下角提供按需打开的“大纲”按钮：显示本页主要章节与当前位置，点击章节后跳转并自动收起，可回到页首；跳往折叠说明时会自动展开。支持关闭按钮、遮罩、Escape和键盘焦点操作；桌面端默认隐藏浮动按钮。大纲只导航当前页面，不改动筛选数据或图表配置。
 
 | 栏目 | 入口 | 用途 |
 | --- | --- | --- |
+| Beta IntelliUI | `intelli.html` | 用指令和可编辑卡片组织图表、明细与指标，支持撤销和CSV共享 |
 | 产业链总览 | `atlas.html` | 上下游关系、六条工艺主链、分析框架与子行业研究 |
 | 行业看板 | `index.html` | 价格、产量、开工率等模拟月度数据的快速观察 |
 | 数据与图表 | `data.html` | 数据明细与专业图表制作的统一入口 |
@@ -21,6 +22,10 @@
 首页 `index.html` 为研报风格的交互图表演示，使用模拟化工月度数据，手机单列布局、固定表格首列。原版研究地图保存在 `atlas.html`，首页底部可进入。
 
 支持价格折线图、月度价格对比、产量堆叠图、开工率趋势，以及价格、同比、环比、产量、开工率和产量占比表格。点击价格图例隐藏系列，点击或轻触数据点查看数值，可播放月度走势。
+
+## Beta IntelliUI
+
+新栏目以“指令 + 可操作卡片”组织研究工作区：支持折线图、柱状图、数据表和指标卡；可通过自然语言或参数面板生成，每张卡片可调整、导出和移除，支持撤销、当前标签页恢复以及共享CSV数据。明确标注模拟数据/导入来源；当前采用本地规则，未连接大模型。未知需求会提示确认。支持手机和键盘操作，最多8张卡片。扩展视图与后续模型接入约定见 [IntelliUI说明](docs/intelli-ui.md)。
 
 ## 图表工作台
 
@@ -55,9 +60,9 @@ GitHub 的文件浏览页面显示源码，不直接运行网页。已加入 `.g
 
 首次部署需要在仓库 Settings → Pages → Build and deployment → Source 选择 **GitHub Actions**。然后在 Actions 中打开 `Deploy research atlas to GitHub Pages`，使用 Run workflow 启动，或重跑先前失败的部署。部署成功后的预期访问地址为：https://cafelzj.github.io/research/ 。以 GitHub Pages 返回的实际地址为准。
 
-此后每次推送到 `main` 都会自动发布。站点发布 `index.html`、`atlas.html`、`data.html`、`studio.html` 和 `assets/`；不发布 README、验证脚本或研究笔记。
+此后每次推送到 `main` 都会自动发布。站点发布 `index.html`、`atlas.html`、`data.html`、`studio.html`、`intelli.html` 和 `assets/`；不发布 README、验证脚本或研究笔记。
 
-部署后，Actions 的 `Verify public website matches this commit` 步骤会通过公网请求四个页面及所有站点资源，检查 HTTP 200、网页的 HTML 类型及文件内容是否与本次提交完全一致，等待 CDN 更新后重试，持续失败会使工作流失败。可在具备访问权限的环境手动执行 `python3 scripts/verify_public_site.py https://cafelzj.github.io/research/`。这验证公网内容发布结果，交互行为还需浏览器检查。
+部署后，Actions 的 `Verify public website matches this commit` 步骤会通过公网请求五个页面及所有站点资源，检查 HTTP 200、网页的 HTML 类型及文件内容是否与本次提交完全一致，等待 CDN 更新后重试，持续失败会使工作流失败。可在具备访问权限的环境手动执行 `python3 scripts/verify_public_site.py https://cafelzj.github.io/research/`。这验证公网内容发布结果，交互行为还需浏览器检查。
 
 ## 内容
 

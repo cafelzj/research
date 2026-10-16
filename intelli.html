@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Beta IntelliUI · 化工观测</title>
+    <link rel="stylesheet" href="assets/site.css" />
+    <link rel="stylesheet" href="assets/intelli.css" />
+    <script defer src="assets/data-core.js"></script>
+    <script defer src="assets/vendor/echarts-5.6.0.min.js"></script>
+    <script defer src="assets/intelli.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#workspace">跳到工作区</a>
+    <header class="site-header">
+      <a class="site-brand" href="index.html"
+        >化工观测<small>CHEMICAL INDUSTRY / RESEARCH</small></a
+      >
+      <nav class="site-nav" aria-label="网站主导航">
+        <a href="atlas.html">产业链总览</a><a href="index.html">行业看板</a
+        ><a href="data.html">数据与图表</a
+        ><a href="intelli.html" aria-current="page"
+          >IntelliUI <span class="beta">BETA</span></a
+        >
+      </nav>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">INTELLIGENCE, IN YOUR WORKFLOW / BETA</p>
+          <h1>少一点操作，<br />多一个研究视角<span>。</span></h1>
+          <p class="lead">说出想看的内容，让数据成为可继续操作的工作区。</p>
+        </div>
+        <div class="hero-note">
+          <span class="live-dot"></span> 本地工作模式
+          <p>规则解析 · 数据留在浏览器<br />未连接大模型或实时行情</p>
+        </div>
+      </section>
+      <div class="layout">
+        <aside class="rail" aria-label="工具与数据">
+          <div class="rail-head">
+            <span class="eyebrow">YOUR CONTEXT</span>
+            <h2>研究上下文</h2>
+          </div>
+          <div class="source">
+            <span class="source-icon">▤</span>
+            <div>
+              <strong id="sourceName">模拟数据</strong>
+              <p id="sourceInfo"></p>
+            </div>
+          </div>
+          <label class="file-button"
+            >↑ 导入 CSV<input
+              id="importFile"
+              type="file"
+              accept=".csv,text/csv"
+          /></label>
+          <p class="muted">
+            共享数据明细页的数据。CSV 最多 2 MB，导入不会上传服务器。
+          </p>
+          <button id="demoData" class="text-button">使用模拟数据</button>
+          <hr />
+          <h3>从一个问题开始</h3>
+          <div id="quickActions" class="quick-actions"></div>
+          <hr />
+          <h3>继续深入</h3>
+          <a class="rail-link" href="data.html">数据明细 <span>↗</span></a
+          ><a class="rail-link" href="studio.html"
+            >专业图表制作 <span>↗</span></a
+          ><a class="rail-link" href="atlas.html#glossary"
+            >研究术语表 <span>↗</span></a
+          >
+          <details>
+            <summary>能力与边界</summary>
+            <p class="muted">
+              支持产品、近 N
+              个月、数值字段，以及折线图、柱状图、数据表和指标卡。产品名与字段名以当前数据为准。未识别内容会提示确认，成功执行前不会改动工作区。卡片只呈现数据，不生成投资结论。
+            </p>
+          </details>
+        </aside>
+        <section id="workspace" class="workspace" aria-label="IntelliUI 工作区">
+          <div class="workspace-heading">
+            <div>
+              <span class="eyebrow">A CANVAS FOR YOUR QUESTIONS</span>
+              <h2>你的研究工作区</h2>
+            </div>
+            <div class="workspace-tools">
+              <button id="undo" disabled>↶ 撤销</button
+              ><button id="clear" disabled>清空卡片</button>
+            </div>
+          </div>
+          <form id="commandForm" class="composer">
+            <label for="command">你想如何观察这份数据？</label
+            ><textarea
+              id="command"
+              rows="2"
+              maxlength="300"
+              placeholder="试试：近6个月甲醇价格折线图"
+              required
+            ></textarea>
+            <div class="composer-bottom">
+              <span>Ctrl / ⌘ + Enter 执行 · <kbd>/</kbd> 聚焦</span
+              ><button class="primary" type="submit">
+                生成工作卡片 <span>↗</span>
+              </button>
+            </div>
+          </form>
+          <p id="status" class="status" role="status" aria-live="polite">
+            选择一个快捷操作，或输入你的需求。
+          </p>
+          <div id="clarify" class="clarify" hidden>
+            <p id="clarifyText"></p>
+            <button id="acceptPlan" type="button">按已识别设置生成</button
+            ><button id="editPlan" type="button">返回修改</button>
+          </div>
+          <details class="manual">
+            <summary>自己选择参数 <span>精确控制，无需组织语言</span></summary>
+            <form id="manualForm">
+              <div class="controls">
+                <label
+                  >展示方式<select id="view">
+                    <option value="line">折线图</option>
+                    <option value="bar">柱状图</option>
+                    <option value="table">数据表</option>
+                    <option value="metric">指标卡</option>
+                  </select></label
+                ><label>产品<select id="product"></select></label
+                ><label>指标<select id="field"></select></label
+                ><label
+                  >时间<select id="period">
+                    <option value="6">近6个月</option>
+                    <option value="12">近12个月</option>
+                    <option value="0">全部月份</option>
+                    <option value="1">最新月份</option>
+                  </select></label
+                >
+              </div>
+              <button type="submit">添加到工作区 ＋</button>
+            </form>
+          </details>
+          <div id="cards" class="cards"></div>
+          <div id="empty" class="empty">
+            <span class="empty-mark">✳</span>
+            <h3>从问题到图表，只需一步。</h3>
+            <p>
+              卡片可以独立调整、导出和移除。<br />试着添加一张趋势图，再用数据表核对细节。
+            </p>
+          </div>
+          <p class="workspace-foot">
+            支持当前标签页恢复 · 最多保留 8 张卡片 · 无需 API 密钥
+          </p>
+        </section>
+      </div>
+      <footer>
+        化工观测 / IntelliUI Beta
+        <span>以数据为依据，让操作可理解、可调整、可撤销。</span>
+      </footer>
+    </main>
+    <noscript
+      ><p>
+        IntelliUI 需要 JavaScript。请启用后使用，或访问产业链总览阅读静态内容。
+      </p></noscript
+    >
+  </body>
+</html>
