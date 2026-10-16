@@ -4,7 +4,19 @@ with sync_playwright() as p:
  b=p.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox'])
  page=b.new_page(viewport={'width':1440,'height':1000});errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
  page.goto('http://127.0.0.1:8000/intelli.html');expect(page.locator('#empty')).to_be_visible()
- page.get_by_role('button',name='↗ 观察指标走势').click()
+ # The reported natural-language request must execute without a clarification.
+ for prompt in ['价格折线图，按品种区分不同颜色', '价格折线图，按产品分色', '价格柱状图，不同产品用不同颜色']:
+  result=page.evaluate('(text)=>IntelliUI.resolvePlan(text)',prompt)
+  assert not result.get('unknown') and not result.get('error'),result
+  assert result['plan']['product']=='*' and result['plan']['field']=='price',result
+ for prompt in ['价格折线图，按地区区分不同颜色','价格折线图，所有品种用红色']:
+  assert page.evaluate('(text)=>IntelliUI.resolvePlan(text)',prompt).get('unknown')
+ page.locator('#command').fill('价格折线图，按品种区分不同颜色');page.locator('#commandForm').evaluate('(f)=>f.requestSubmit()')
+ expect(page.locator('#clarify')).to_be_hidden()
+ series=page.evaluate("echarts.getInstanceByDom(document.querySelector('.card-chart')).getOption().series")
+ assert len({s['itemStyle']['color'] for s in series})==5
+ assert {s['name'] for s in series}=={'甲醇','尿素','纯碱','聚乙烯','聚丙烯'}
+
  expect(page.locator('.work-card')).to_have_count(1)
  assert page.evaluate("echarts.getInstanceByDom(document.querySelector('.card-chart')).getOption().series.length") == 5
  page.locator('#command').fill('近3个月甲醇产量数据表');page.locator('#commandForm').evaluate('(f)=>f.requestSubmit()')
@@ -55,6 +67,14 @@ with sync_playwright() as p:
  expect(x.locator('.card-content')).to_contain_text('观测数 6');x.reload();expect(x.locator('.card-content')).to_contain_text('观测数 6')
  x.locator('#importFile').set_input_files({'name':'safe.csv','mimeType':'text/csv','buffer':b'date,product,price\n2026-01,<img src=x onerror=alert(1)>,100\n'})
  expect(x.locator('#sourceName')).to_have_text('safe.csv');x.get_by_role('button',name='▤ 核对数据明细').click();expect(x.locator('tbody')).to_contain_text('<img src=x onerror=alert(1)>');expect(x.locator('tbody img')).to_have_count(0)
+ # Imported datasets with more than five products must not repeat colors.
+ data='date,product,price\n'+''.join(f'2026-01,Product{i},{i+1}\n' for i in range(15))
+ x.locator('#importFile').set_input_files({'name':'colors.csv','mimeType':'text/csv','buffer':data.encode()})
+ expect(x.locator('#sourceName')).to_have_text('colors.csv')
+ x.locator('#command').fill('价格折线图，按品种区分不同颜色');x.locator('#commandForm').evaluate('(f)=>f.requestSubmit()')
+ series=x.evaluate("echarts.getInstanceByDom(document.querySelector('.card-chart')).getOption().series")
+ assert len(series)==15 and len({s['itemStyle']['color'] for s in series})==15
+ print('PASS: reported color request, synonyms, unsupported grouping preserved, 15 distinct product colors')
  print('PASS: extension registration, plan parsing, restored custom cards and safe data rendering')
  print('PASS: chart, parsing, clarification, invalid ranges, edits, undo, restore, export, CSV validation, custom fields, calendar gaps, shared data, card limit, 320/390px layout, keyboard, navigation, blocked storage; no runtime errors')
  b.close()

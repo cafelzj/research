@@ -144,6 +144,12 @@
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
+  // One stable color per product across cards, including all 15 imported products.
+  const productColors = [
+    "#236b62", "#507da4", "#bb8653", "#8575a8", "#bd6571",
+    "#187e97", "#8a6a39", "#6754a2", "#9a435d", "#45863b",
+    "#b4522b", "#3664bb", "#9b7b13", "#a449a1", "#4b6772",
+  ];
   function chartRenderer(type) {
     return (container, plan, sample) => {
       if (!window.echarts) throw Error("图表引擎未加载，请刷新或使用数据表。");
@@ -160,7 +166,7 @@
       );
       chart.setOption({
         animation: !matchMedia("(prefers-reduced-motion: reduce)").matches,
-        color: ["#236b62", "#507da4", "#bb8653", "#8575a8", "#bd6571"],
+        color: productColors,
         tooltip: { trigger: "axis", renderMode: "richText" },
         legend: { type: "scroll", top: 5, left: 16, right: 16 },
         grid: { top: 58, bottom: 35, left: 25, right: 25, containLabel: true },
@@ -173,7 +179,8 @@
           showSymbol: dates.length < 15,
           connectNulls: false,
           barMaxWidth: 22,
-          lineStyle: { width: 2 },
+          itemStyle: { color: productColors[products().indexOf(name)] },
+          lineStyle: { width: 2, color: productColors[products().indexOf(name)] },
         })),
       });
     };
@@ -432,6 +439,13 @@
     if (hits.length > 1)
       return { error: "一次请选择一种展示方式；可以分别添加多张卡片。" };
     if (hits.length) plan.view = hits[0];
+    // Recognize an existing chart capability as an explicit phrase. Keep other
+    // color/grouping requests in `unknown` rather than discarding their words.
+    const productColorPhrase = /(?:按(?:照)?(?:品种|产品)(?:来)?(?:区分不同颜色|区分颜色|分配不同颜色|显示不同颜色|分色|着色)|不同(?:的)?(?:品种|产品)(?:使用|用)(?:不同(?:的)?颜色|颜色区分))/g;
+    const productColor = productColorPhrase.test(rest);
+    rest = rest.replace(productColorPhrase, " ");
+    if (productColor && !["line", "bar"].includes(plan.view))
+      return { error: "按品种分色适用于折线图或柱状图，请选择图表展示。" };
     const period = rest.match(/近\s*(\d+)\s*个?月/);
     if (period) {
       plan.period = +period[1];
