@@ -29,7 +29,7 @@ def build():
             f'<a href="#map" data-chain-target="{term["chain"]}">回到相关产业链 ↗</a></details></article>'
         )
     section = (
-        f'{START}<section id="glossary"><div class="heading"><h2><span class="num">07 /</span>入门术语表</h2>'
+        f'{START}<section id="glossary" data-outline="入门术语表"><div class="heading"><h2><span class="num">07 /</span>入门术语表</h2>'
         f'<small>{len(terms)}个术语 · 缩写、化学式与研究口径</small></div>'
         '<p class="mini">读不懂缩写时来这里：先看通俗解释，再展开例子和易混点。可搜索英文缩写、中文名称或相关概念。</p>'
         '<div class="glossary-controls"><label for="glossaryQuery">搜索术语<input id="glossaryQuery" type="search" placeholder="例如：PX、烧碱、开工率、价差" aria-controls="glossaryCards"></label>'

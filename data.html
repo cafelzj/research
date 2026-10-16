@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="assets/site.css" />
     <script defer src="assets/data-core.js"></script>
     <script defer src="assets/data-browser.js"></script>
+    <link rel="stylesheet" href="assets/outline.css" />
+    <script defer src="assets/outline.js"></script>
   </head>
   <body class="data-page">
     <header class="site-header">
@@ -45,7 +47,12 @@
           明细筛选需要JavaScript，请用浏览器打开。行业看板提供静态图表预览。
         </p></noscript
       >
-      <section class="panel" aria-label="数据筛选">
+      <section
+        id="data-filters"
+        data-outline="数据筛选与字段"
+        class="panel"
+        aria-label="数据筛选"
+      >
         <div class="data-filters">
           <div>
             <label for="start">开始月份</label><input id="start" type="month" />
@@ -76,8 +83,8 @@
         <label>显示的数值字段</label>
         <div id="fields" class="field-list"></div>
       </section>
-      <div id="summary" class="summary-cards"></div>
-      <section id="dataset" class="chartpanel">
+      <div id="summary" data-outline="筛选概览" class="summary-cards"></div>
+      <section id="dataset" data-outline="观测明细" class="chartpanel">
         <div class="dataset-toolbar">
           <div>
             <h2>观测明细</h2>
@@ -113,7 +120,7 @@
           >
         </div>
       </section>
-      <details class="panel">
+      <details id="data-dictionary" data-outline="字段与数据口径" class="panel">
         <summary>字段与数据口径</summary>
         <div id="dictionary"></div>
         <p class="small">
@@ -121,7 +128,11 @@
           inventory为万吨，rate为%；其他导入列按原始字段名显示，需自行核对单位。模拟序列仅用于展示分析流程，不能当作实际行情。气泡图、饼图等会继续校验字段与数值约束。
         </p>
       </details>
-      <section class="panel data">
+      <section
+        id="data-next"
+        data-outline="继续探索与恢复数据"
+        class="panel data"
+      >
         <div>
           <h2>继续探索</h2>
           <p>

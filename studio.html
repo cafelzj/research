@@ -9,6 +9,8 @@
     <script defer src="assets/vendor/echarts-5.6.0.min.js"></script>
     <script defer src="assets/data-core.js"></script>
     <script defer src="assets/studio.js"></script>
+    <link rel="stylesheet" href="assets/outline.css" />
+    <script defer src="assets/outline.js"></script>
   </head>
   <body>
     <header class="site-header">
@@ -43,7 +45,11 @@
         </div>
         <span class="pill">Apache ECharts <b>5.6.0</b></span>
       </div>
-      <section class="ask">
+      <section
+        id="natural-language"
+        data-outline="自然语言绘图与设置问答"
+        class="ask"
+      >
         <form id="ask">
           <label for="prompt">询问设置，或用自然语言生成图表</label>
           <div class="askrow">
@@ -94,6 +100,7 @@
         </div>
         <section
           id="helpAnswers"
+          data-outline="设置问答记录"
           class="help-answers"
           hidden
           aria-label="设置问答"
@@ -113,7 +120,11 @@
           本地规则解析，未接入大模型。支持图表类型、字段、产品、近 N
           个月、颜色和点形状；生成后可在配置区继续调整。
         </p>
-        <details class="language-help">
+        <details
+          id="language-guide"
+          data-outline="自然语言术语说明"
+          class="language-help"
+        >
           <summary>自然语言如何变成图表？支持哪些标准术语？</summary>
           <p>
             流程：原句规范化 → 识别术语与字段 → 生成结构化配置 JSON →
@@ -190,7 +201,12 @@
             X 轴；饼图未指定月份时取最新月。下方解析报告会展示实际配置和提示。
           </p>
         </details>
-        <details id="parseReport" class="language-help" hidden>
+        <details
+          id="parseReport"
+          data-outline="本次解析报告"
+          class="language-help"
+          hidden
+        >
           <summary>本次解析报告：原句 → 配置 → 校验</summary>
           <p id="parseSource"></p>
           <p id="parseSummary"></p>
@@ -210,7 +226,7 @@
         </div></noscript
       >
       <div class="workspace">
-        <aside class="panel">
+        <aside id="chart-config" data-outline="图表配置" class="panel">
           <div class="paneltitle">
             <h2>图表配置</h2>
             <button id="reset" type="button">重置</button>
@@ -328,7 +344,7 @@
           >
           <p class="small" id="configHelp"></p>
         </aside>
-        <section class="chartpanel">
+        <section id="chart-preview" data-outline="图表预览" class="chartpanel">
           <div class="charthead">
             <div>
               <span class="eyebrow" id="chartTag">SCATTER / RESEARCH</span>
@@ -346,10 +362,14 @@
             <h3>数据预览</h3>
             <span id="count"></span>
           </div>
-          <div id="table" class="tablewrap"></div>
+          <div id="table" data-outline="绘图数据预览" class="tablewrap"></div>
         </section>
       </div>
-      <section class="panel data">
+      <section
+        id="studio-data"
+        data-outline="数据导入与导出"
+        class="panel data"
+      >
         <div>
           <h2>换一份数据，继续使用同一套图表。</h2>
           <p>
@@ -379,7 +399,11 @@
           ><button id="demo">恢复模拟数据</button>
         </div>
       </section>
-      <section class="about">
+      <section
+        id="chart-engine"
+        data-outline="绘图引擎与扩展说明"
+        class="about"
+      >
         <h2>绘图引擎与扩展方式</h2>
         <p>
           本工作台使用
