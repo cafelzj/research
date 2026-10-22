@@ -1,0 +1,486 @@
+.ir-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 20px 0;
+  border-bottom: 1px solid #d8e2eb;
+  margin-bottom: 22px;
+}
+.ir-switch > span {
+  font-size: 12px;
+  color: #5c6c80;
+  margin-right: 8px;
+}
+.ir-switch button {
+  border: 1px solid #c7d4e2;
+  border-radius: 6px;
+  padding: 8px 22px;
+  background: white;
+  color: #244360;
+  cursor: pointer;
+  font: inherit;
+}
+.ir-switch button[aria-pressed="true"] {
+  background: #102d60;
+  color: white;
+  border-color: #102d60;
+}
+.ir-switch small {
+  margin-left: auto;
+  color: #64778b;
+  font-size: 11px;
+}
+body[data-industry]:not([data-industry="chemical"]).page-atlas > aside {
+  display: none;
+}
+body[data-industry]:not([data-industry="chemical"]).page-atlas main {
+  margin: 0 auto;
+  max-width: 1380px;
+}
+.ir-hub {
+  --ir-accent: #176d70;
+  color: #20334c;
+  font:
+    14px/1.8 system-ui,
+    -apple-system,
+    sans-serif;
+}
+.ir-hub * {
+  box-sizing: border-box;
+}
+.ir-hub h1 {
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.35;
+  margin: 12px 0;
+}
+.ir-hub h2 {
+  font-size: 23px;
+  margin: 5px 0 18px;
+}
+.ir-hub h3 {
+  font-size: 17px;
+  margin: 6px 0 12px;
+}
+.ir-hub h4 {
+  font-size: 13px;
+  margin: 12px 0 5px;
+}
+.ir-hub p {
+  margin: 8px 0 14px;
+}
+.ir-hub a {
+  color: #176d70;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.ir-hub button,
+.ir-hub input,
+.ir-hub select,
+.ir-hub textarea {
+  font: inherit;
+}
+.ir-hub button {
+  border: 1px solid #c7d4e2;
+  border-radius: 6px;
+  background: #fff;
+  color: #244360;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.ir-hub button:hover {
+  background: #eff7f5;
+}
+.ir-hub :focus-visible,
+.ir-switch :focus-visible {
+  outline: 3px solid #2377ad;
+  outline-offset: 3px;
+}
+.ir-hub label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+}
+.ir-hub input,
+.ir-hub select,
+.ir-hub textarea {
+  display: block;
+  min-width: 0;
+  width: 100%;
+  border: 1px solid #c7d4e2;
+  border-radius: 5px;
+  background: white;
+  padding: 9px;
+  color: #20334c;
+}
+.ir-hub textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+.ir-kicker {
+  font: 10px/1.5 monospace;
+  letter-spacing: 2px;
+  color: #62788f;
+}
+.ir-intro {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  padding: 20px 0 16px;
+}
+.ir-intro > div {
+  min-width: 0;
+}
+.ir-context {
+  background: #eaf2f3;
+  padding: 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  align-self: center;
+}
+.ir-warning {
+  padding: 14px 18px;
+  border: 1px solid #d8c593;
+  background: #fffbef;
+  border-radius: 7px;
+  font-size: 12px;
+  color: #70592e;
+  margin: 16px 0;
+  overflow-wrap: anywhere;
+}
+.ir-jump {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 20px 0 26px !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+.ir-jump a {
+  display: inline-block !important;
+  padding: 7px 12px !important;
+  border: 1px solid #d7e3e7;
+  border-radius: 5px;
+  background: white;
+  font-size: 12px;
+  white-space: normal !important;
+}
+.ir-block {
+  scroll-margin-top: 20px;
+  margin: 38px 0;
+}
+.ir-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.ir-card {
+  background: #fff;
+  border: 1px solid #d9e3ec;
+  border-radius: 8px;
+  padding: 22px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.ir-card p,
+.ir-card li {
+  font-size: 13px;
+}
+.ir-muted {
+  font-size: 12px;
+  color: #64778b;
+}
+.ir-chain {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+.ir-chain > div {
+  background: #eef4f5;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 12px;
+}
+.ir-chain b {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #176d70;
+  margin-bottom: 6px;
+}
+.ir-source-links {
+  font-size: 11px;
+  line-height: 1.8;
+  border-top: 1px solid #e2e9ee;
+  padding-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+}
+.ir-source-links a {
+  font-size: 11px;
+}
+.ir-hub summary {
+  cursor: pointer;
+  color: #176d70;
+  font-size: 13px;
+  padding: 4px 0;
+}
+.ir-criteria {
+  border-left: 3px solid #739b93;
+  padding-left: 12px;
+}
+.ir-refute {
+  border-left-color: #b38b61;
+}
+.ir-badge {
+  font-size: 10px;
+  color: #576e81;
+  background: #edf2f6;
+  padding: 3px 7px;
+  border-radius: 3px;
+  display: inline-block;
+}
+.ir-search-row {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+.ir-search-row label {
+  flex: 1;
+  min-width: 180px;
+}
+.ir-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  white-space: normal;
+}
+.ir-table th,
+.ir-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 12px;
+  border-bottom: 1px solid #e0e6ed;
+  min-width: 140px;
+}
+.ir-table th {
+  background: #edf3f6;
+  color: #20334c;
+  position: static;
+  font-size: 12px;
+}
+.ir-table-scroll {
+  overflow: auto;
+  border: 1px solid #d9e3ec;
+  border-radius: 8px;
+  background: white;
+  max-width: 100%;
+}
+.ir-table caption {
+  text-align: left;
+  padding: 12px;
+  color: #64778b;
+  font-size: 11px;
+}
+.ir-table small {
+  display: block;
+  color: #64778b;
+}
+.ir-hub .ir-form {
+  background: white;
+  padding: 22px;
+  border: 1px solid #d9e3ec;
+  border-radius: 8px;
+}
+.ir-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.ir-wide {
+  grid-column: 1/-1;
+}
+.ir-status {
+  color: #176d70;
+  font-size: 12px;
+  min-height: 22px;
+  overflow-wrap: anywhere;
+}
+.ir-status.error {
+  color: #a33d32;
+}
+.ir-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 22px 0;
+}
+.ir-stats > div {
+  background: white;
+  border: 1px solid #d9e3ec;
+  padding: 16px;
+  border-radius: 7px;
+  font-size: 12px;
+}
+.ir-stats strong {
+  display: block;
+  font-size: 26px;
+  color: #102d60;
+}
+.ir-demo {
+  background: #eff4f8;
+  padding: 22px;
+  border-radius: 8px;
+  margin: 18px 0;
+}
+.ir-demo svg {
+  width: 100%;
+  height: 240px;
+  display: block;
+}
+.ir-demo line {
+  stroke: #c7d4df;
+}
+.ir-demo text {
+  fill: #5a6f86;
+  font: 12px system-ui;
+}
+.ir-evidence {
+  background: #fff;
+  padding: 16px;
+  border: 1px solid #d9e3ec;
+  border-radius: 7px;
+  margin: 12px 0;
+  overflow-wrap: anywhere;
+}
+.ir-evidence button {
+  font-size: 11px;
+}
+.ir-tools {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ir-empty {
+  padding: 22px;
+  background: #eff4f8;
+  border-radius: 7px;
+  color: #64778b;
+  font-size: 13px;
+}
+.ir-notes label {
+  margin-bottom: 10px;
+}
+.ir-hub .ir-check {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 13px;
+  font-weight: 400;
+  margin: 10px 0;
+}
+.ir-check input {
+  width: 18px;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.ir-foot {
+  padding: 25px 0;
+  border-top: 1px solid #d9e3ec;
+  font-size: 12px;
+  color: #64778b;
+}
+.ir-source-item {
+  scroll-margin-top: 20px;
+}
+.ir-source-item a {
+  overflow-wrap: anywhere;
+}
+.ir-hub [hidden],
+#chemicalContent[hidden],
+#industryHub[hidden] {
+  display: none !important;
+}
+@media (max-width: 850px) {
+  .ir-grid {
+    grid-template-columns: 1fr;
+  }
+  .ir-chain {
+    grid-template-columns: 1fr;
+  }
+  .ir-chain > div + div:before {
+    content: "↓";
+    float: right;
+    color: #62788f;
+  }
+  .ir-intro {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .ir-jump a {
+    font-size: 11px;
+  }
+  .ir-switch small {
+    margin-left: 0;
+    width: 100%;
+  }
+  .ir-hub h2 {
+    font-size: 20px;
+  }
+  .ir-card {
+    padding: 17px;
+  }
+}
+@media (max-width: 480px) {
+  .ir-fields {
+    grid-template-columns: 1fr;
+  }
+  .ir-stats {
+    gap: 7px;
+  }
+  .ir-stats > div {
+    padding: 10px;
+    font-size: 10px;
+  }
+  .ir-stats strong {
+    font-size: 22px;
+  }
+  .ir-switch button {
+    padding: 8px 18px;
+  }
+  .ir-hub .ir-form {
+    padding: 16px;
+  }
+  .ir-demo {
+    padding: 15px;
+  }
+  .ir-jump {
+    gap: 6px;
+  }
+  .ir-card p {
+    font-size: 12px;
+  }
+}
+
+.ir-history-chart {
+  max-width: 850px;
+  margin: 20px auto;
+  background: white;
+  border: 1px solid #d9e3ec;
+  border-radius: 8px;
+  padding: 12px;
+}
+.ir-history-chart svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.ir-history-chart text {
+  font: 12px system-ui;
+  fill: #64778b;
+}
