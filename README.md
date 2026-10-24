@@ -2,12 +2,13 @@
 
 ## 栏目结构
 
-四个主栏目采用统一导航：
+五个主栏目采用统一导航：
 
 手机和平板宽度（不超过900px）下，原有四个页面右下角提供按需打开的“大纲”按钮：显示本页主要章节与当前位置，点击章节后跳转并自动收起，可回到页首；跳往折叠说明时会自动展开。支持关闭按钮、遮罩、Escape和键盘焦点操作；桌面端默认隐藏浮动按钮。大纲只导航当前页面，不改动筛选数据或图表配置。
 
 | 栏目 | 入口 | 用途 |
 | --- | --- | --- |
+| 日常研究 | `daily.html` | 以事件线索组织跨国指标地图、来源核验与个人研究笔记 |
 | Beta IntelliUI | `intelli.html` | 用指令和可编辑卡片组织图表、明细与指标，支持撤销和CSV共享 |
 | 产业链总览 | `atlas.html` | 上下游关系、六条工艺主链、分析框架与子行业研究 |
 | 行业看板 | `index.html` | 价格、产量、开工率等模拟月度数据的快速观察 |
@@ -33,6 +34,14 @@
 - 电新提供可复算的2015—2024年中国风光发电历史图表，来自已读取的OWID固定提交CSV与字段字典，注明二手来源、版本及方法变更提示，不与当前行情混合。
 
 **研究边界：**这是一版研究框架与学习工具。官方宏观统计、政策原文、公司年报、IEA/IRENA报告的逐项核验仍受来源访问限制，页面已分别标注；历史事件部分是待验证的复盘题，不能冒充已完成的深度历史研究或当前行业判断。来源记录与后续核验清单见 [研究说明](docs/industry-research.md)。
+
+## 日常研究
+
+新入口 `daily.html`。首个专题围绕用户提供的「10·17法国暴力骚乱事件」条目，比较法国与其他9个欧盟国家的财政、代际分配和居民处境。事件年份和经过尚未独立核实，不与2023年事件混同，也不将宏观指标当作已证实的骚乱原因。
+
+地图支持指标/年份/国家切换、键盘选择、数值排序、CSV和独立SVG导出。提供7项已读取镜像的历史指标；公共养老金和公务员专门制度因缺可比核验数据保持空白。每张图同年比较，缺失不填零、不沿用旧值，不展示IMF预测。教育、基尼和财政数据年份可能不同，页面逐项标明。
+
+笔记与保存视角仅存本浏览器，可导出Markdown。官方新闻/统计原页仍受访问限制，固定镜像来源、校验脚本与核验边界见 [日常研究说明](docs/daily-research.md)。
 
 ## Beta IntelliUI
 
@@ -71,9 +80,9 @@ GitHub 的文件浏览页面显示源码，不直接运行网页。已加入 `.g
 
 首次部署需要在仓库 Settings → Pages → Build and deployment → Source 选择 **GitHub Actions**。然后在 Actions 中打开 `Deploy research atlas to GitHub Pages`，使用 Run workflow 启动，或重跑先前失败的部署。部署成功后的预期访问地址为：https://cafelzj.github.io/research/ 。以 GitHub Pages 返回的实际地址为准。
 
-此后每次推送到 `main` 都会自动发布。站点发布 `index.html`、`atlas.html`、`data.html`、`studio.html`、`intelli.html` 和 `assets/`；不发布 README、验证脚本或研究笔记。
+此后每次推送到 `main` 都会自动发布。站点发布 `index.html`、`atlas.html`、`data.html`、`studio.html`、`intelli.html`、`daily.html` 和 `assets/`；不发布 README、验证脚本或研究笔记。
 
-部署后，Actions 的 `Verify public website matches this commit` 步骤会通过公网请求五个页面及所有站点资源，检查 HTTP 200、网页的 HTML 类型及文件内容是否与本次提交完全一致，等待 CDN 更新后重试，持续失败会使工作流失败。可在具备访问权限的环境手动执行 `python3 scripts/verify_public_site.py https://cafelzj.github.io/research/`。这验证公网内容发布结果，交互行为还需浏览器检查。
+部署后，Actions 的 `Verify public website matches this commit` 步骤会通过公网请求六个页面及所有站点资源，检查 HTTP 200、网页的 HTML 类型及文件内容是否与本次提交完全一致，等待 CDN 更新后重试，持续失败会使工作流失败。可在具备访问权限的环境手动执行 `python3 scripts/verify_public_site.py https://cafelzj.github.io/research/`。这验证公网内容发布结果，交互行为还需浏览器检查。
 
 ## 内容
 

@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>日常研究 · 法国与欧洲结构指标地图</title>
+    <link rel="stylesheet" href="assets/site.css" />
+    <link rel="stylesheet" href="assets/daily.css" />
+    <script defer src="assets/daily-data.js"></script>
+    <script defer src="assets/daily.js"></script>
+    <link rel="stylesheet" href="assets/outline.css" />
+    <script defer src="assets/outline.js"></script>
+  </head>
+  <body>
+    <a class="daily-skip" href="#research-map">跳到指标地图</a>
+    <header class="site-header">
+      <a class="site-brand" href="index.html"
+        >化工观测<small>CHEMICAL INDUSTRY / RESEARCH</small></a
+      >
+      <nav class="site-nav" aria-label="网站主导航">
+        <a href="atlas.html">产业链总览</a><a href="index.html">行业看板</a
+        ><a href="data.html">数据与图表</a
+        ><a href="intelli.html">IntelliUI <small>BETA</small></a
+        ><a href="daily.html" aria-current="page">日常研究</a>
+      </nav>
+    </header>
+    <main>
+      <div class="daily-breadcrumb">
+        <span>日常研究 / 001</span><span>社会事件 × 欧洲比较</span>
+      </div>
+      <section class="daily-hero">
+        <div>
+          <p class="daily-kicker">DAILY RESEARCH / FRANCE & EUROPE</p>
+          <h1>看见事件，<br />读懂背后的<span>结构。</span></h1>
+          <p class="daily-lead">
+            以你提供的「10·17 法国暴力骚乱事件」为线索，<br
+              class="wide-only"
+            />比较财政空间、代际分配与居民处境，建立可复核的研究地图。
+          </p>
+        </div>
+        <div class="hero-question">
+          <span class="daily-kicker">OUR QUESTION</span>
+          <p>法国的长期压力，<br />在欧洲处于什么位置？</p>
+          <small
+            >国家级指标用于理解背景。<br />它们不能独立证明某一场冲突的原因。</small
+          >
+        </div>
+      </section>
+      <nav class="daily-jump" aria-label="专题章节">
+        <a href="#event-scope">事件与边界</a><a href="#research-map">比较地图</a
+        ><a href="#comparison">数据与排序</a><a href="#mechanisms">研究逻辑</a
+        ><a href="#research-notes">我的研究笔记</a
+        ><a href="#source-ledger">来源与方法</a>
+      </nav>
+      <section
+        id="event-scope"
+        data-outline="事件与事实边界"
+        class="daily-section"
+      >
+        <div class="daily-section-heading">
+          <div>
+            <span class="daily-kicker">01 / DEFINE THE EVENT</span>
+            <h2>先把事件说清楚。</h2>
+          </div>
+          <span class="status-pill pending">事件事实待核实</span>
+        </div>
+        <div class="event-grid">
+          <article>
+            <h3>已定位到你提供的条目</h3>
+            <p>
+              「10·17
+              法国暴力骚乱事件」：用户关注近期巴黎事件。<strong>“10·17”只说明月日，不能据此推断年份。</strong>百科正文及引用报道目前无法读取，年份、经过、规模和直接触发因素尚未独立核实。
+            </p>
+            <a
+              id="event-link"
+              href="https://baike.baidu.com/item/10%C2%B717%E6%B3%95%E5%9B%BD%E6%9A%B4%E5%8A%9B%E9%AA%9A%E4%B9%B1%E4%BA%8B%E4%BB%B6/69426873"
+              target="_blank"
+              rel="noopener noreferrer"
+              >查看用户提供的百科条目 ↗</a
+            >
+          </article>
+          <article>
+            <h3>把两条证据链分开</h3>
+            <p>
+              <b>事件链：</b
+              >时间、地点、诉求、参与情况、直接触发因素及多方报道，需要逐项核验。
+            </p>
+            <p>
+              <b>结构链：</b
+              >债务、财政收支、就业、教育与退休制度，需要同口径、同年份比较。
+            </p>
+            <p class="daily-muted">
+              不把2023年事件当作本次事件，也不把“有财政压力”写成“因此发生骚乱”。国家平均值不能代表巴黎某个街区。
+            </p>
+          </article>
+        </div>
+      </section>
+      <section
+        id="research-map"
+        data-outline="欧洲指标地图"
+        class="daily-section"
+      >
+        <div class="daily-section-heading">
+          <div>
+            <span class="daily-kicker">02 / A COMPARABLE VIEW</span>
+            <h2>把法国放进欧洲看。</h2>
+          </div>
+          <span class="status-pill">10国同年对照 · 历史快照</span>
+        </div>
+        <div class="map-controls">
+          <label>观察指标<select id="daily-metric"></select></label
+          ><label>观察年份<select id="daily-year"></select></label
+          ><label>选中国家<select id="daily-country"></select></label
+          ><button type="button" id="daily-reset">回到法国 / 债务</button>
+        </div>
+        <p class="control-note">
+          切换指标时选择该指标最近的完整样本年，年份可手动调整。每张地图内使用同一年，缺失不补上年。所有数值是历史数据，不是这几周的实时变化。
+        </p>
+        <p
+          id="daily-status"
+          class="daily-status"
+          role="status"
+          aria-live="polite"
+        ></p>
+        <div class="map-layout">
+          <article class="map-card">
+            <div class="map-heading">
+              <div>
+                <h3 id="map-title"></h3>
+                <p id="map-subtitle"></p>
+              </div>
+              <span class="map-instruction">点击国家查看 · 支持键盘</span>
+            </div>
+            <div id="map-host" class="map-host"></div>
+            <div class="map-legend" id="map-legend"></div>
+            <p class="map-footnote">
+              巴黎为城市定位，非事件现场坐标。底图仅显示法国欧洲本土等地；统计范围以原始指标为准。浅灰为未纳入的背景国家，斜线为比较样本缺失。自然地理底图不表达边界立场。
+            </p>
+          </article>
+          <aside class="country-card" aria-label="国家指标详情">
+            <div id="country-summary"></div>
+            <div class="country-actions">
+              <button id="save-view" type="button">＋ 保存研究视角</button
+              ><button id="download-view" type="button">↓ 导出本年 CSV</button
+              ><button id="download-map" type="button">↓ 导出地图 SVG</button>
+            </div>
+          </aside>
+        </div>
+        <div class="definition-grid">
+          <article>
+            <span class="daily-kicker">WHAT IT MEASURES</span>
+            <h3>先理解统计口径</h3>
+            <p id="metric-definition"></p>
+          </article>
+          <article>
+            <span class="daily-kicker">HOW TO READ IT</span>
+            <h3>再理解它的边界</h3>
+            <p id="metric-caution"></p>
+          </article>
+        </div>
+      </section>
+      <section
+        id="comparison"
+        data-outline="国家比较与数据明细"
+        class="daily-section"
+      >
+        <div class="daily-section-heading">
+          <div>
+            <span class="daily-kicker">03 / CHECK THE NUMBERS</span>
+            <h2>数值能对上，观点才有起点。</h2>
+          </div>
+          <label class="sort-control"
+            >排序<select id="daily-sort">
+              <option value="desc">数值从高到低</option>
+              <option value="asc">数值从低到高</option>
+              <option value="name">国家顺序</option>
+            </select></label
+          >
+        </div>
+        <p class="daily-muted">
+          排名仅表示本指标数值顺序，不是社会风险、政府能力或投资评级。样本中位数不是欧盟平均值。
+        </p>
+        <div class="comparison-layout">
+          <div id="ranking-bars" class="ranking-bars"></div>
+          <div class="daily-table-wrap">
+            <table class="daily-table">
+              <caption id="comparison-caption"></caption>
+              <thead>
+                <tr>
+                  <th scope="col">国家</th>
+                  <th scope="col">观察值</th>
+                  <th scope="col">年份</th>
+                  <th scope="col">资料状态</th>
+                </tr>
+              </thead>
+              <tbody id="comparison-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      <section
+        id="mechanisms"
+        data-outline="结构逻辑与反证"
+        class="daily-section"
+      >
+        <div class="daily-section-heading">
+          <div>
+            <span class="daily-kicker">04 / FROM FACTS TO HYPOTHESES</span>
+            <h2>从指标到解释，还差哪些证据？</h2>
+          </div>
+        </div>
+        <div id="mechanism-cards" class="mechanism-grid"></div>
+        <article class="pension-explainer">
+          <span class="daily-kicker">A KEY DISTINCTION</span>
+          <h3>“公务员退休金”不能直接用“公共养老金”替代。</h3>
+          <p>
+            退休制度比较要分别核对：全国公共老年/遗属现金养老金、公共部门雇员的专门制度、私人/职业养老金，以及退休年龄、替代率、现期财政补贴与未来承诺。它们不是同一类数字。
+          </p>
+          <p>
+            法国还需区分国家公务员与军人制度（SRE）、地方及医院公职人员制度（CNRACL）等。其他国家可能把公共部门人员纳入一般制度。<b
+              >未获得10国同口径数值前，这两项保持空白，不作排名。</b
+            >
+          </p>
+          <p class="daily-muted">
+            高公共养老金/GDP不等于个人退休金更高；较低公共支出也可能对应私人养老金支出。未确认的未来承诺不能直接叠加到政府债务。
+          </p>
+        </article>
+      </section>
+      <section
+        id="research-notes"
+        data-outline="我的研究笔记与保存视角"
+        class="daily-section"
+      >
+        <div class="daily-section-heading">
+          <div>
+            <span class="daily-kicker">05 / BUILD YOUR RESEARCH HABIT</span>
+            <h2>把每天的观察，留成证据。</h2>
+          </div>
+          <button id="export-notes" type="button">↓ 导出研究笔记</button>
+        </div>
+        <div class="notes-layout">
+          <form id="daily-notes-form" class="daily-notes">
+            <label
+              >我的研究问题<input
+                name="question"
+                maxlength="300"
+                placeholder="例：财政调整通过哪条渠道影响此次事件？" /></label
+            ><label
+              >已经核对的事实与来源<textarea
+                name="facts"
+                maxlength="10000"
+                placeholder="写明日期、报道/统计链接、指标代码和年份。只填自己确实核实的事实。"
+              ></textarea></label
+            ><label
+              >解释、替代解释与反证<textarea
+                name="hypotheses"
+                maxlength="10000"
+                placeholder="假设：…… 也可能是：…… 若观察到……，原判断需要修改。国家级相关性不是事件因果证据。"
+              ></textarea></label
+            ><label
+              >下一步查什么<textarea
+                name="next"
+                maxlength="3000"
+                placeholder="例：核对百科引用报道；查巴黎分区就业/贫困、政策适用对象与事件诉求。"
+              ></textarea></label
+            ><label>下次复核日期<input name="review" type="date" /></label>
+            <p class="daily-muted">
+              笔记与视角仅保存在此浏览器，不上传服务器。失去浏览器数据会丢失，建议导出；你的笔记不会被标记为网站已核验事实。
+            </p>
+            <p
+              id="notes-status"
+              class="daily-status"
+              role="status"
+              aria-live="polite"
+            ></p>
+          </form>
+          <article class="saved-card">
+            <h3>保存的研究视角</h3>
+            <p class="daily-muted">
+              保存国家、指标和年份，下一次可以从同一处继续。
+            </p>
+            <div id="saved-views"></div>
+            <p class="daily-muted">
+              从新手开始：先核对一条事件事实，再比较一个同年指标，最后写下一条能推翻自己解释的证据。
+            </p>
+          </article>
+        </div>
+      </section>
+      <section
+        id="source-ledger"
+        data-outline="来源、版本与复核方法"
+        class="daily-section"
+      >
+        <div class="daily-section-heading">
+          <div>
+            <span class="daily-kicker">06 / LEAVE A TRAIL</span>
+            <h2>每个数字，都应该找得到来处。</h2>
+          </div>
+          <span class="status-pill pending">官方原页仍待回查</span>
+        </div>
+        <p class="daily-muted">
+          本页已读取固定提交下的镜像数据和元数据，保留版本与观测状态；尚未直接回查官方原始发布。整理日为2026-10-24，不表示所有指标统计到2026年。镜像不是官方背书，历史值可能被后续修订。<a href="assets/france-europe-debt-2024.svg" download>下载默认债务地图 SVG（2024）</a>。
+        </p>
+        <div id="source-cards" class="source-grid"></div>
+        <details class="method-details">
+          <summary>样本选择、缺失值与因果限制</summary>
+          <p>
+            样本为法国、德国、意大利、西班牙、荷兰、比利时、波兰、瑞典、奥地利、丹麦；不是欧盟全体，也没有计算欧盟加权平均。最近完整样本年按每项指标单独选择。选定年份缺失的国家保持空白，不沿用上一年，不插值。
+          </p>
+          <p>
+            IMF数据逐行要求观察年份不晚于镜像中的“Latest Actual Annual
+            Data”，未展示预测期。WDI失业率为ILO模型估计；人口与其他指标也可能包含估计和修订。基尼的调查定义仍需逐国核对。
+          </p>
+          <p>
+            数据版本来自2026年公开仓库，可能包含对更早年份的事后修订；在事件年份与资料公开时间确认前，不能用于声称“当时就能预测”的事前研究。当前也没有事件频次、街区样本或反事实识别，不做因果回归或“骚乱风险评分”。
+          </p>
+        </details>
+      </section>
+      <footer class="daily-footer">
+        日常研究 · 比较、核实、保留反证
+        <span>首个专题：法国与欧洲结构指标</span>
+      </footer>
+    </main>
+    <noscript
+      ><p class="noscript-note">
+        地图交互需要JavaScript。上方事件边界、研究方法与退休制度说明仍可阅读；请使用启用脚本的浏览器查看各国数据。
+      </p></noscript
+    >
+  </body>
+</html>
