@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>日料菜单 · 预制与现做环节研究</title>
+    <title>日料预制风险 · 重灾区与60道菜判断</title>
     <link rel="stylesheet" href="assets/site.css" />
     <link rel="stylesheet" href="assets/washoku.css" />
     <script defer src="assets/washoku-data.js"></script>
@@ -27,19 +27,27 @@
     <main>
       <nav class="w-topics" aria-label="日常研究专题">
         <span>研究专题</span><a href="daily.html">法国与欧洲指标</a
-        ><a href="washoku.html" aria-current="page">日料菜单与制作环节</a>
+        ><a href="washoku.html" aria-current="page">日料菜单与预制风险</a>
       </nav>
       <section class="w-hero">
         <div>
           <p class="w-kicker">DAILY RESEARCH 002 / JAPANESE MENU GUIDE</p>
-          <h1>日料菜单，<br />从菜名看到<span>制作过程。</span></h1>
+          <h1>哪些日料，<br />是<span>预制重灾区？</span></h1>
           <p class="w-lead">
-            寿司、烤物、炸物、饭面与小菜。<br />先认清供餐路径，再问店家实际上做了哪一步。
+            我的判断：优先警惕成品凉菜、熟鳗鱼与厚烧蛋、成型炸物、热小食和外购甜品。<br />60
+            道菜逐一标红黄绿，说明风险在哪一步。
           </p>
           <div class="w-hero-counts">
             <span><b id="dish-total">60</b> 道常见菜单</span
-            ><span><b>8</b> 个菜品分类</span><span><b>4</b> 种核实方向</span>
+            ><span><b id="high-total">26</b> 道标为高风险</span
+            ><span><b>3</b> 档风险判断</span>
           </div>
+          <a
+            class="w-risk-cta"
+            id="high-risk-shortcut"
+            href="washoku.html?risk=high#menu-guide"
+            >直接看高风险重灾区 ↓</a
+          >
         </div>
         <div class="w-hero-art" aria-hidden="true">
           <div class="w-art-caption">お品書きの、その先へ。</div>
@@ -128,30 +136,45 @@
         </div>
       </section>
       <div class="w-scope">
-        <b>先说清“预制”：</b
-        >本页标记的是<b>值得核实的成品、半成品和配料路径</b>，不是断言某家店一定使用预制菜。冷冻原料、门店提前备料、外购成品和具体法规分类需要分开看；没有门店证据时，实际方式均待核实。
+        <b>这里的风险指什么：</b
+        >指主要成品或半成品在店外做好的风险，<b>是我对普通综合日料店菜单的定性判断</b>。不是食品安全评分，也不是断言某家店一定使用预制菜；冷冻原料、基础调味料与整菜成品分开看。
       </div>
-      <section id="how-to-read" data-outline="如何读标签" class="w-section">
+      <section
+        id="how-to-read"
+        data-outline="预制风险与重灾区"
+        class="w-section"
+      >
         <div class="w-section-heading">
           <div>
-            <p class="w-kicker">01 / READ THE PROCESS</p>
-            <h2>颜色提示的是：下一句该问什么。</h2>
+            <p class="w-kicker">01 / MY RISK JUDGMENT</p>
+            <h2>我的判断，先看红色重灾区。</h2>
           </div>
-          <span class="w-muted">不是使用率统计，也不是质量评分</span>
+          <span class="w-muted">红：高风险 / 黄：中风险 / 绿：低风险</span>
         </div>
-        <div id="focus-legend" class="w-legend"></div>
-        <div class="w-process">
-          <span>谁做的？<small>门店 / 中央厨房 / 外部工厂</small></span
-          ><i>→</i
-          ><span
-            >到店时是什么状态？<small
-              >原料 / 半成品 / 全熟或即食成品</small
-            ></span
-          ><i>→</i
-          ><span
-            >门店最后做什么？<small>切配 / 烹熟 / 复热 / 组合摆盘</small></span
-          >
-        </div>
+        <div id="risk-legend" class="w-risk-legend"></div>
+        <h3 class="w-hotspot-heading">这五类，我会优先当作预制重灾区来查。</h3>
+        <div id="risk-hotspots" class="w-hotspots"></div>
+        <p class="w-risk-method">
+          判断依据：主要制作能否在店外完成、是否便于冷链供货，以及门店最后只需复热、煎炸或装盘。已读取的同类商品作佐证，其余明确属于工序推断；不编造使用率，也不把高风险等同“已查实”。
+        </p>
+        <details class="w-path-details">
+          <summary>补充：成品、半成品和配料有什么区别？</summary>
+          <div id="focus-legend" class="w-legend"></div>
+          <div class="w-process">
+            <span>谁做的？<small>门店 / 中央厨房 / 外部工厂</small></span
+            ><i>→</i
+            ><span
+              >到店时是什么状态？<small
+                >原料 / 半成品 / 全熟或即食成品</small
+              ></span
+            ><i>→</i
+            ><span
+              >门店最后做什么？<small
+                >切配 / 烹熟 / 复热 / 组合摆盘</small
+              ></span
+            >
+          </div>
+        </details>
         <div class="w-starter">
           <span>有厂商例证，先从这几道问起</span>
           <div id="starter-dishes"></div>
@@ -166,7 +189,7 @@
         <div class="w-section-heading">
           <div>
             <p class="w-kicker">02 / EXPLORE THE MENU</p>
-            <h2>从你爱点的那一道开始。</h2>
+            <h2>每道菜，都有明确的风险判断。</h2>
           </div>
           <button id="export-menu" type="button">↓ 导出筛选菜单 CSV</button>
         </div>
@@ -186,6 +209,10 @@
                   type="search"
                   placeholder="试试：鳗鱼、拉面、玉子烧、gyoza"
                   maxlength="100" /></label
+              ><label
+                >预制风险<select id="risk-filter">
+                  <option value="all">全部风险等级</option>
+                </select></label
               ><label
                 >核实方向<select id="focus-filter">
                   <option value="all">全部制作路径</option>
@@ -299,9 +326,12 @@
         </p>
         <div id="evidence-cards" class="w-evidence-grid"></div>
         <details class="w-method">
-          <summary>研究口径与未覆盖的内容</summary>
+          <summary>风险等级怎样判断？适用到什么范围？</summary>
           <p>
-            这是常见菜单的供餐工序研究，不是门店抽样调查，没有计算“预制比例”或“预制概率”。“整品/成品”也涵盖消费者常问的即食冷菜和甜品，不等于全部符合国内“预制菜”的监管定义。速冻面米、调味品、初加工食材和餐饮中央厨房模式需按实际适用口径另辨。
+            这是我对普通综合日料店菜单的定性风险判断，不是门店抽样调查。高风险看主要成品或半成品能否替代店内主要制作，中风险看关键配料和不同做法，低风险按整菜口径降低优先级。专门现杀鳗鱼、手打面或开放制作的店铺，应根据其实际证据更新判断。本页没有计算“预制比例”或“预制概率”，26道高风险只表示本目录中被这样标记的菜品数量。
+          </p>
+          <p>
+            本页广义“预制”也包含成型半成品、即食冷菜和外购甜品，不等于全部符合国内“预制菜”的监管定义。速冻面米、调味品、初加工食材和餐饮中央厨房模式需按实际适用口径另辨。低风险不代表食用安全更高、全部自制或没有外购配料。
           </p>
           <p>
             商品例证只对应其具体名称和标示工序。使用相似菜名的其他商品可能有不同配方、熟制程度、储运和加热要求。本页不以口感、整齐度、价格高低、冷冻或出餐速度单独判断制作来源。
@@ -312,13 +342,13 @@
         </details>
       </section>
       <footer class="w-footer">
-        <span>日常研究 / 日料菜单与制作过程</span
+        <span>日常研究 / 日料菜单与预制风险</span
         ><a href="daily.html">返回其他研究专题 ↗</a>
       </footer>
     </main>
     <noscript
       ><p class="w-noscript">
-        菜品筛选与个人清单需要JavaScript。上方标签口径、典型例子和研究边界仍可直接阅读。
+        菜品筛选与个人清单需要JavaScript。上方风险判断口径、典型例子和研究边界仍可直接阅读。
       </p></noscript
     >
   </body>

@@ -14,10 +14,39 @@ with sync_playwright() as p:
     expect(page.locator('.w-dish')).to_have_count(60)
     expect(page.locator('.w-category-section')).to_have_count(8)
     expect(page.locator('.w-evidence-card')).to_have_count(12)
+    expect(page.locator('.w-risk-tile')).to_have_count(3)
+    expect(page.locator('.w-hotspot')).to_have_count(5)
+    expect(page.locator('.w-dish[data-risk="high"]')).to_have_count(26)
+    expect(page.locator('.w-dish[data-risk="medium"]')).to_have_count(23)
+    expect(page.locator('.w-dish[data-risk="low"]')).to_have_count(11)
+    expect(page.locator('.w-dish .w-risk-badge')).to_have_count(60)
     expect(page.locator('#menu-status')).to_contain_text('13 道有同类厂商')
     assert page.evaluate('new Set(WashokuData.dishes.map(d=>d.id)).size')==60
     assert page.evaluate('WashokuData.dishes.every(d=>d.refs.every(id=>WashokuData.sources[id]?.verified))')
+    assert page.evaluate('WashokuData.dishes.every(d=>WashokuData.riskLevels[d.risk.level] && d.risk.reason.length>20 && d.risk.target.length>4)')
+    assert page.evaluate('WashokuData.hotspots.every(g=>g.dishes.every(id=>WashokuData.dishes.find(d=>d.id===id)?.risk.level==="high"))')
     expect(page.locator('.w-scope')).to_contain_text('不是断言某家店一定使用预制菜')
+    # Risk is the primary judgment. Main-component risk must not imply a whole meal is bought in.
+    expect(page.locator('#dish-unadon .w-risk-badge')).to_contain_text('高风险')
+    expect(page.locator('#dish-unadon .w-risk-target')).to_contain_text('米饭另判')
+    expect(page.locator('#dish-salmon-sashimi .w-risk-badge')).to_contain_text('低风险')
+    expect(page.locator('#dish-udon .w-risk-badge')).to_contain_text('中风险')
+    assert page.evaluate('Array.from(document.querySelectorAll(".w-dish-grid")).every(g=>{const ranks=Array.from(g.children,d=>WashokuData.riskLevels[d.dataset.risk].rank);return ranks.every((r,i)=>!i||r>=ranks[i-1])})')
+    page.locator('#high-risk-shortcut').click()
+    expect(page.locator('.w-dish')).to_have_count(26)
+    expect(page.locator('#risk-filter')).to_have_value('high')
+    assert 'risk=high' in page.url
+    page.locator('[data-category="fried"]').click()
+    expect(page.locator('.w-dish')).to_have_count(9)
+    page.locator('#proof-only').check()
+    expect(page.locator('.w-dish')).to_have_count(4)
+    page.locator('[data-risk-filter="low"]').click()
+    expect(page.locator('.w-dish')).to_have_count(11)
+    expect(page.locator('#proof-only')).not_to_be_checked()
+    page.locator('[data-hotspot-dish="kabayaki"]').click()
+    expect(page.locator('.w-dish')).to_have_count(1)
+    expect(page.locator('.w-dish .w-risk-badge')).to_contain_text('高风险')
+    page.locator('#reset-filters').click()
     page.locator('[data-category="fried"]').click()
     expect(page.locator('.w-dish')).to_have_count(10)
     expect(page.locator('[data-category="fried"]')).to_have_attribute('aria-pressed','true')
@@ -44,6 +73,9 @@ with sync_playwright() as p:
     rows=list(csv.DictReader(io.StringIO(Path(download.value.path()).read_text(encoding='utf-8-sig'))))
     assert len(rows)==1 and rows[0]['菜品']=='蒲烧鳗鱼' and '不是' not in rows[0]['核实方向（非门店结论）']
     assert rows[0]['商品例证URL']=='https://unagiya.com/cp/processing.html'
+    assert rows[0]['预制风险（定性判断，非门店查实）']=='高风险 · 预制重灾区'
+    assert '已完成蒲烧' in rows[0]['风险判断对象'] and '真空鳗鱼' in rows[0]['风险判断理由']
+    assert rows[0]['判断依据类型']=='同类厂商商品例证 + 工序推断'
     page.locator('[data-pin="kabayaki"]').click()
     expect(page.locator('[data-pin="kabayaki"]')).to_have_attribute('aria-pressed','true')
     expect(page.locator('.w-note-card')).to_have_count(1)
@@ -60,6 +92,7 @@ with sync_playwright() as p:
         page.locator('#export-checklist').click()
     report=Path(download.value.path()).read_text()
     assert '我的日料研究' in report and '店家口头说明（未独立核实）' in report and '尚未看包装' in report
+    assert '网页预制风险判断：高风险' in report and '判断对象：已完成蒲烧' in report
     page.locator('#reset-filters').click()
     page.locator('#saved-only').check()
     expect(page.locator('.w-dish')).to_have_count(1)
@@ -69,12 +102,22 @@ with sync_playwright() as p:
     page.locator('#dish-search').fill('蒲烧鳗鱼')
     page.locator('[data-pin="kabayaki"]').click()
     expect(note.locator('textarea')).to_contain_text('尚未看包装')
-    # Label says only which process to investigate, not a claim about a store.
+    # Grade applies to the specified component and remains an editorial judgment.
     page.goto(BASE+'washoku.html?category=staple&q=鳗鱼')
     expect(page.locator('.w-dish')).to_have_count(1)
     expect(page.locator('.w-dish h4')).to_have_text('鳗鱼饭')
     expect(page.locator('.w-dish')).to_contain_text('冷冻鳗鱼饭商品')
-    page.goto(BASE+'washoku.html?category=bad&focus=bad&q=')
+    page.goto(BASE+'washoku.html?risk=high&category=staple')
+    expect(page.locator('.w-dish')).to_have_count(2)
+    page.locator('#risk-filter').select_option('low')
+    expect(page.locator('.w-dish h4')).to_have_text('亲子丼')
+    page.evaluate("history.pushState(null,'','?risk=high');dispatchEvent(new PopStateEvent('popstate'))")
+    expect(page.locator('#risk-filter')).to_have_value('high')
+    expect(page.locator('.w-dish')).to_have_count(26)
+    page.locator('[data-starter="wakame"]').click()
+    expect(page.locator('#risk-filter')).to_have_value('all')
+    expect(page.locator('.w-dish')).to_have_count(1)
+    page.goto(BASE+'washoku.html?category=bad&focus=bad&risk=bad&q=')
     expect(page.locator('.w-dish')).to_have_count(60)
     for width in [1100,768,390,320]:
         page.set_viewport_size({'width':width,'height':844})
@@ -94,5 +137,5 @@ with sync_playwright() as p:
     q.locator('[data-pin="wakame"]').click()
     expect(q.locator('.w-note-card')).to_have_count(1)
     expect(q.locator('#notebook-status')).to_contain_text('无法保存')
-    print('PASS 60 dishes/8 categories, 13 linked examples/12 sources, category/path/search/proof filters, source links, CSV, notebook evidence levels and export, persistence/safe text, removed-note recovery, URL handling, responsive/keyboard/outline, topic navigation and blocked storage')
+    print('PASS 60 risk judgments (26 high/23 medium/11 low), 5 hotspots, risk-first ordering, combined filters/reset/deep links/history, component scope, 13 linked examples/12 sources, CSV and notes with reasons, persistence/safe text, responsive/keyboard/outline, topic navigation and blocked storage')
     browser.close()

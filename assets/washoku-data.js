@@ -1,9 +1,9 @@
 "use strict";
-// Preparation-path guide, never a determination about a particular restaurant.
+// Qualitative preparation-risk judgments; not measured store usage or food-safety ratings.
 window.WashokuData = {
-  "version": 1,
+  "version": 2,
   "scope": "以中文日料店常见菜单为参考，包含传统、居酒屋、连锁与融合菜式，不声称代表所有门店或日本料理的完整分类。",
-  "disclaimer": "标签表示优先核实的供餐路径，不是对某家餐厅的事实判断，也不是法律上的预制菜认定。无门店包装、采购和工序证据时，实际状态一律待核实。",
+  "disclaimer": "风险等级是对普通综合日料店菜单的定性判断：看主要食材或成品是否容易在店外完成制作，不是门店使用率统计、食品安全评级或法规认定。高风险不等于某家店已被证实使用，低风险也不代表全部自制。",
   "categories": [
     {
       "id": "sushi",
@@ -96,7 +96,12 @@ window.WashokuData = {
         "三文魚",
         "salmon",
         "刺生"
-      ]
+      ],
+      "risk": {
+        "level": "low",
+        "target": "整道刺身；不把冷冻鱼柳算作熟制成品",
+        "reason": "主要工作是鱼料解冻、修整与切片，原料冷冻和去骨不等于整菜预制；我不会仅因此把刺身列为重灾区。"
+      }
     },
     {
       "id": "tuna-sashimi",
@@ -113,7 +118,12 @@ window.WashokuData = {
         "吞拿鱼",
         "鮪",
         "tuna"
-      ]
+      ],
+      "risk": {
+        "level": "low",
+        "target": "整道刺身；区分鱼块与预切片",
+        "reason": "采购超低温鱼块属于原料链，门店仍可现场修切；风险重点是预切规格，不是整道熟制菜复热。"
+      }
     },
     {
       "id": "sweet-shrimp",
@@ -126,7 +136,12 @@ window.WashokuData = {
       "ask": "虾到店时是否已去壳？能说明原料规格吗？",
       "trap": "去壳冷冻不等于熟制；“生食”也不能只凭名称或冷冻状态确认。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "low",
+        "target": "整道刺身；区分生虾原料的处理深度",
+        "reason": "去壳、冷冻主要改变原料规格，摆盘前没有复杂熟制可被成品替代，因此整菜预制的判断优先级较低。"
+      }
     },
     {
       "id": "surf-clam",
@@ -139,7 +154,12 @@ window.WashokuData = {
       "ask": "这款贝料到店时是生的还是已熟制？是否已切片？",
       "trap": "菜单写“刺身”不自动代表所有贝类都是未经加热的生原料。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "medium",
+        "target": "贝肉预熟、开壳与分切",
+        "reason": "贝肉可能在供货前已完成熟制和分切，到店后主要解冻摆盘；这更像加工水产原料，需与调味成菜分开。"
+      }
     },
     {
       "id": "nigiri",
@@ -152,7 +172,12 @@ window.WashokuData = {
       "ask": "是点单后握制吗？鱼片和醋饭分别在哪里准备？",
       "trap": "有提前备料不等于整只寿司是外购成品；也不能凭“手握”推断全部配料自制。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "low",
+        "target": "整只寿司；生鱼料与握制分别看",
+        "reason": "生鱼握寿司的切片、醋饭组合与握制容易在店内完成；不能因鱼料冷冻就推断整只寿司是成品。"
+      }
     },
     {
       "id": "unagi-nigiri",
@@ -169,7 +194,12 @@ window.WashokuData = {
       ],
       "aliases": [
         "炙烤鳗鱼寿司"
-      ]
+      ],
+      "risk": {
+        "level": "high",
+        "target": "鳗鱼熟料；不等于整只寿司外购",
+        "reason": "我把主要鱼料列为高风险：蒲烧可在供货前做完，门店切片或炙烤后握制即可；现场握寿司不能证明鳗鱼自制。"
+      }
     },
     {
       "id": "california-roll",
@@ -187,7 +217,12 @@ window.WashokuData = {
       "aliases": [
         "反卷",
         "California roll"
-      ]
+      ],
+      "risk": {
+        "level": "medium",
+        "target": "蟹柳、鱼籽和酱；不等于整卷成品",
+        "reason": "蟹柳本身就是加工配料，但卷制仍可现场完成。这里的风险在配料来源，不能直接升级为整卷预制。"
+      }
     },
     {
       "id": "inari",
@@ -200,7 +235,12 @@ window.WashokuData = {
       "ask": "豆皮是自行调味还是成品？整只是否在店内填装？",
       "trap": "只看到店内装饭，仍不能说明豆皮是否自制。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "medium",
+        "target": "调味豆皮；另查是否整只供货",
+        "reason": "豆皮调味可由供应商完成，门店填醋饭仍有现场组装；先查豆皮与整只成品两条路径，不一概判整品。"
+      }
     },
     {
       "id": "gunkan",
@@ -217,7 +257,12 @@ window.WashokuData = {
         "飞鱼籽",
         "蟹籽",
         "tobiko"
-      ]
+      ],
+      "risk": {
+        "level": "medium",
+        "target": "鱼籽或调味海鲜浇头",
+        "reason": "成品浇头能替代调味处理，但军舰的醋饭与围海苔仍可现做；应重点看上面的料，不是把整只军舰一并定性。"
+      }
     },
     {
       "id": "wakame",
@@ -236,7 +281,12 @@ window.WashokuData = {
         "海草沙拉",
         "裙带菜",
         "wakame"
-      ]
+      ],
+      "risk": {
+        "level": "high",
+        "target": "整份调味海藻小菜",
+        "reason": "我会优先按袋装成品方向判断：切配和调味可在供货前完成，门店解冻、分装便能出餐，自制替代的工序多。"
+      }
     },
     {
       "id": "tako-wasabi",
@@ -254,7 +304,12 @@ window.WashokuData = {
       "aliases": [
         "章鱼芥末",
         "tako wasabi"
-      ]
+      ],
+      "risk": {
+        "level": "high",
+        "target": "整份芥末章鱼小菜",
+        "reason": "章鱼处理、切粒、拌酱可被一份调味商品整体替代，门店摆盘即可；这是我会优先查包装的小菜。"
+      }
     },
     {
       "id": "seasoned-whelk",
@@ -267,7 +322,12 @@ window.WashokuData = {
       "ask": "贝料到店时已熟制调味了吗？",
       "trap": "鲜切外观和盘饰不能证明熟制调味是在店内完成。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "high",
+        "target": "整份调味螺肉",
+        "reason": "熟制、切片和入味可在外部集中完成，冷盘上桌只需解冻分装；主要制作很容易全部外移。"
+      }
     },
     {
       "id": "edamame",
@@ -282,7 +342,12 @@ window.WashokuData = {
       "refs": [],
       "aliases": [
         "edamame"
-      ]
+      ],
+      "risk": {
+        "level": "medium",
+        "target": "是否为已熟制调味毛豆",
+        "reason": "冷冻生毛豆和熟制调味毛豆都能快速出餐，但店内水煮也很简单。单看冷冻或出餐快，不足以列最高风险。"
+      }
     },
     {
       "id": "potato-salad",
@@ -297,7 +362,12 @@ window.WashokuData = {
       "refs": [
         "potato"
       ],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "high",
+        "target": "整份土豆沙拉",
+        "reason": "蒸煮、压拌、调味等费工步骤都可由成品沙拉替代，到店后挖取装盘即可，我会把它列入重点。"
+      }
     },
     {
       "id": "sesame-tofu",
@@ -310,7 +380,12 @@ window.WashokuData = {
       "ask": "豆腐本体是店内熬制成型，还是成品切块？",
       "trap": "胡麻豆腐与普通大豆豆腐并非同一做法，不能凭“豆腐”二字判断。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "high",
+        "target": "已成型的胡麻豆腐本体",
+        "reason": "芝麻研磨、调浆和凝固定型可整段外移，店内切块配汁就能完成出餐；比普通冷豆腐更值得查成品来源。"
+      }
     },
     {
       "id": "pickles",
@@ -327,7 +402,12 @@ window.WashokuData = {
         "日式泡菜",
         "腌黄瓜",
         "沢庵"
-      ]
+      ],
+      "risk": {
+        "level": "high",
+        "target": "腌制完成的渍物本体",
+        "reason": "腌制与入味可在供货前全部完成，店内往往只剩切片或摆盘；我会按外购即食成品高风险看待。"
+      }
     },
     {
       "id": "hiyayakko",
@@ -340,7 +420,12 @@ window.WashokuData = {
       "ask": "豆腐与配汁分别自制还是采购？",
       "trap": "现切摆盘与配料外购可以同时成立，不必把整道菜硬分成两个极端。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "low",
+        "target": "整道冷豆腐；外购普通豆腐另记",
+        "reason": "买豆腐、柴鱼片和酱油不等于购买整份做好的菜，门店切配组合就能完成；不把基础食品自动算整菜预制。"
+      }
     },
     {
       "id": "kabayaki",
@@ -358,7 +443,12 @@ window.WashokuData = {
       "aliases": [
         "烤鳗鱼",
         "kabayaki"
-      ]
+      ],
+      "risk": {
+        "level": "high",
+        "target": "已完成蒲烧的鳗鱼",
+        "reason": "杀鱼、处理和蒲烧是主要技术工序，熟制真空鳗鱼能整体替代它们；到店复烤刷汁仍可能只是最后加热。"
+      }
     },
     {
       "id": "saba-shio",
@@ -371,7 +461,12 @@ window.WashokuData = {
       "ask": "青花鱼上烤架前是生鱼、腌料还是已烤熟？",
       "trap": "切好的冷冻鱼片与全熟复热鱼是不同供餐路径。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "medium",
+        "target": "鱼片是生料、腌料还是熟品",
+        "reason": "预腌鱼片与全熟烤鱼的加工深度差别很大，而生鱼现烤也容易实现；我会列中风险，先核实上烤架前状态。"
+      }
     },
     {
       "id": "sanma",
@@ -384,7 +479,12 @@ window.WashokuData = {
       "ask": "是否从未熟鱼料开始烤？",
       "trap": "冷冻储存本身不足以判断整道烤鱼是否预制。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "low",
+        "target": "整道烤鱼；不把冷冻整鱼算熟菜",
+        "reason": "从整鱼或处理过的生鱼烤熟，核心烹调可以在店内完成；仅靠冷冻储运没有足够理由列为预制重灾区。"
+      }
     },
     {
       "id": "teriyaki-chicken",
@@ -397,7 +497,12 @@ window.WashokuData = {
       "ask": "是生腌肉现场烤，还是熟制鸡肉复热收汁？",
       "trap": "现浇酱汁不能证明肉在店内从生料做起。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "medium",
+        "target": "鸡肉预腌还是已熟制带汁",
+        "reason": "腌制和酱汁容易标准化，整块鸡肉现场煎烤也不复杂；关键在熟制是否外移，不能只因照烧酱判高风险。"
+      }
     },
     {
       "id": "yakitori",
@@ -413,7 +518,12 @@ window.WashokuData = {
       "aliases": [
         "烧鸟",
         "yakitori"
-      ]
+      ],
+      "risk": {
+        "level": "medium",
+        "target": "切肉穿串、预腌与预熟",
+        "reason": "半成品能替代分切穿串，但烤制也可能从生肉开始；普通鸡肉串的判断要低于已调馅成型的肉丸。"
+      }
     },
     {
       "id": "tsukune",
@@ -426,7 +536,12 @@ window.WashokuData = {
       "ask": "肉丸是店内调馅成型吗？采购时生熟状态是什么？",
       "trap": "浇上蛋黄或刷酱只是组装，不能证明肉丸自制。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "high",
+        "target": "肉糜调馅、成型和可能的预熟",
+        "reason": "绞肉、配方调馅、成丸这些劳动密集步骤容易由标准半成品替代，门店只烤熟或复烤；我会重点查肉丸。"
+      }
     },
     {
       "id": "mentaiko-potato",
@@ -439,7 +554,12 @@ window.WashokuData = {
       "ask": "土豆或薯泥和明太子酱分别怎么准备？",
       "trap": "表面现焗不代表底料没有使用成品。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "medium",
+        "target": "明太子酱和土豆泥",
+        "reason": "配料和薯泥可以外购，但土豆处理与焗烤也可现场完成；需要查主料，而不是看到瓶装酱就断言整道预制。"
+      }
     },
     {
       "id": "beef-tongue",
@@ -452,7 +572,12 @@ window.WashokuData = {
       "ask": "是原块修切、切片原料还是调味半成品？",
       "trap": "预切不是熟制；也不能凭切片厚度整齐判断一定预制。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "low",
+        "target": "整道烤牛舌；预切预腌另记",
+        "reason": "牛舌的主要熟制仍可发生在烤架上，预切片属于原料规格；相对成型肉丸，整道熟品复热的疑点较低。"
+      }
     },
     {
       "id": "karaage",
@@ -470,7 +595,12 @@ window.WashokuData = {
       "aliases": [
         "日式炸鸡",
         "karaage"
-      ]
+      ],
+      "risk": {
+        "level": "high",
+        "target": "腌制裹粉鸡块；可能生制或已熟制",
+        "reason": "预腌、裹粉的半成品可以直接入油锅，省去主要备料工序；已经有未加热商品例证，不能把“现炸”当作全程自制。"
+      }
     },
     {
       "id": "tonkatsu",
@@ -483,7 +613,12 @@ window.WashokuData = {
       "ask": "猪排在哪里裹粉？是整块肉还是重组/成型商品？",
       "trap": "现炸外壳酥脆不等于店内从原肉制作。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "high",
+        "target": "已处理和裹糠的猪排",
+        "reason": "分切、拍松、调味和裹糠均可在店外完成，门店只负责炸熟；我会把预裹粉猪排作为主要核查对象。"
+      }
     },
     {
       "id": "ebi-fry",
@@ -496,7 +631,12 @@ window.WashokuData = {
       "ask": "虾是否已经去壳拉直裹粉？到店时是否预炸？",
       "trap": "“炸虾”有不同加工深度，不能仅凭形状判断。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "high",
+        "target": "去壳拉直、裹面包糠的虾",
+        "reason": "处理虾和裹糠费工，采购已成型半成品能直接省去这些步骤；现炸只能确认最后熟制，不能排除预制。"
+      }
     },
     {
       "id": "korokke",
@@ -515,7 +655,12 @@ window.WashokuData = {
         "土豆可乐饼",
         "蟹肉可乐饼",
         "korokke"
-      ]
+      ],
+      "risk": {
+        "level": "high",
+        "target": "土豆馅、成型与裹粉",
+        "reason": "蒸土豆、调馅、成型和裹粉可被成型商品整段替代，门店只炸制；这是我判断的典型半成品重灾区。"
+      }
     },
     {
       "id": "tempura",
@@ -528,7 +673,12 @@ window.WashokuData = {
       "ask": "是原料现裹面糊，还是已经裹衣的半成品？",
       "trap": "现炸不能排除预制裹衣；但也不能把所有天妇罗都贴同一标签。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "medium",
+        "target": "是否预裹衣或预炸；分清虾与蔬菜",
+        "reason": "预裹衣商品能替代前处理，但原料现调面糊现炸也直接。不同食材差别大，不能把全部天妇罗归为最高风险。"
+      }
     },
     {
       "id": "ika-rings",
@@ -541,7 +691,12 @@ window.WashokuData = {
       "ask": "鱿鱼圈是原切、已裹粉还是已预炸？",
       "trap": "预切原料与裹粉半成品不应混为一类。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "high",
+        "target": "已裹粉的鱿鱼圈；原切圈另看",
+        "reason": "预切加裹粉能把主要加工移到供应商，门店直接炸；我会优先查裹粉半成品，不把仅预切的原料混进去。"
+      }
     },
     {
       "id": "oyster-fry",
@@ -554,7 +709,12 @@ window.WashokuData = {
       "ask": "牡蛎上桌前的裹粉、熟制分别在哪完成？",
       "trap": "仅凭出餐快不能确认工业半成品；门店也会提前备料。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "high",
+        "target": "清理和裹面包糠的牡蛎",
+        "reason": "牡蛎清理、沥水与裹糠可由供货端完成，入店后炸熟即可，具备主要工序被半成品替代的特征。"
+      }
     },
     {
       "id": "cheese-stick",
@@ -567,7 +727,12 @@ window.WashokuData = {
       "ask": "芝士条是店内包裹裹粉吗？",
       "trap": "半成品不同于“坏食材”，研究重点是实际工序是否透明。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "high",
+        "target": "成型包裹并裹粉的芝士条",
+        "reason": "包裹、定型和裹粉能在工厂集中完成，门店只需炸制；主要价值不在最终几分钟下锅。"
+      }
     },
     {
       "id": "chawanmushi",
@@ -580,7 +745,12 @@ window.WashokuData = {
       "ask": "蛋液在哪里调配？是现蒸生蛋液还是成品蒸热？",
       "trap": "门店提前调液或批量蒸制，不等于外购整杯工业成品。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "medium",
+        "target": "杯装成品还是店内调液现蒸",
+        "reason": "杯装熟品能复热出餐，但店内批量调蛋液和蒸制也直接；我会先列中风险，避免把提前备料误判为外购成品。"
+      }
     },
     {
       "id": "tamagoyaki",
@@ -599,7 +769,12 @@ window.WashokuData = {
         "厚烧玉子",
         "厚烧蛋",
         "tamagoyaki"
-      ]
+      ],
+      "risk": {
+        "level": "high",
+        "target": "已卷煎成型的厚烧蛋",
+        "reason": "分层卷煎是核心技术和耗工环节，餐饮用成品能直接替代；解冻切片、加炙烤仍不等于店内卷煎。"
+      }
     },
     {
       "id": "beef-stew",
@@ -612,7 +787,12 @@ window.WashokuData = {
       "ask": "是店内炖好分装，还是采购整袋熟制品？",
       "trap": "长时炖煮本来就常需提前准备，出餐复热不能单独判定外购。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "medium",
+        "target": "整袋熟制炖菜与店内批量炖煮",
+        "reason": "长时炖煮适合集中制作和分装，但门店自己提前炖同样合理；有复热过程不能直接推出外购，因此保留中风险。"
+      }
     },
     {
       "id": "oden",
@@ -625,7 +805,12 @@ window.WashokuData = {
       "ask": "配料、汤底和煮制分别如何准备？",
       "trap": "用加工鱼糜配料并不等于整锅从工厂直接复热。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "medium",
+        "target": "鱼糜成型配料与汤底",
+        "reason": "竹轮、鱼丸等加工配料值得查，但煮制与调汤可能在店内完成；配料工业化不代表整锅来自成品袋。"
+      }
     },
     {
       "id": "agedashi",
@@ -638,7 +823,12 @@ window.WashokuData = {
       "ask": "豆腐是现场裹粉炸，还是炸好的成品复热？",
       "trap": "现浇出汁只是最终组装，不能反推豆腐此前的处理。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "low",
+        "target": "整道豆腐菜；重点确认是否现炸",
+        "reason": "普通豆腐裹粉炸制即可完成主要工序，现场制作路径较直接；采购豆腐和酱汁不足以列为整菜预制重灾区。"
+      }
     },
     {
       "id": "nizakana",
@@ -651,7 +841,12 @@ window.WashokuData = {
       "ask": "鱼是生料入汁煮，还是带汁熟制品复热？",
       "trap": "提前入味与工厂熟制不是同一维度；要问制作地点。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "medium",
+        "target": "带汁熟制鱼与店内提前煮鱼",
+        "reason": "带汁成品能复热出餐，但煮鱼本来就需要提前入味；两条路径都合理，我会查包装而不凭出餐速度判高。"
+      }
     },
     {
       "id": "unadon",
@@ -671,7 +866,12 @@ window.WashokuData = {
         "鳗鱼丼",
         "鳗鱼盖饭",
         "unadon"
-      ]
+      ],
+      "risk": {
+        "level": "high",
+        "target": "主要指蒲烧鳗鱼；米饭另判",
+        "reason": "这碗饭最有价值的鱼料可采购全熟蒲烧，再复烤铺到现煮饭上；所以主料列高风险，不等于整碗饭都是料理包。"
+      }
     },
     {
       "id": "curry-rice",
@@ -684,7 +884,12 @@ window.WashokuData = {
       "ask": "咖喱是整包熟制酱、基底加料，还是店内炖制？",
       "trap": "用了工业咖喱块是使用调味基底，不自动等于整盘饭为工业成品。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "medium",
+        "target": "肉菜咖喱浇头；区分咖喱块和熟制整包",
+        "reason": "熟制咖喱包能替代炖煮，但用咖喱块加肉菜自己煮也是另一条路径；仅有工业调味基底不足以判整菜高风险。"
+      }
     },
     {
       "id": "katsu-curry",
@@ -697,7 +902,12 @@ window.WashokuData = {
       "ask": "猪排是否现裹粉？咖喱是成品还是店内煮？",
       "trap": "要按猪排、酱和饭三项分别记，不能只凭“现炸”下整体结论。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "high",
+        "target": "优先看预裹糠猪排；咖喱与饭分别看",
+        "reason": "主菜猪排可用已裹粉半成品直接炸，咖喱又可能另有成品路径；我会重点查猪排，不能因现炸现装盘就排除。"
+      }
     },
     {
       "id": "gyudon",
@@ -710,7 +920,12 @@ window.WashokuData = {
       "ask": "牛肉是生切片现场煮，还是熟制浇头复热？",
       "trap": "米饭现煮与牛肉料是否外购不矛盾。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "medium",
+        "target": "牛肉浇头是否熟制供货",
+        "reason": "熟制牛肉包能省去煮浇头，但生切片加洋葱现场煮也很直接；不因连锁式装盘就认定是料理包。"
+      }
     },
     {
       "id": "oyakodon",
@@ -723,7 +938,12 @@ window.WashokuData = {
       "ask": "鸡肉与蛋是点单后同煮吗？鸡肉是否已熟制？",
       "trap": "购买调味汁与购买整份熟浇头是不同加工深度。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "low",
+        "target": "鸡肉和蛋的主要熟制",
+        "reason": "按份把鸡肉与蛋同煮就能完成核心烹调，现场制作路径直接；预配丼汁不足以把整碗饭列为预制重灾区。"
+      }
     },
     {
       "id": "ramen",
@@ -740,7 +960,12 @@ window.WashokuData = {
         "豚骨拉面",
         "味噌拉面",
         "ramen"
-      ]
+      ],
+      "risk": {
+        "level": "medium",
+        "target": "浓缩汤底、叉烧、蛋；面条另记",
+        "reason": "汤底和熟浇头可以替代店内长时间熬煮与卤制，值得重点问；但也有自熬自制路径，不把所有拉面都判整碗成品。"
+      }
     },
     {
       "id": "udon",
@@ -758,7 +983,12 @@ window.WashokuData = {
       "aliases": [
         "乌龙面",
         "udon"
-      ]
+      ],
+      "risk": {
+        "level": "medium",
+        "target": "冷冻面体、汤底与浇头分别看",
+        "reason": "现成面体确有商品例证，但它首先是主食原料；我会标中风险组件，不把买面煮面等同整碗料理包。"
+      }
     },
     {
       "id": "soba",
@@ -771,7 +1001,12 @@ window.WashokuData = {
       "ask": "面体是店内打制吗？蘸汁是自熬还是成品调配？",
       "trap": "“现煮”和“手打”是不同描述；购买面条不能自动等同整餐预制。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "medium",
+        "target": "面体和成品蘸汁",
+        "reason": "采购面体与蘸汁能减少备料，但煮面、冷却和组装仍可现场做；成品组件应记录，整餐预制判断应更谨慎。"
+      }
     },
     {
       "id": "fried-rice",
@@ -784,7 +1019,12 @@ window.WashokuData = {
       "ask": "是白饭加配料现炒，还是已有配料的冷冻饭复炒？",
       "trap": "提前备饭、使用隔夜冷藏饭，与采购工业成品炒饭不是同一件事。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "medium",
+        "target": "是否直接使用已配料的冷冻炒饭",
+        "reason": "冷冻成品可复炒，但白饭配菜按份炒也直接；现场有炒锅仍不足以区分两者，因此列中风险核对饭料。"
+      }
     },
     {
       "id": "omurice",
@@ -797,7 +1037,12 @@ window.WashokuData = {
       "ask": "饭、蛋皮和酱分别在哪制作？",
       "trap": "现场浇酱或划开蛋皮，不能反推内馅和蛋皮的来源。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "medium",
+        "target": "炒饭内馅、蛋皮与酱",
+        "reason": "内馅和蛋皮都有可外购的加工路径，现场浇酱无法排除；但现炒现煎也合理，应拆开查而不一概判整品。"
+      }
     },
     {
       "id": "miso-soup",
@@ -810,7 +1055,12 @@ window.WashokuData = {
       "ask": "出汁是熬制还是调配？汤是整包即食还是门店组合？",
       "trap": "调味料是工业品不等于整碗汤为预制菜。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "medium",
+        "target": "整份即食汤包与出汁调味料的区别",
+        "reason": "浓缩出汁和味噌是调味基础，不能算整汤成品；只有整包汤料复原才更接近成品路径，故保留中风险。"
+      }
     },
     {
       "id": "dobin",
@@ -823,7 +1073,12 @@ window.WashokuData = {
       "ask": "汤底和配料分别怎么准备？是按份装料加热吗？",
       "trap": "器皿精致、现开盖和蒸汽只能说明上桌状态。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "medium",
+        "target": "汤底与按份组合料",
+        "reason": "汤底、海鲜料可预处理并按份组合，器皿加热不代表从头自制；同时店内备料也可实现，需要看具体组件。"
+      }
     },
     {
       "id": "sukiyaki",
@@ -836,7 +1091,12 @@ window.WashokuData = {
       "ask": "肉和菜是什么处理规格？锅汁是店内调还是成品？",
       "trap": "使用切片肉和瓶装汁，不能直接把整锅归为成品复热。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "low",
+        "target": "整锅；丸类、汁料单独记录",
+        "reason": "核心肉菜熟制可发生在门店或桌边；切片肉与调味汁是基础原料和配料，不能直接判整锅是预制成品。"
+      }
     },
     {
       "id": "shabu",
@@ -849,7 +1109,12 @@ window.WashokuData = {
       "ask": "哪些是原料、哪些是调味或成型食品？汤底怎么做？",
       "trap": "把锅里所有食物笼统称为预制菜，会掩盖各组件的实际状态。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "low",
+        "target": "整锅；成型丸类和汤底另判",
+        "reason": "主要肉菜在桌边涮熟，与整锅成品复热差别明显；原料冷冻、切片或外购蘸料不构成整锅高风险理由。"
+      }
     },
     {
       "id": "matcha-icecream",
@@ -862,7 +1127,12 @@ window.WashokuData = {
       "ask": "冰淇淋是店内制作还是外购？能说明品牌或制作方式吗？",
       "trap": "外购甜品是成品供货事实，不应自动套入“需加热菜肴”的监管口径。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "high",
+        "target": "冰淇淋成品；属于外购甜品口径",
+        "reason": "调基底、搅拌和冷冻需要专门设备，外购桶装再挖球能替代整段生产；我会优先按成品甜点看待。"
+      }
     },
     {
       "id": "daifuku",
@@ -878,7 +1148,12 @@ window.WashokuData = {
       "aliases": [
         "麻薯",
         "mochi"
-      ]
+      ],
+      "risk": {
+        "level": "high",
+        "target": "整只甜品本体",
+        "reason": "制皮、包馅和定型均可在供货前完成，店内解冻加盘饰即可；点单后装饰不能证明本体自制。"
+      }
     },
     {
       "id": "pudding",
@@ -891,7 +1166,12 @@ window.WashokuData = {
       "ask": "是店内调液制作，还是成品脱模装盘？",
       "trap": "冷藏定型本来需要时间，不能把提前做都叫工业预制。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "high",
+        "target": "已凝固的杯装或脱模甜品",
+        "reason": "调液、凝固和冷藏工序可整体外移，成品脱模摆盘即可；综合日料店里我会优先核对是否外购。"
+      }
     },
     {
       "id": "dorayaki",
@@ -904,7 +1184,12 @@ window.WashokuData = {
       "ask": "饼皮、馅和整只分别是谁做的？",
       "trap": "单个组件自制与整只自制不是同一结论。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "high",
+        "target": "饼皮与整只成品",
+        "reason": "煎饼皮、备馅与夹制均可被整只成品替代，门店拆袋装盘就能出餐；加冰淇淋也不能证明饼皮自制。"
+      }
     },
     {
       "id": "warabi",
@@ -917,7 +1202,12 @@ window.WashokuData = {
       "ask": "本体是店内煮制还是成品切块？",
       "trap": "撒黄豆粉或加糖浆是出餐环节，不说明本体制作地点。",
       "refs": [],
-      "aliases": []
+      "aliases": [],
+      "risk": {
+        "level": "high",
+        "target": "已凝固切块的蕨饼",
+        "reason": "调浆、加热和凝固能在外部集中完成，店内切块撒粉配糖浆即可；我会重点查本体而不是最后的配料。"
+      }
     },
     {
       "id": "gyoza",
@@ -935,7 +1225,12 @@ window.WashokuData = {
       "aliases": [
         "饺子",
         "gyoza"
-      ]
+      ],
+      "risk": {
+        "level": "high",
+        "target": "调馅包制好的饺子；不等于全部全熟",
+        "reason": "成型饺子商品能替代拌馅和包制，店内煎熟即可；这是半成品风险，不能由“现煎”排除。"
+      }
     },
     {
       "id": "takoyaki",
@@ -953,7 +1248,12 @@ window.WashokuData = {
       "aliases": [
         "章鱼烧",
         "takoyaki"
-      ]
+      ],
+      "risk": {
+        "level": "high",
+        "target": "已烧制成型的章鱼小丸子",
+        "reason": "有冷冻成品例证，调面糊和模具烧制可在店外完成；门店复热、复炸再加酱就能出餐，是优先排查对象。"
+      }
     }
   ],
   "sources": {
@@ -1089,5 +1389,83 @@ window.WashokuData = {
       "supports": "商品页同时列出真空包装蒲烧鳗鱼与冷冻鳗鱼饭，说明“仅熟制鱼料”和“连饭整餐商品”是不同层次。不能据此判断餐厅到底使用哪一种。",
       "sha256": "d7633895e28df973c122bdcb5bbacf4ac52f4364869a271d1e6c98c7a0c4192f"
     }
-  }
+  },
+  "riskLevels": {
+    "high": {
+      "name": "高风险 · 预制重灾区",
+      "short": "高风险",
+      "rank": 0,
+      "lead": "我会优先怀疑外购成品或主要半成品。主要制作可在店外完成，到店后解冻、复热、煎炸或组合即可出餐。"
+    },
+    "medium": {
+      "name": "中风险 · 重点看组件",
+      "short": "中风险",
+      "rank": 1,
+      "lead": "成品配料、汤底或熟料值得查，但现场制作也很直接；要拆开判断，不能把一瓶酱等同整菜预制。"
+    },
+    "low": {
+      "name": "低风险 · 整菜预制较少疑点",
+      "short": "低风险",
+      "rank": 2,
+      "lead": "按整菜预制口径，我会先放低优先级：主要价值在切配、现场熟制或涮煮。原料仍可能冷冻、预切或预腌。"
+    }
+  },
+  "hotspots": [
+    {
+      "name": "成品凉菜",
+      "why": "切配和调味在店外完成，解冻分装就能上桌。",
+      "dishes": [
+        "wakame",
+        "tako-wasabi",
+        "seasoned-whelk",
+        "potato-salad",
+        "sesame-tofu",
+        "pickles"
+      ]
+    },
+    {
+      "name": "熟鳗鱼与厚烧蛋",
+      "why": "蒲烧、卷煎等主要技术工序可被成品替代。",
+      "dishes": [
+        "kabayaki",
+        "unadon",
+        "unagi-nigiri",
+        "tamagoyaki"
+      ]
+    },
+    {
+      "name": "裹粉与成型炸物",
+      "why": "现炸只完成最后一步；调味、裹粉和成型可能已做完。",
+      "dishes": [
+        "korokke",
+        "ebi-fry",
+        "tonkatsu",
+        "karaage",
+        "ika-rings",
+        "oyster-fry",
+        "cheese-stick",
+        "katsu-curry"
+      ]
+    },
+    {
+      "name": "热小食与成型肉丸",
+      "why": "成型商品能替代拌馅、包制或模具烧制。",
+      "dishes": [
+        "takoyaki",
+        "gyoza",
+        "tsukune"
+      ]
+    },
+    {
+      "name": "外购甜品",
+      "why": "制皮、凝固、冷冻等生产工序整体外移，店内装盘。",
+      "dishes": [
+        "matcha-icecream",
+        "daifuku",
+        "pudding",
+        "dorayaki",
+        "warabi"
+      ]
+    }
+  ]
 };
