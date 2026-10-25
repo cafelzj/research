@@ -43,6 +43,14 @@
 
 ## 日常研究
 
+### 中餐预制菜避雷
+
+新专题 `chinese-menu.html`，与日料专题、法国专题互相导航。按9类整理94项菜品与点单场景：66项高风险、20项中风险、8项低风险参照。默认速查表，可切换详细卡片，支持风险/菜类/关键词/商品例证筛选、私人核实清单、CSV与Markdown导出。
+
+本次读取5家厂家31份来源记录，为56项关联直接或明确同类商品例证，其余38项明确为工序推断。每项分别写明适用场景、判断对象、理由、原料肉种或整菜/组件边界，不将商品存在等同门店使用率。完整静态CSV位于 `assets/chinese-menu-risk.csv`，网页也可导出当前筛选。中餐和日料共享可配置筛选引擎，私人笔记使用独立存储键。来源与维护方法见 [中餐研究说明](docs/chinese-menu-guide.md)。
+
+### 法国与欧洲指标
+
 新入口 `daily.html`。首个专题围绕用户提供的「10·17法国暴力骚乱事件」条目，比较法国与其他9个欧盟国家的财政、代际分配和居民处境。事件年份和经过尚未独立核实，不与2023年事件混同，也不将宏观指标当作已证实的骚乱原因。
 
 地图支持指标/年份/国家切换、键盘选择、数值排序、CSV和独立SVG导出。提供7项已读取镜像的历史指标；公共养老金和公务员专门制度因缺可比核验数据保持空白。每张图同年比较，缺失不填零、不沿用旧值，不展示IMF预测。教育、基尼和财政数据年份可能不同，页面逐项标明。
@@ -86,7 +94,7 @@ GitHub 的文件浏览页面显示源码，不直接运行网页。已加入 `.g
 
 首次部署需要在仓库 Settings → Pages → Build and deployment → Source 选择 **GitHub Actions**。然后在 Actions 中打开 `Deploy research atlas to GitHub Pages`，使用 Run workflow 启动，或重跑先前失败的部署。部署成功后的预期访问地址为：https://cafelzj.github.io/research/ 。以 GitHub Pages 返回的实际地址为准。
 
-此后每次推送到 `main` 都会自动发布。站点发布 `index.html`、`atlas.html`、`data.html`、`studio.html`、`intelli.html`、`daily.html`、`washoku.html` 和 `assets/`；不发布 README、验证脚本或研究笔记。
+此后每次推送到 `main` 都会自动发布。站点发布 `index.html`、`atlas.html`、`data.html`、`studio.html`、`intelli.html`、`daily.html`、`washoku.html`、`chinese-menu.html` 和 `assets/`；不发布 README、验证脚本或研究笔记。
 
 部署后，Actions 的 `Verify public website matches this commit` 步骤会通过公网请求七个页面及所有站点资源，检查 HTTP 200、网页的 HTML 类型及文件内容是否与本次提交完全一致，等待 CDN 更新后重试，持续失败会使工作流失败。可在具备访问权限的环境手动执行 `python3 scripts/verify_public_site.py https://cafelzj.github.io/research/`。这验证公网内容发布结果，交互行为还需浏览器检查。
 

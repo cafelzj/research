@@ -1,7 +1,26 @@
 "use strict";
 (() => {
-  const D = window.WashokuData;
+  const D = window.MenuRiskData || window.WashokuData;
   if (!D) return;
+  const ui = {
+    storageKey: "washoku.research.v1",
+    aliasLabel: "日文名",
+    csvName: "日料菜单-制作路径研究.csv",
+    notebookTitle: "日料店到店核实清单",
+    notebookName: "日料店核实笔记.md",
+    unit: "道",
+    itemLabel: "道菜",
+    starterIds: [
+      "wakame",
+      "tako-wasabi",
+      "kabayaki",
+      "tamagoyaki",
+      "korokke",
+      "takoyaki",
+    ],
+    ...D.ui,
+  };
+  let menuView = ui.defaultView === "table" ? "table" : "cards";
   const $ = (id) => document.getElementById(id),
     esc = (s) =>
       String(s).replace(
@@ -31,7 +50,7 @@
       proof: false,
       saved: false,
     };
-  const KEY = "washoku.research.v1",
+  const KEY = ui.storageKey,
     basisChoices = {
       unasked: "未询问 / 暂无证据",
       staff: "店家口头说明（未独立核实）",
@@ -161,6 +180,15 @@
       )
       .join("");
   }
+  function quickRow(d) {
+    const pinned = book.pinned.includes(d.id);
+    return `<tr data-quick-dish="${esc(d.id)}"><th scope="row">${esc(d.name)}<small>${esc(d.ja)}</small></th><td>${riskBadge(d)}<small>${esc(D.focus[d.focus].name)}</small></td><td><b>${esc(d.risk.target)}</b><p>${esc(d.risk.reason)}</p><details><summary>怎么问 / 看来源</summary><p>${esc(d.ask)}</p>${sourceLinks(d)}</details></td><td><button type="button" data-pin="${esc(d.id)}" aria-pressed="${pinned}" aria-label="${pinned ? "从核实清单移除" : "加入核实清单"}：${esc(d.name)}">${pinned ? "已加入" : "＋ 加清单"}</button></td></tr>`;
+  }
+  function categoryContents(selected) {
+    return menuView === "table"
+      ? `<div class="c-table-wrap"><table class="c-quick-table"><caption class="c-sr-only">菜品预制风险速查，含判断对象、理由和来源</caption><thead><tr><th scope="col">菜名 / 场景</th><th scope="col">我的风险判断</th><th scope="col">风险在哪 / 为什么</th><th scope="col">留待点单</th></tr></thead><tbody>${selected.map(quickRow).join("")}</tbody></table></div>`
+      : `<div class="w-dish-grid">${selected.map(card).join("")}</div>`;
+  }
   function renderMenu() {
     const list = filtered();
     renderCategories();
@@ -169,13 +197,13 @@
           .map((c) => {
             const selected = list.filter((d) => d.category === c.id);
             return selected.length
-              ? `<section class="w-category-section"><div class="w-category-heading"><h3>${esc(c.name)}</h3><span>${esc(c.ja)} / ${selected.length}道</span></div><p class="w-category-intro">${esc(c.intro)}</p><div class="w-dish-grid">${selected.map(card).join("")}</div></section>`
+              ? `<section class="w-category-section"><div class="w-category-heading"><h3>${esc(c.name)}</h3><span>${esc(c.ja)} / ${selected.length}${esc(ui.unit)}</span></div><p class="w-category-intro">${esc(c.intro)}</p>${categoryContents(selected)}</section>`
               : "";
           })
           .join("")
       : `<div class="w-empty">没有匹配菜品。试试清空关键词、改选全部风险和路径，或取消“只看清单/商品例证”。</div>`;
     $("menu-status").textContent =
-      `显示 ${list.length} / ${D.dishes.length} 道菜 · 高 ${list.filter((d) => d.risk.level === "high").length} / 中 ${list.filter((d) => d.risk.level === "medium").length} / 低 ${list.filter((d) => d.risk.level === "low").length} · ${list.filter(verified).length} 道有同类厂商商品例证 · 同类内高风险优先。`;
+      `显示 ${list.length} / ${D.dishes.length} ${ui.itemLabel} · 高 ${list.filter((d) => d.risk.level === "high").length} / 中 ${list.filter((d) => d.risk.level === "medium").length} / 低 ${list.filter((d) => d.risk.level === "low").length} · ${list.filter(verified).length} ${ui.unit}有同类厂商商品例证 · 同类内高风险优先。`;
     $("risk-legend")
       .querySelectorAll("[data-risk-filter]")
       .forEach((b) =>
@@ -186,6 +214,22 @@
       );
     $("export-menu").disabled = !list.length;
     syncUrl();
+  }
+  if ($("menu-view")) {
+    $("menu-view").onclick = (e) => {
+      const b = e.target.closest("[data-menu-view]");
+      if (!b) return;
+      menuView = b.dataset.menuView;
+      $("menu-view")
+        .querySelectorAll("[data-menu-view]")
+        .forEach((button) =>
+          button.setAttribute(
+            "aria-pressed",
+            String(button.dataset.menuView === menuView),
+          ),
+        );
+      renderMenu();
+    };
   }
   function renderNotebook() {
     const target = $("checklist-items");
@@ -215,7 +259,7 @@
               )}</select></label></div><label>原话、包装内容、所见工序与仍有疑问<textarea data-record="${esc(id)}" data-field="note" maxlength="3000" placeholder="区分自己见到的、店家说的和仍不知道的部分；不要只写“预制/现做”两个字。">${esc(r.note)}</textarea></label></div></article>`;
           })
           .join("")
-      : '<p class="w-empty">还没有菜品加入清单。点击菜单卡片右上角“＋”，带着具体问题到店核实。</p>';
+      : '<p class="w-empty">还没有菜品加入清单。点击菜品旁的加入按钮，带着具体问题到店核实。</p>';
     $("export-checklist").disabled = !book.pinned.length && !book.restaurant;
   }
   function togglePin(id) {
@@ -251,7 +295,7 @@
   $("risk-legend").innerHTML = Object.entries(D.riskLevels)
     .map(([id, r]) => {
       const count = D.dishes.filter((d) => d.risk.level === id).length;
-      return `<button type="button" class="w-risk-tile ${id}" data-risk-filter="${id}" aria-pressed="false"><span>${esc(r.name)}</span><b>${count}<small> 道</small></b><p>${esc(r.lead)}</p><small>查看这一档菜品 ↓</small></button>`;
+      return `<button type="button" class="w-risk-tile ${id}" data-risk-filter="${id}" aria-pressed="false"><span>${esc(r.name)}</span><b>${count}<small> ${esc(ui.unit)}</small></b><p>${esc(r.lead)}</p><small>查看这一档菜品 ↓</small></button>`;
     })
     .join("");
   function resetFilters() {
@@ -391,7 +435,7 @@
     const rows = [
       [
         "菜品",
-        "日文名",
+        ui.aliasLabel,
         "分类",
         "预制风险（定性判断，非门店查实）",
         "风险判断对象",
@@ -403,6 +447,7 @@
         "到店询问",
         "易误判之处",
         "商品例证URL",
+        "官网公开产品数据URL",
       ],
       ...filtered().map((d) => [
         d.name,
@@ -423,6 +468,10 @@
           .filter((id) => D.sources[id]?.verified)
           .map((id) => D.sources[id].url)
           .join(" "),
+        d.refs
+          .map((id) => D.sources[id]?.dataUrl || "")
+          .filter(Boolean)
+          .join(" "),
       ]),
     ];
     const cell = (v) =>
@@ -433,14 +482,16 @@
       ) +
       '"';
     download(
-      "日料菜单-制作路径研究.csv",
+      ui.csvName,
       "\ufeff" + rows.map((r) => r.map(cell).join(",")).join("\r\n"),
       "text/csv;charset=utf-8",
     );
   };
   $("export-checklist").onclick = () => {
     const text =
-      "# 日料店到店核实清单\n\n店铺/研究：" +
+      "# " +
+      ui.notebookTitle +
+      "\n\n店铺/研究：" +
       book.restaurant +
       "\n\n" +
       D.disclaimer +
@@ -454,26 +505,24 @@
               .filter((id) => D.sources[id]?.verified)
               .map((id) => D.sources[id].url)
               .join("；") || "无直接例证，制作工序参考"
+          }\n官网公开产品数据：${
+            d.refs
+              .map((id) => D.sources[id]?.dataUrl || "")
+              .filter(Boolean)
+              .join("；") || "见原页"
           }`;
         })
         .join("\n\n");
-    download("日料店核实笔记.md", text, "text/markdown;charset=utf-8");
+    download(ui.notebookName, text, "text/markdown;charset=utf-8");
   };
   $("evidence-cards").innerHTML = Object.entries(D.sources)
     .filter(([, s]) => s.verified)
     .map(
       ([id, s]) =>
-        `<article class="w-evidence-card" id="evidence-${esc(id)}"><span class="w-proof verified">已读取厂商公开页 · ${esc(s.market)}</span><h3>${esc(s.title)}</h3><p>${esc(s.supports)}</p><p><b>不能据此判断：</b>${esc(s.limit)}</p><a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">阅读商品原页 ↗</a><small>核验：${esc(s.checked)}<br>${s.sha256 ? "读取时HTML SHA-256：" + esc(s.sha256.slice(0, 16)) + "…" : ""}</small></article>`,
+        `<article class="w-evidence-card" id="evidence-${esc(id)}"><span class="w-proof verified">已读取厂商公开页 · ${esc(s.market)}</span><h3>${esc(s.title)}</h3><p>${esc(s.supports)}</p><p><b>不能据此判断：</b>${esc(s.limit)}</p><a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">阅读商品原页 ↗</a>${s.dataUrl ? `<br><a href="${esc(s.dataUrl)}" target="_blank" rel="noopener noreferrer">官网公开产品数据 ↗</a>` : ""}<small>核验：${esc(s.checked)}<br>${s.sha256 ? "读取内容 SHA-256：" + esc(s.sha256.slice(0, 16)) + "…" : ""}</small></article>`,
     )
     .join("");
-  $("starter-dishes").innerHTML = [
-    "wakame",
-    "tako-wasabi",
-    "kabayaki",
-    "tamagoyaki",
-    "korokke",
-    "takoyaki",
-  ]
+  $("starter-dishes").innerHTML = ui.starterIds
     .map(
       (id) =>
         `<button type="button" data-starter="${id}">${esc(dishes.get(id).name)} ↗</button>`,
@@ -503,6 +552,10 @@
   $("high-total").textContent = D.dishes.filter(
     (d) => d.risk.level === "high",
   ).length;
+  if ($("source-total"))
+    $("source-total").textContent = Object.values(D.sources).filter(
+      (s) => s.verified,
+    ).length;
   renderMenu();
   renderNotebook();
   if (storageWarning) $("notebook-status").textContent = storageWarning;

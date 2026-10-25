@@ -28,7 +28,7 @@ jobs:
       - name: Prepare static website
         run: |
           mkdir -p _site
-          cp index.html atlas.html data.html studio.html intelli.html daily.html washoku.html _site/
+          cp index.html atlas.html data.html studio.html intelli.html daily.html washoku.html chinese-menu.html _site/
           cp -R assets _site/assets
       - name: Upload website
         uses: actions/upload-pages-artifact@v3

@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="中餐点单预制风险速查：扣肉、熟料浇头、鱼虾、炸物、凉菜与面点。逐项标记风险，提供厂家商品例证、判断理由和可导出的点单清单。"
+    />
+    <title>中餐预制菜避雷 · 菜名、风险与来源速查</title>
+    <link rel="stylesheet" href="assets/site.css" />
+    <link rel="stylesheet" href="assets/washoku.css" />
+    <link rel="stylesheet" href="assets/chinese-menu.css" />
+    <link rel="stylesheet" href="assets/outline.css" />
+    <script defer src="assets/chinese-menu-data.js"></script>
+    <script defer src="assets/washoku.js"></script>
+    <script defer src="assets/outline.js"></script>
+  </head>
+  <body class="c-page">
+    <a class="w-skip" href="#menu-guide">跳到中餐避雷速查表</a>
+    <header class="site-header">
+      <a class="site-brand" href="index.html"
+        >化工观测<small>CHEMICAL INDUSTRY / RESEARCH</small></a
+      >
+      <nav class="site-nav" aria-label="网站主导航">
+        <a href="atlas.html">产业链总览</a><a href="index.html">行业看板</a
+        ><a href="data.html">数据与图表</a
+        ><a href="intelli.html">IntelliUI <small>BETA</small></a
+        ><a href="daily.html" aria-current="page">日常研究</a>
+      </nav>
+    </header>
+    <main>
+      <nav class="w-topics" aria-label="日常研究专题">
+        <span>研究专题</span><a href="daily.html">法国与欧洲指标</a
+        ><a href="washoku.html">日料菜单与预制风险</a
+        ><a href="chinese-menu.html" aria-current="page">中餐预制菜避雷</a>
+      </nav>
+      <section class="w-hero">
+        <div>
+          <p class="w-kicker">DAILY RESEARCH 003 / BEFORE YOU ORDER</p>
+          <h1>中餐预制重灾区，<br /><span>点菜前看一眼。</span></h1>
+          <p class="w-lead">
+            我的优先避雷清单：扣肉慢炖、熟料盖饭、内脏凤爪、成型炸物、调味凉菜与面点。<br />直接给判断，也把厂家例证和工序推断分开写明。
+          </p>
+          <div class="w-hero-counts">
+            <span><b id="dish-total">94</b> 项菜单与点单场景</span
+            ><span><b id="high-total">66</b> 项高风险</span
+            ><span><b id="source-total">31</b> 份来源记录</span>
+          </div>
+          <a
+            class="w-risk-cta"
+            id="high-risk-shortcut"
+            href="chinese-menu.html?risk=high#menu-guide"
+            >只看高风险避雷清单 ↓</a
+          >
+          <a
+            class="c-download-all"
+            href="assets/chinese-menu-risk.csv"
+            download="中餐预制风险完整清单.csv"
+            >下载完整清单 CSV ↗</a
+          >
+          <p class="c-updated">
+            资料读取：2026-10-25 · 5 家厂家 · 中国市场商品目录
+          </p>
+        </div>
+        <aside class="c-menu-note" aria-label="优先留意的菜名">
+          <p>点单前先记住 / QUICK WATCH</p>
+          <h2>先看这 12 项</h2>
+          <ul>
+            <li>梅菜扣肉</li>
+            <li>红烧肉</li>
+            <li>虎皮凤爪</li>
+            <li>红烧狮子头</li>
+            <li>小酥肉</li>
+            <li>糖醋里脊</li>
+            <li>炸藕盒</li>
+            <li>鱼香肉丝盖饭</li>
+            <li>卤肉饭浇头</li>
+            <li>酸菜鱼主料</li>
+            <li>红糖糍粑</li>
+            <li>南瓜饼</li>
+          </ul>
+          <small
+            >现蒸、现炸、现炒，仍可能使用店外做好的主要成品或半成品。</small
+          >
+        </aside>
+      </section>
+      <div class="w-scope">
+        <b>我的判断口径：</b
+        >看主要成品或半成品是否容易在店外做完，再由门店复热、煎炸或组合。<b>高风险是点单避雷优先级，不是某家店已被查实，也不是食品安全评分。</b>没有可靠的全国菜品使用率，以下不编造“九成在用”等比例；即食凉菜和面点按广义外购供餐看待。
+      </div>
+      <section
+        id="how-to-read"
+        class="w-section"
+        data-outline="风险判断与优先避雷"
+      >
+        <div class="w-section-heading">
+          <div>
+            <p class="w-kicker">01 / THE SHORTLIST</p>
+            <h2>红色先避，黄色拆开看。</h2>
+          </div>
+          <span class="w-muted">点击任一风险档，进入对应清单</span>
+        </div>
+        <div id="risk-legend" class="w-risk-legend"></div>
+        <h3 class="w-hotspot-heading">这六类，我会优先留意。</h3>
+        <div id="risk-hotspots" class="w-hotspots"></div>
+        <p class="w-risk-method">
+          判断结合主要制作外移程度、冷链与复热方式、替代的备料劳动，以及本次实际读取的厂家目录。每道菜都写明判断对象和适用场景；商品目录是供货例证，不等于市场使用率调查。
+        </p>
+        <details class="w-path-details">
+          <summary>成品、半成品、配料与现场制作怎么区分？</summary>
+          <div id="focus-legend" class="w-legend"></div>
+          <div class="w-process">
+            <span>先问制作地点<small>门店 / 中央厨房 / 外部工厂</small></span
+            ><i>→</i
+            ><span>再问到店状态<small>生料 / 预腌裹粉 / 全熟或即食</small></span
+            ><i>→</i
+            ><span
+              >最后问门店做什么<small>主要烹调 / 复热 / 组合摆盘</small></span
+            >
+          </div>
+        </details>
+        <div class="w-starter">
+          <span>先看这些有直接商品例证的菜</span>
+          <div id="starter-dishes"></div>
+          <small>点开菜品，再追溯原页。</small>
+        </div>
+      </section>
+      <section
+        id="menu-guide"
+        class="w-section"
+        data-outline="中餐点单避雷速查表"
+      >
+        <div class="w-section-heading">
+          <div>
+            <p class="w-kicker">02 / SAVE THIS MENU</p>
+            <h2>按菜名查，也能整表带走。</h2>
+          </div>
+          <button id="export-menu" type="button">↓ 导出筛选菜单 CSV</button>
+        </div>
+        <div class="w-menu-layout">
+          <aside class="w-category-rail" aria-label="中餐菜品分类">
+            <div id="category-buttons"></div>
+            <p class="w-muted">
+              覆盖家常菜、川湘菜、江浙粤菜、外卖盖饭、宴席、火锅和小吃。相同菜名在不同场景下，判断可能不同。
+            </p>
+            <a href="#research-checklist">我的点单核实清单 ↓</a>
+          </aside>
+          <div class="w-menu-main">
+            <div class="w-filter-bar">
+              <label class="w-search-label"
+                >搜索菜名、场景或环节<input
+                  id="dish-search"
+                  type="search"
+                  maxlength="100"
+                  placeholder="试试：扣肉、外卖、猪肚鸡、鸡肉、汤底"
+              /></label>
+              <label
+                >预制风险<select id="risk-filter">
+                  <option value="all">全部风险等级</option>
+                </select></label
+              ><label
+                >供餐路径<select id="focus-filter">
+                  <option value="all">全部制作路径</option>
+                </select></label
+              >
+              <div class="w-filter-checks">
+                <label
+                  ><input
+                    id="proof-only"
+                    type="checkbox"
+                  />只看有厂家商品例证</label
+                ><label
+                  ><input id="saved-only" type="checkbox" />只看我的清单</label
+                ><button id="reset-filters" type="button">清除筛选</button>
+              </div>
+            </div>
+            <div class="c-menu-tools">
+              <div id="menu-view" role="group" aria-label="菜品展示方式">
+                <button
+                  type="button"
+                  data-menu-view="table"
+                  aria-pressed="true"
+                >
+                  速查表</button
+                ><button
+                  type="button"
+                  data-menu-view="cards"
+                  aria-pressed="false"
+                >
+                  详细卡片
+                </button>
+              </div>
+              <span>高风险优先 · 可加入私人清单</span>
+            </div>
+            <p
+              id="menu-status"
+              class="w-status"
+              role="status"
+              aria-live="polite"
+            ></p>
+            <div id="dish-results"></div>
+          </div>
+        </div>
+      </section>
+      <section
+        id="quick-reading"
+        class="w-section"
+        data-outline="点单时怎么避雷"
+      >
+        <div class="w-section-heading">
+          <div>
+            <p class="w-kicker">03 / ORDER WITH A REASON</p>
+            <h2>我会这样点，也会这样问。</h2>
+          </div>
+        </div>
+        <div class="w-cases">
+          <article>
+            <span>01 / 先排除主要熟料</span>
+            <h3>扣肉、卤肉和熟浇头，问在哪里做熟。</h3>
+            <p>
+              “今天现热”不等于“今天在店里做”。直接问是生肉在本店炖，还是熟制肉包复热。米饭、配菜与肉料分开看。
+            </p>
+          </article>
+          <article>
+            <span>02 / 炸物看前处理</span>
+            <h3>小酥肉、鸡排和藕盒，问在哪里腌裹成型。</h3>
+            <p>
+              有些商品是生制半成品，也有预炸品。现炸只说明最后下锅；“小酥肉”还要核对猪肉、鸡肉等实际肉种。
+            </p>
+          </article>
+          <article>
+            <span>03 / 低风险点单参照</span>
+            <h3>从生料现做的简单菜，更好核对。</h3>
+            <p>
+              清炒青菜、番茄炒蛋、酸辣土豆丝、白灼虾、清蒸整鱼可作参照。它们也可能有预处理原料或商品版本，优先看现场主要工序。
+            </p>
+          </article>
+        </div>
+        <div class="c-context-note">
+          <b>两条容易误判：</b
+          >炖菜本来就需要提前备料，店内批量炖不等于外购；同名炒菜既可能有整袋熟制版本，也可能现场切肉炒制。大菜单、出餐快、味道浓只适合触发追问，不能单独当证据。
+        </div>
+      </section>
+      <section
+        id="research-checklist"
+        tabindex="-1"
+        class="w-section"
+        data-outline="我的点单核实清单"
+      >
+        <div class="w-section-heading">
+          <div>
+            <p class="w-kicker">04 / YOUR PRIVATE LIST</p>
+            <h2>收藏你常点的菜，下次带着问。</h2>
+          </div>
+          <button id="export-checklist" type="button">↓ 导出核实笔记</button>
+        </div>
+        <div class="w-notebook-intro">
+          <label
+            >店铺 / 本次研究名称<input
+              id="restaurant-name"
+              maxlength="100"
+              placeholder="只保存在此浏览器"
+          /></label>
+          <p class="w-muted">
+            记录店家原话、包装配料和所见工序。自己的记录与网页风险判断分开，支持导出备份；中餐与日料清单各自保存。
+          </p>
+        </div>
+        <p
+          id="notebook-status"
+          class="w-status"
+          role="status"
+          aria-live="polite"
+        ></p>
+        <div id="checklist-items"></div>
+      </section>
+      <section
+        id="evidence-library"
+        class="w-section"
+        data-outline="厂家来源与证据范围"
+      >
+        <div class="w-section-heading">
+          <div>
+            <p class="w-kicker">05 / CHECK THE SUPPLY</p>
+            <h2>把判断，落到实际供货资料。</h2>
+          </div>
+          <span class="w-muted">资料读取于 2026-10-25</span>
+        </div>
+        <p class="w-evidence-intro">
+          本次读取千味央厨、聪厨、盖世食品、凤祥食品、安井食品的具体商品页和分类目录。部分页面的产品通过官网公开数据加载，列出原页与数据入口。厂家被列为资料来源，<b>不表示厂家质量有问题，也不是餐厅黑名单</b>。未找到直接同名或明确同类商品的菜，标记为工序推断；不引用无关搜索结果、验证码页或未读正文的链接。
+        </p>
+        <div id="evidence-cards" class="w-evidence-grid"></div>
+        <details class="w-method">
+          <summary>适用范围与下一步如何更新</summary>
+          <p>
+            本页的高、中、低是我的定性判断，针对表中写明的供餐场景，不是抽样调查得到的“预制概率”。高风险可能针对主要肉料或半成品，而非整菜；低风险不是食品安全评级，也不保证全部自制。
+          </p>
+          <p>
+            广义外购供餐涵盖消费者关心的整份熟品、成型半成品、即食凉菜和面点，不能直接等同国内法规对“预制菜”的定义。基础调味料、冷冻生肉、净菜、鲜面和门店提前备料分别看。
+          </p>
+          <p>
+            专门现杀、现包、现熬或能提供包装与制作证据的门店，应按实际证据更新判断。单个商品的肉种、生熟和加热要求，以其配料表和标签为准；本页不把一款商品推广为所有同名菜。
+          </p>
+        </details>
+      </section>
+      <footer class="w-footer">
+        <span>日常研究 / 中餐预制菜避雷</span
+        ><a href="washoku.html">继续看日料预制风险 ↗</a>
+      </footer>
+    </main>
+    <noscript
+      ><p class="w-noscript">
+        速查表、筛选与私人清单需要
+        JavaScript。上方重点菜名、点单建议和研究口径仍可阅读。
+      </p></noscript
+    >
+  </body>
+</html>
