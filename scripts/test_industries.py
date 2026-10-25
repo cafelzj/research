@@ -11,8 +11,8 @@ with sync_playwright() as p:
     page.on("pageerror", lambda e: errors.append(str(e)))
     page.goto(BASE + "atlas.html")
     expect(page.locator("#chemicalContent")).to_be_visible()
-    expect(page.locator("#workflow textarea,#workflow input,#workflow button")).to_have_count(0)
-    expect(page.locator("#checks .research-step")).to_have_count(7)
+    expect(page.locator("#workflow,#model")).to_have_count(0)
+    expect(page.locator("#sectorCards .atlas-sector-row")).to_have_count(14)
     for key, name, routes in [("appliances", "家电", 5), ("electrical", "电新", 6)]:
         page.locator(f'[data-industry-choice="{key}"]').click()
         expect(page.locator("#chemicalContent")).to_be_hidden()

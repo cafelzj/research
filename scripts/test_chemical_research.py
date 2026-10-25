@@ -5,7 +5,7 @@ from pathlib import Path
 from urllib.request import urlopen
 from playwright.sync_api import sync_playwright, expect
 ROOT = Path(__file__).resolve().parents[1]
-BASE = (sys.argv[1] if len(sys.argv)>1 else 'http://127.0.0.1:8021/').rstrip('/')+'/'
+BASE = (sys.argv[1] if len(sys.argv)>1 else 'http://127.0.0.1:8026/').rstrip('/')+'/'
 data = json.loads((ROOT/'assets/chemical-applications-data.js').read_text().removeprefix('window.ChemicalResearch = ').strip().removesuffix(';'))
 assert len(data['chapters']) == 6
 for c in data['chapters']:
@@ -25,6 +25,19 @@ with sync_playwright() as p:
         page.route(BASE+'**',relay)
     page.goto(BASE+'atlas.html?chemChain=phosphate#product-applications')
     expect(page.locator('.chem-chapter-header h3')).to_have_text('磷化工')
+    expect(page.locator('#model,#workflow')).to_have_count(0)
+    assert page.locator('#chemicalContent>section').evaluate_all('(els)=>els.map(e=>e.id)')[:6]==['sectors','map','product-applications','framework','metrics','glossary']
+    expect(page.locator('.atlas-sector-group')).to_have_count(4)
+    expect(page.locator('.atlas-sector-row')).to_have_count(14)
+    expect(page.locator('.atlas-topic-link')).to_have_count(6)
+    page.locator('#search').fill('冰箱')
+    expect(page.locator('#atlas-product-results')).to_be_visible()
+    result=page.locator('#atlas-product-results a').first
+    result.click()
+    assert 'chemChain=pu' in page.url and '#chem-product-' in page.url
+    assert page.locator('#'+page.url.split('#')[1]).is_visible()
+    page.locator('#search').fill('')
+    expect(page.locator('#atlas-product-results')).to_be_hidden()
     host=page.locator('#product-applications')
     expect(host.locator('input,textarea,select,form')).to_have_count(0)
     for c in data['chapters']:
@@ -39,6 +52,22 @@ with sync_playwright() as p:
         first=page.locator('.chem-product-index a').first
         first.click(); assert '#chem-product-0' in page.url
         assert page.locator('#chem-product-0').is_visible()
+        page.locator('.chem-reader-menu summary').click()
+        expect(page.locator('.chem-reader-menu')).to_have_attribute('open','')
+        page.locator('.chem-menu-products a').last.click()
+        expect(page.locator('.chem-reader-menu')).not_to_have_attribute('open','')
+        page.wait_for_timeout(350)
+        bar=page.locator('.chem-reading-bar').bounding_box()
+        assert -1 <= bar['y'] <= 2, bar
+        page.locator('.chem-reader-menu summary').click()
+        page.keyboard.press('Escape')
+        expect(page.locator('.chem-reader-menu')).not_to_have_attribute('open','')
+    page.goto(BASE+'atlas.html?industry=chemical&chemChain=fluoro#chem-product-5')
+    expect(page.locator('.chem-chapter-header h3')).to_have_text('氟化工')
+    page.locator('[data-chem-chain="silicon"]').click()
+    page.go_back()
+    expect(page.locator('.chem-chapter-header h3')).to_have_text('氟化工')
+    assert '#chem-product-5' in page.url
     page.locator('[data-industry-choice="appliances"]').click()
     expect(host).to_be_hidden()
     page.locator('[data-industry-choice="chemical"]').click()
@@ -47,6 +76,18 @@ with sync_playwright() as p:
     for c in data['chapters']:
         page.locator('[data-chem-chain="'+c['key']+'"]').click()
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth+1')
+    page.locator('.chem-reader-menu summary').click()
+    page.wait_for_timeout(100)
+    menu=page.locator('.chem-reader-links').bounding_box()
+    assert menu['y']>=0 and menu['y']+menu['height']<=844,menu
+    page.keyboard.press('Escape')
+    page.locator('.page-outline-trigger').click()
+    expect(page.locator('#pageOutline')).to_contain_text('01 · 子行业目录')
+    expect(page.locator('#pageOutline')).not_to_contain_text('价差推演')
+    expect(page.locator('#pageOutline')).not_to_contain_text('研究路径')
+    page.keyboard.press('Escape')
+    page.set_viewport_size({'width':320,'height':844})
+    assert page.evaluate('document.documentElement.scrollWidth <= innerWidth+1')
     expect(host.locator('a[download]')).to_have_count(1)
     with urlopen(BASE+'assets/chemical-research-handbook.md',timeout=40) as r:
         handbook=r.read().decode()
