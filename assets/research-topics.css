@@ -1,0 +1,29 @@
+.research-topic-nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid #dbe4ed;
+  font-size: 11px;
+}
+.research-topic-nav span {
+  color: #64758b;
+  margin-right: 8px;
+}
+.research-topic-nav a {
+  color: #58728b;
+}
+.research-topic-nav a[aria-current="page"] {
+  color: #225d88;
+  border-bottom: 1px solid #225d88;
+}
+@media (max-width: 520px) {
+  .research-topic-nav {
+    gap: 10px;
+    font-size: 10px;
+  }
+  .research-topic-nav span {
+    width: 100%;
+  }
+}

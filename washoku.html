@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>日料菜单 · 预制与现做环节研究</title>
+    <link rel="stylesheet" href="assets/site.css" />
+    <link rel="stylesheet" href="assets/washoku.css" />
+    <script defer src="assets/washoku-data.js"></script>
+    <script defer src="assets/washoku.js"></script>
+    <link rel="stylesheet" href="assets/outline.css" />
+    <script defer src="assets/outline.js"></script>
+  </head>
+  <body>
+    <a class="w-skip" href="#menu-guide">跳到菜品目录</a>
+    <header class="site-header">
+      <a class="site-brand" href="index.html"
+        >化工观测<small>CHEMICAL INDUSTRY / RESEARCH</small></a
+      >
+      <nav class="site-nav" aria-label="网站主导航">
+        <a href="atlas.html">产业链总览</a><a href="index.html">行业看板</a
+        ><a href="data.html">数据与图表</a
+        ><a href="intelli.html">IntelliUI <small>BETA</small></a
+        ><a href="daily.html" aria-current="page">日常研究</a>
+      </nav>
+    </header>
+    <main>
+      <nav class="w-topics" aria-label="日常研究专题">
+        <span>研究专题</span><a href="daily.html">法国与欧洲指标</a
+        ><a href="washoku.html" aria-current="page">日料菜单与制作环节</a>
+      </nav>
+      <section class="w-hero">
+        <div>
+          <p class="w-kicker">DAILY RESEARCH 002 / JAPANESE MENU GUIDE</p>
+          <h1>日料菜单，<br />从菜名看到<span>制作过程。</span></h1>
+          <p class="w-lead">
+            寿司、烤物、炸物、饭面与小菜。<br />先认清供餐路径，再问店家实际上做了哪一步。
+          </p>
+          <div class="w-hero-counts">
+            <span><b id="dish-total">60</b> 道常见菜单</span
+            ><span><b>8</b> 个菜品分类</span><span><b>4</b> 种核实方向</span>
+          </div>
+        </div>
+        <div class="w-hero-art" aria-hidden="true">
+          <div class="w-art-caption">お品書きの、その先へ。</div>
+          <svg viewBox="0 0 430 320">
+            <ellipse cx="220" cy="170" rx="161" ry="110" fill="#e6dfd1" />
+            <ellipse
+              cx="215"
+              cy="158"
+              rx="158"
+              ry="108"
+              fill="#fcfaf4"
+              stroke="#d3c8b5"
+              stroke-width="2"
+            />
+            <ellipse
+              cx="215"
+              cy="158"
+              rx="131"
+              ry="87"
+              fill="none"
+              stroke="#e3dccf"
+            />
+            <g transform="translate(113 105) rotate(-18 50 30)">
+              <rect
+                x="0"
+                y="15"
+                width="110"
+                height="48"
+                rx="21"
+                fill="#e6dfcb"
+              />
+              <rect
+                x="0"
+                y="10"
+                width="110"
+                height="45"
+                rx="18"
+                fill="#fffdf6"
+              />
+              <path
+                d="M-5 13 Q48 -8 115 8 L108 36 Q55 53 -3 37Z"
+                fill="#ce7e62"
+              />
+              <path
+                d="M15 10L38 43M43 5L68 45M74 5L98 39"
+                stroke="#f5c3a7"
+                stroke-width="6"
+              />
+            </g>
+            <g transform="translate(215 166) rotate(14)">
+              <rect
+                x="0"
+                y="8"
+                width="113"
+                height="50"
+                rx="22"
+                fill="#e8e0cc"
+              />
+              <path d="M-3 5Q55 -13 116 7L110 39Q51 55 0 38Z" fill="#a16035" />
+              <path
+                d="M20 5L23 40M49 1L53 44M80 2L85 42"
+                stroke="#6e4128"
+                stroke-width="5"
+              />
+              <path
+                d="M4 18Q55 4 109 18"
+                fill="none"
+                stroke="#d6a664"
+                stroke-width="3"
+              />
+            </g>
+            <path
+              d="M106 206q12-28 27-4q18-25 28 5q-25 18-55-1"
+              fill="#7e965e"
+            />
+            <path d="M273 91q12-20 26-2q-9 22-26 2" fill="#729174" />
+            <path
+              d="M42 277L381 243M44 287L384 254"
+              stroke="#6c5743"
+              stroke-width="5"
+              stroke-linecap="round"
+            /></svg
+          ><span class="w-art-note"
+            >现握、现炸、现炙烤<br />描述的是某一步，不是全部过程。</span
+          >
+        </div>
+      </section>
+      <div class="w-scope">
+        <b>先说清“预制”：</b
+        >本页标记的是<b>值得核实的成品、半成品和配料路径</b>，不是断言某家店一定使用预制菜。冷冻原料、门店提前备料、外购成品和具体法规分类需要分开看；没有门店证据时，实际方式均待核实。
+      </div>
+      <section id="how-to-read" data-outline="如何读标签" class="w-section">
+        <div class="w-section-heading">
+          <div>
+            <p class="w-kicker">01 / READ THE PROCESS</p>
+            <h2>颜色提示的是：下一句该问什么。</h2>
+          </div>
+          <span class="w-muted">不是使用率统计，也不是质量评分</span>
+        </div>
+        <div id="focus-legend" class="w-legend"></div>
+        <div class="w-process">
+          <span>谁做的？<small>门店 / 中央厨房 / 外部工厂</small></span
+          ><i>→</i
+          ><span
+            >到店时是什么状态？<small
+              >原料 / 半成品 / 全熟或即食成品</small
+            ></span
+          ><i>→</i
+          ><span
+            >门店最后做什么？<small>切配 / 烹熟 / 复热 / 组合摆盘</small></span
+          >
+        </div>
+        <div class="w-starter">
+          <span>有厂商例证，先从这几道问起</span>
+          <div id="starter-dishes"></div>
+          <small>商品存在不等于店铺正在使用。</small>
+        </div>
+      </section>
+      <section
+        id="menu-guide"
+        data-outline="菜品分类与制作路径"
+        class="w-section"
+      >
+        <div class="w-section-heading">
+          <div>
+            <p class="w-kicker">02 / EXPLORE THE MENU</p>
+            <h2>从你爱点的那一道开始。</h2>
+          </div>
+          <button id="export-menu" type="button">↓ 导出筛选菜单 CSV</button>
+        </div>
+        <div class="w-menu-layout">
+          <aside class="w-category-rail" aria-label="菜品分类">
+            <div id="category-buttons"></div>
+            <p class="w-muted">
+              分类参考中文日料店常见菜单，包含传统、居酒屋、连锁与融合菜式，并非完整日本料理体系。
+            </p>
+            <a href="#research-checklist">查看我的核实清单 ↓</a>
+          </aside>
+          <div class="w-menu-main">
+            <div class="w-filter-bar">
+              <label class="w-search-label"
+                >搜索菜品或制作环节<input
+                  id="dish-search"
+                  type="search"
+                  placeholder="试试：鳗鱼、拉面、玉子烧、gyoza"
+                  maxlength="100" /></label
+              ><label
+                >核实方向<select id="focus-filter">
+                  <option value="all">全部制作路径</option>
+                </select></label
+              >
+              <div class="w-filter-checks">
+                <label
+                  ><input
+                    id="proof-only"
+                    type="checkbox"
+                  />只看有厂商商品例证</label
+                ><label
+                  ><input
+                    id="saved-only"
+                    type="checkbox"
+                  />只看我的核实清单</label
+                ><button id="reset-filters" type="button">清除筛选</button>
+              </div>
+            </div>
+            <p
+              id="menu-status"
+              class="w-status"
+              role="status"
+              aria-live="polite"
+            ></p>
+            <div id="dish-results"></div>
+          </div>
+        </div>
+      </section>
+      <section
+        id="quick-reading"
+        data-outline="容易误判的典型菜"
+        class="w-section"
+      >
+        <div class="w-section-heading">
+          <div>
+            <p class="w-kicker">03 / A FEW USEFUL DISTINCTIONS</p>
+            <h2>别让最后一步，替整道菜作答。</h2>
+          </div>
+        </div>
+        <div class="w-cases">
+          <article>
+            <span>01 / 鳗鱼饭</span>
+            <h3>饭现煮，鳗鱼也可能是熟料。</h3>
+            <p>
+              分别问“米饭在哪里煮”和“鳗鱼到店前是否已经蒲烧”。熟制鳗鱼参与组装，不自动意味着整碗饭是外购成品。
+            </p>
+          </article>
+          <article>
+            <span>02 / 炸物</span>
+            <h3>现炸，不等于现腌、现裹粉。</h3>
+            <p>
+              清理、调味、成型、裹粉、预炸和最终熟制是不同环节。商品可能是生制半成品，也可能已经全熟，要看具体标签。
+            </p>
+          </article>
+          <article>
+            <span>03 / 刺身与寿司</span>
+            <h3>冷冻和预切，先按原料工序看。</h3>
+            <p>
+              冷冻鱼料、预切片、鱼籽或蟹柳、醋饭、最终握制需分别核实。外观、出餐速度和师傅在面前操作，都只能提供部分信息。
+            </p>
+          </article>
+        </div>
+      </section>
+      <section
+        tabindex="-1"
+        id="research-checklist"
+        data-outline="我的到店核实清单"
+        class="w-section"
+      >
+        <div class="w-section-heading">
+          <div>
+            <p class="w-kicker">04 / TAKE A QUESTION TO THE TABLE</p>
+            <h2>留一份你自己的点单研究。</h2>
+          </div>
+          <button id="export-checklist" type="button">↓ 导出核实笔记</button>
+        </div>
+        <div class="w-notebook-intro">
+          <label
+            >店铺 / 本次研究名称（可不填）<input
+              id="restaurant-name"
+              maxlength="100"
+              placeholder="只保存在你的浏览器，不公开发布"
+          /></label>
+          <p class="w-muted">
+            从菜品卡片加入清单，再记录店家说法、包装/菜单信息与具体工序。自己的记录不会改动网页公共标签；仅保存本浏览器，可随时导出。
+          </p>
+        </div>
+        <p
+          id="notebook-status"
+          class="w-status"
+          role="status"
+          aria-live="polite"
+        ></p>
+        <div id="checklist-items"></div>
+      </section>
+      <section
+        id="evidence-library"
+        data-outline="商品例证与研究边界"
+        class="w-section"
+      >
+        <div class="w-section-heading">
+          <div>
+            <p class="w-kicker">05 / FOLLOW THE EVIDENCE</p>
+            <h2>商品存在，是一条线索。</h2>
+          </div>
+          <span class="w-muted">不是某家店的采购记录</span>
+        </div>
+        <p class="w-evidence-intro">
+          以下厂商页面已经读取。它们只能证明有相应商品或供餐路径，<b>不能证明某家店在用、在中国日料店有多普遍，或某道菜按法规一定属于预制菜</b>。部分例证是日本或北美市场、家庭用或餐饮用产品；地域与用途在来源说明中标出。没有直接商品例证的卡片标记为“工序参考”。
+        </p>
+        <div id="evidence-cards" class="w-evidence-grid"></div>
+        <details class="w-method">
+          <summary>研究口径与未覆盖的内容</summary>
+          <p>
+            这是常见菜单的供餐工序研究，不是门店抽样调查，没有计算“预制比例”或“预制概率”。“整品/成品”也涵盖消费者常问的即食冷菜和甜品，不等于全部符合国内“预制菜”的监管定义。速冻面米、调味品、初加工食材和餐饮中央厨房模式需按实际适用口径另辨。
+          </p>
+          <p>
+            商品例证只对应其具体名称和标示工序。使用相似菜名的其他商品可能有不同配方、熟制程度、储运和加热要求。本页不以口感、整齐度、价格高低、冷冻或出餐速度单独判断制作来源。
+          </p>
+          <p>
+            外购、提前备料和工业加工不直接等于质量好坏。你可以根据原料、味道、透明度与价格作自己的选择。
+          </p>
+        </details>
+      </section>
+      <footer class="w-footer">
+        <span>日常研究 / 日料菜单与制作过程</span
+        ><a href="daily.html">返回其他研究专题 ↗</a>
+      </footer>
+    </main>
+    <noscript
+      ><p class="w-noscript">
+        菜品筛选与个人清单需要JavaScript。上方标签口径、典型例子和研究边界仍可直接阅读。
+      </p></noscript
+    >
+  </body>
+</html>

@@ -35,6 +35,12 @@
 
 **研究边界：**这是一版研究框架与学习工具。官方宏观统计、政策原文、公司年报、IEA/IRENA报告的逐项核验仍受来源访问限制，页面已分别标注；历史事件部分是待验证的复盘题，不能冒充已完成的深度历史研究或当前行业判断。来源记录与后续核验清单见 [研究说明](docs/industry-research.md)。
 
+## 日料菜单与制作环节
+
+新网页 `washoku.html`，从“日常研究”顶部专题导航进入。整理60道常见菜单、8个分类，按整品/成品、成型裹粉半成品、成品配料和现场操作四种方向提示核实。每道菜提供可采购路径、现场做法、到店问题与易误判之处。
+
+已读取12个厂商页面，为13道菜关联商品例证；其他卡片明确标注为工序参考。商品存在不代表具体餐厅使用、市场使用率或法规分类。页面支持分类/路径/关键词/例证筛选、到店清单、记录依据、备注与CSV/Markdown导出，清单只在本浏览器保存。详情见 [日料研究说明](docs/washoku-guide.md)。
+
 ## 日常研究
 
 新入口 `daily.html`。首个专题围绕用户提供的「10·17法国暴力骚乱事件」条目，比较法国与其他9个欧盟国家的财政、代际分配和居民处境。事件年份和经过尚未独立核实，不与2023年事件混同，也不将宏观指标当作已证实的骚乱原因。
@@ -80,9 +86,9 @@ GitHub 的文件浏览页面显示源码，不直接运行网页。已加入 `.g
 
 首次部署需要在仓库 Settings → Pages → Build and deployment → Source 选择 **GitHub Actions**。然后在 Actions 中打开 `Deploy research atlas to GitHub Pages`，使用 Run workflow 启动，或重跑先前失败的部署。部署成功后的预期访问地址为：https://cafelzj.github.io/research/ 。以 GitHub Pages 返回的实际地址为准。
 
-此后每次推送到 `main` 都会自动发布。站点发布 `index.html`、`atlas.html`、`data.html`、`studio.html`、`intelli.html`、`daily.html` 和 `assets/`；不发布 README、验证脚本或研究笔记。
+此后每次推送到 `main` 都会自动发布。站点发布 `index.html`、`atlas.html`、`data.html`、`studio.html`、`intelli.html`、`daily.html`、`washoku.html` 和 `assets/`；不发布 README、验证脚本或研究笔记。
 
-部署后，Actions 的 `Verify public website matches this commit` 步骤会通过公网请求六个页面及所有站点资源，检查 HTTP 200、网页的 HTML 类型及文件内容是否与本次提交完全一致，等待 CDN 更新后重试，持续失败会使工作流失败。可在具备访问权限的环境手动执行 `python3 scripts/verify_public_site.py https://cafelzj.github.io/research/`。这验证公网内容发布结果，交互行为还需浏览器检查。
+部署后，Actions 的 `Verify public website matches this commit` 步骤会通过公网请求七个页面及所有站点资源，检查 HTTP 200、网页的 HTML 类型及文件内容是否与本次提交完全一致，等待 CDN 更新后重试，持续失败会使工作流失败。可在具备访问权限的环境手动执行 `python3 scripts/verify_public_site.py https://cafelzj.github.io/research/`。这验证公网内容发布结果，交互行为还需浏览器检查。
 
 ## 内容
 
