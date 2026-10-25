@@ -2,6 +2,8 @@
 
 入口：`intelli.html`。这是一个在静态站点内运行的研究工作区，不需要后端、API 密钥或新的构建工具。
 
+IntelliUI统一包含“智能工作区”“数据明细”“图表制作”三个子栏目，分别使用 `intelli.html`、`data.html`、`studio.html`，三个页面顶部互链并统一高亮主导航中的IntelliUI。旧页面地址继续有效，原本共享的CSV与会话数据沿用，无需重复导入。
+
 ## 使用方式
 
 从主导航进入 **IntelliUI BETA**。直接点击快捷操作，或输入“近6个月甲醇价格折线图”。支持折线图、柱状图、数据表、指标卡，支持“价格折线图，按品种区分不同颜色”“不同产品用不同颜色”等分色表达；折线图和柱状图以产品作为系列，每个产品具有稳定颜色（最多15种），支持一个产品或全部产品、一个数值指标、近1至120个自然月、全部月份或最新月份。时间范围以数据中的最新月份为基准，缺失月份不补值。
@@ -45,6 +47,6 @@ window.IntelliUI.registerView('range', {
 
 启动：`python3 -m http.server 8000 --bind 127.0.0.1`。
 
-浏览器回归：`python3 scripts/test_intelli.py`，需要 Python Playwright 与 `/usr/bin/chromium`；测试针对本地静态服务，使用独立浏览器会话，不改动仓库数据。覆盖指令解析、图表、编辑撤销、CSV 与自定义字段、工作区恢复、导出、异常存储、手机宽度和主导航。
+浏览器回归：`python3 scripts/test_intelli.py`（可传其他服务地址，如 `http://127.0.0.1:8005/`），需要 Python Playwright 与 `/usr/bin/chromium`；测试针对本地静态服务，使用独立浏览器会话，不改动仓库数据。覆盖指令解析、图表、编辑撤销、CSV 与自定义字段、工作区恢复、导出、异常存储、手机宽度、统一主导航和三个子栏目的数据共享与跳转。
 
 部署的文件列表在 `.github/workflows/pages.yml`，公网逐文件验证在 `scripts/verify_public_site.py`；两者均包含新入口。

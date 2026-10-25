@@ -3,11 +3,8 @@
   const D = window.MenuRiskData || window.WashokuData;
   if (!D) return;
   const ui = {
-    storageKey: "washoku.research.v1",
     aliasLabel: "日文名",
     csvName: "日料菜单-制作路径研究.csv",
-    notebookTitle: "日料店到店核实清单",
-    notebookName: "日料店核实笔记.md",
     unit: "道",
     itemLabel: "道菜",
     starterIds: [
@@ -48,64 +45,8 @@
       risk: risks.has(params.get("risk")) ? params.get("risk") : "all",
       query: (params.get("q") || "").slice(0, 100),
       proof: false,
-      saved: false,
     };
-  const KEY = ui.storageKey,
-    basisChoices = {
-      unasked: "未询问 / 暂无证据",
-      staff: "店家口头说明（未独立核实）",
-      package: "看过包装/菜单标示（注明内容）",
-      observed: "看过部分工序（不代表全流程）",
-    },
-    stageChoices = {
-      unknown: "实际供餐路径未确认",
-      whole: "记录为整品/成品路径",
-      half: "记录为成型/裹粉半成品",
-      component: "记录为成品配料参与",
-      onsite: "记录为现场操作（注明已见环节）",
-      mixed: "混合路径 / 仍有疑问",
-    };
-  let book = { version: 1, pinned: [], records: {}, restaurant: "" },
-    storageWarning = "";
-  try {
-    const old = JSON.parse(localStorage.getItem(KEY) || "null");
-    if (old) {
-      if (
-        old.version !== 1 ||
-        !Array.isArray(old.pinned) ||
-        typeof old.records !== "object" ||
-        old.records === null
-      )
-        throw Error("format");
-      book.pinned = [...new Set(old.pinned.filter((id) => dishes.has(id)))];
-      book.restaurant =
-        typeof old.restaurant === "string" ? old.restaurant.slice(0, 100) : "";
-      for (const id of dishes.keys()) {
-        const r = old.records[id];
-        if (r && typeof r === "object")
-          book.records[id] = {
-            basis: basisChoices[r.basis] ? r.basis : "unasked",
-            stage: stageChoices[r.stage] ? r.stage : "unknown",
-            note: typeof r.note === "string" ? r.note.slice(0, 3000) : "",
-          };
-      }
-    }
-  } catch (_) {
-    storageWarning =
-      "浏览器存储不可用或旧清单格式异常；本次清单仅在页面内存保留，请导出备份。";
-  }
   const verified = (d) => d.refs.some((id) => D.sources[id]?.verified === true);
-  const record = (id) =>
-    book.records[id] ||
-    (book.records[id] = { basis: "unasked", stage: "unknown", note: "" });
-  function persist() {
-    try {
-      localStorage.setItem(KEY, JSON.stringify(book));
-      return "已保存到此浏览器。";
-    } catch (_) {
-      return "浏览器无法保存，当前内容仅在本页有效，请导出。";
-    }
-  }
   function syncUrl() {
     const url = new URL(location.href);
     if (state.category === "all") url.searchParams.delete("category");
@@ -122,7 +63,6 @@
     if (state.risk !== "all" && d.risk.level !== state.risk) return false;
     if (state.focus !== "all" && d.focus !== state.focus) return false;
     if (state.proof && !verified(d)) return false;
-    if (state.saved && !book.pinned.includes(d.id)) return false;
     const tokens = normalize(state.query).split(/\s+/).filter(Boolean),
       text = normalize(
         [
@@ -167,8 +107,7 @@
       : '<p class="w-muted">此等级为工序与供餐逻辑推断，未绑定直接商品例证；不是门店使用情况或市场使用率统计。</p>';
   }
   function card(d) {
-    const pinned = book.pinned.includes(d.id);
-    return `<article id="dish-${esc(d.id)}" class="w-dish" data-risk="${d.risk.level}" data-dish="${esc(d.id)}"><div class="w-dish-top"><div><h4>${esc(d.name)}</h4><div class="w-dish-ja">${esc(d.ja)}</div></div><button type="button" class="w-dish-save" data-pin="${esc(d.id)}" aria-pressed="${pinned}" aria-label="${pinned ? "从核实清单移除" : "加入核实清单"}：${esc(d.name)}">${pinned ? "●" : "＋"}</button></div>${riskBadge(d)}<p class="w-risk-target"><b>判断对象：</b>${esc(d.risk.target)}</p><p class="w-risk-reason"><b>我的判断：</b>${esc(d.risk.reason)}</p>${stage(d)}<p class="w-dish-path">${esc(d.preparedPath)}</p><p class="w-question"><b>到店问一句</b>${esc(d.ask)}</p><p class="w-proof ${verified(d) ? "verified" : ""}">${verified(d) ? "判断依据：同类厂商商品例证 + 工序推断" : "判断依据：工序与供餐逻辑推断 · 无直接商品例证"}</p><details><summary>看现场做法、来源与易误判之处</summary><p><b>现场制作路径：</b>${esc(d.onsitePath)}</p><p><b>容易误判：</b>${esc(d.trap)}</p>${sourceLinks(d)}</details></article>`;
+    return `<article id="dish-${esc(d.id)}" class="w-dish" data-risk="${d.risk.level}" data-dish="${esc(d.id)}"><div class="w-dish-top"><div><h4>${esc(d.name)}</h4><div class="w-dish-ja">${esc(d.ja)}</div></div></div>${riskBadge(d)}<p class="w-risk-target"><b>判断对象：</b>${esc(d.risk.target)}</p><p class="w-risk-reason"><b>我的判断：</b>${esc(d.risk.reason)}</p>${stage(d)}<p class="w-dish-path">${esc(d.preparedPath)}</p><p class="w-question"><b>到店问一句</b>${esc(d.ask)}</p><p class="w-proof ${verified(d) ? "verified" : ""}">${verified(d) ? "判断依据：同类厂商商品例证 + 工序推断" : "判断依据：工序与供餐逻辑推断 · 无直接商品例证"}</p><details><summary>看现场做法、来源与易误判之处</summary><p><b>现场制作路径：</b>${esc(d.onsitePath)}</p><p><b>容易误判：</b>${esc(d.trap)}</p>${sourceLinks(d)}</details></article>`;
   }
   function renderCategories() {
     const all = D.dishes.filter(baseMatches),
@@ -181,12 +120,11 @@
       .join("");
   }
   function quickRow(d) {
-    const pinned = book.pinned.includes(d.id);
-    return `<tr data-quick-dish="${esc(d.id)}"><th scope="row">${esc(d.name)}<small>${esc(d.ja)}</small></th><td>${riskBadge(d)}<small>${esc(D.focus[d.focus].name)}</small></td><td><b>${esc(d.risk.target)}</b><p>${esc(d.risk.reason)}</p><details><summary>怎么问 / 看来源</summary><p>${esc(d.ask)}</p>${sourceLinks(d)}</details></td><td><button type="button" data-pin="${esc(d.id)}" aria-pressed="${pinned}" aria-label="${pinned ? "从核实清单移除" : "加入核实清单"}：${esc(d.name)}">${pinned ? "已加入" : "＋ 加清单"}</button></td></tr>`;
+    return `<tr data-quick-dish="${esc(d.id)}"><th scope="row">${esc(d.name)}<small>${esc(d.ja)}</small></th><td>${riskBadge(d)}<small>${esc(D.focus[d.focus].name)}</small></td><td><b>${esc(d.risk.target)}</b><p>${esc(d.risk.reason)}</p><details><summary>怎么问 / 看来源</summary><p>${esc(d.ask)}</p>${sourceLinks(d)}</details></td></tr>`;
   }
   function categoryContents(selected) {
     return menuView === "table"
-      ? `<div class="c-table-wrap"><table class="c-quick-table"><caption class="c-sr-only">菜品预制风险速查，含判断对象、理由和来源</caption><thead><tr><th scope="col">菜名 / 场景</th><th scope="col">我的风险判断</th><th scope="col">风险在哪 / 为什么</th><th scope="col">留待点单</th></tr></thead><tbody>${selected.map(quickRow).join("")}</tbody></table></div>`
+      ? `<div class="c-table-wrap"><table class="c-quick-table"><caption class="c-sr-only">菜品预制风险速查，含判断对象、理由和来源</caption><thead><tr><th scope="col">菜名 / 场景</th><th scope="col">我的风险判断</th><th scope="col">风险在哪 / 为什么</th></tr></thead><tbody>${selected.map(quickRow).join("")}</tbody></table></div>`
       : `<div class="w-dish-grid">${selected.map(card).join("")}</div>`;
   }
   function renderMenu() {
@@ -201,7 +139,7 @@
               : "";
           })
           .join("")
-      : `<div class="w-empty">没有匹配菜品。试试清空关键词、改选全部风险和路径，或取消“只看清单/商品例证”。</div>`;
+      : `<div class="w-empty">没有匹配菜品。点击“显示全部菜品”，或切换风险和分类。</div>`;
     $("menu-status").textContent =
       `显示 ${list.length} / ${D.dishes.length} ${ui.itemLabel} · 高 ${list.filter((d) => d.risk.level === "high").length} / 中 ${list.filter((d) => d.risk.level === "medium").length} / 低 ${list.filter((d) => d.risk.level === "low").length} · ${list.filter(verified).length} ${ui.unit}有同类厂商商品例证 · 同类内高风险优先。`;
     $("risk-legend")
@@ -212,6 +150,28 @@
           String(state.risk === b.dataset.riskFilter),
         ),
       );
+    $("risk-buttons")
+      .querySelectorAll("[data-risk-button]")
+      .forEach((b) =>
+        b.setAttribute(
+          "aria-pressed",
+          String(state.risk === b.dataset.riskButton),
+        ),
+      );
+    $("proof-only").setAttribute("aria-pressed", String(state.proof));
+    $("focus-legend")
+      .querySelectorAll("[data-focus]")
+      .forEach((b) =>
+        b.setAttribute("aria-pressed", String(state.focus === b.dataset.focus)),
+      );
+    const selection = [
+      state.query ? "当前菜品：" + state.query : "",
+      state.focus !== "all" ? "制作路径：" + D.focus[state.focus].name : "",
+    ]
+      .filter(Boolean)
+      .join(" · ");
+    $("active-selection").textContent = selection;
+    $("active-selection").hidden = !selection;
     $("export-menu").disabled = !list.length;
     syncUrl();
   }
@@ -231,58 +191,6 @@
       renderMenu();
     };
   }
-  function renderNotebook() {
-    const target = $("checklist-items");
-    target.innerHTML = book.pinned.length
-      ? book.pinned
-          .map((id) => {
-            const d = dishes.get(id),
-              r = record(id);
-            return `<article class="w-note-card" data-note-card="${esc(id)}"><div class="w-note-heading"><div><h3>${esc(d.name)}</h3>${riskBadge(d)}${stage(d)}</div><button type="button" data-remove="${esc(id)}">移出清单</button></div><p class="w-note-question">网页判断对象：${esc(d.risk.target)}<br>可以问：${esc(d.ask)}</p><div class="w-note-fields"><div><label>这条记录的依据<select data-record="${esc(id)}" data-field="basis">${Object.entries(
-              basisChoices,
-            )
-              .map(
-                ([key, text]) =>
-                  `<option value="${key}" ${r.basis === key ? "selected" : ""}>${esc(text)}</option>`,
-              )
-              .join(
-                "",
-              )}</select></label><label>我记录的实际路径<select data-record="${esc(id)}" data-field="stage">${Object.entries(
-              stageChoices,
-            )
-              .map(
-                ([key, text]) =>
-                  `<option value="${key}" ${r.stage === key ? "selected" : ""}>${esc(text)}</option>`,
-              )
-              .join(
-                "",
-              )}</select></label></div><label>原话、包装内容、所见工序与仍有疑问<textarea data-record="${esc(id)}" data-field="note" maxlength="3000" placeholder="区分自己见到的、店家说的和仍不知道的部分；不要只写“预制/现做”两个字。">${esc(r.note)}</textarea></label></div></article>`;
-          })
-          .join("")
-      : '<p class="w-empty">还没有菜品加入清单。点击菜品旁的加入按钮，带着具体问题到店核实。</p>';
-    $("export-checklist").disabled = !book.pinned.length && !book.restaurant;
-  }
-  function togglePin(id) {
-    if (!dishes.has(id)) return;
-    const i = book.pinned.indexOf(id);
-    if (i < 0) book.pinned.push(id);
-    else book.pinned.splice(i, 1);
-    renderMenu();
-    renderNotebook();
-    $("notebook-status").textContent =
-      (i < 0 ? "已加入核实清单。" : "已移出清单，历史备注暂存于本浏览器。") +
-      persist();
-    return i < 0;
-  }
-  $("dish-results").onclick = (e) => {
-    const b = e.target.closest("[data-pin]");
-    if (!b) return;
-    const id = b.dataset.pin;
-    togglePin(id);
-    const replacement = $("dish-results").querySelector(`[data-pin="${id}"]`);
-    if (replacement) replacement.focus({ preventScroll: true });
-    else $("saved-only").focus({ preventScroll: true });
-  };
   $("category-buttons").onclick = (e) => {
     const b = e.target.closest("[data-category]");
     if (!b) return;
@@ -305,18 +213,12 @@
       risk: "all",
       query: "",
       proof: false,
-      saved: false,
     });
-    $("dish-search").value = "";
-    $("focus-filter").value = "all";
-    $("risk-filter").value = "all";
-    $("proof-only").checked = false;
-    $("saved-only").checked = false;
   }
   function showRisk(level) {
     resetFilters();
     state.risk = level;
-    $("risk-filter").value = level;
+
     renderMenu();
     $("menu-guide").scrollIntoView({ block: "start" });
   }
@@ -341,20 +243,9 @@
     const d = dishes.get(b.dataset.hotspotDish);
     state.category = d.category;
     state.query = d.name;
-    $("dish-search").value = state.query;
+
     renderMenu();
     $("menu-guide").scrollIntoView({ block: "start" });
-  };
-  for (const [id, r] of Object.entries(D.riskLevels)) {
-    const o = document.createElement("option");
-    o.value = id;
-    o.textContent = r.name;
-    $("risk-filter").append(o);
-  }
-  $("risk-filter").value = state.risk;
-  $("risk-filter").onchange = (e) => {
-    state.risk = e.target.value;
-    renderMenu();
   };
   $("focus-legend").innerHTML = Object.entries(D.focus)
     .map(
@@ -366,62 +257,23 @@
     const b = e.target.closest("[data-focus]");
     if (!b) return;
     state.focus = b.dataset.focus;
-    $("focus-filter").value = state.focus;
+
     renderMenu();
     $("menu-guide").scrollIntoView({ block: "start" });
   };
-  for (const [id, f] of Object.entries(D.focus)) {
-    const o = document.createElement("option");
-    o.value = id;
-    o.textContent = f.name;
-    $("focus-filter").append(o);
-  }
-  $("dish-search").value = state.query;
-  $("focus-filter").value = state.focus;
-  $("dish-search").oninput = (e) => {
-    state.query = e.target.value;
+  $("proof-only").onclick = () => {
+    state.proof = !state.proof;
     renderMenu();
   };
-  $("focus-filter").onchange = (e) => {
-    state.focus = e.target.value;
-    renderMenu();
-  };
-  $("proof-only").onchange = (e) => {
-    state.proof = e.target.checked;
-    renderMenu();
-  };
-  $("saved-only").onchange = (e) => {
-    state.saved = e.target.checked;
+  $("risk-buttons").onclick = (e) => {
+    const b = e.target.closest("[data-risk-button]");
+    if (!b) return;
+    state.risk = b.dataset.riskButton;
     renderMenu();
   };
   $("reset-filters").onclick = () => {
     resetFilters();
     renderMenu();
-  };
-  $("checklist-items").onclick = (e) => {
-    const b = e.target.closest("[data-remove]");
-    if (!b) return;
-    togglePin(b.dataset.remove);
-    $("research-checklist").focus({ preventScroll: true });
-  };
-  function updateRecord(e) {
-    const el = e.target;
-    if (!el.dataset.record) return;
-    const id = el.dataset.record,
-      field = el.dataset.field;
-    if (!dishes.has(id) || !["basis", "stage", "note"].includes(field)) return;
-    if (field === "basis" && !basisChoices[el.value]) return;
-    if (field === "stage" && !stageChoices[el.value]) return;
-    record(id)[field] = field === "note" ? el.value.slice(0, 3000) : el.value;
-    $("notebook-status").textContent = persist();
-  }
-  $("checklist-items").oninput = updateRecord;
-  $("checklist-items").onchange = updateRecord;
-  $("restaurant-name").value = book.restaurant;
-  $("restaurant-name").oninput = (e) => {
-    book.restaurant = e.target.value.slice(0, 100);
-    $("notebook-status").textContent = persist();
-    $("export-checklist").disabled = !book.pinned.length && !book.restaurant;
   };
   function download(name, text, type) {
     const url = URL.createObjectURL(new Blob([text], { type })),
@@ -487,34 +339,6 @@
       "text/csv;charset=utf-8",
     );
   };
-  $("export-checklist").onclick = () => {
-    const text =
-      "# " +
-      ui.notebookTitle +
-      "\n\n店铺/研究：" +
-      book.restaurant +
-      "\n\n" +
-      D.disclaimer +
-      "\n\n" +
-      book.pinned
-        .map((id) => {
-          const d = dishes.get(id),
-            r = record(id);
-          return `## ${d.name}\n\n网页预制风险判断：${D.riskLevels[d.risk.level].name}（定性判断，非门店查实）\n判断对象：${d.risk.target}\n判断理由：${d.risk.reason}\n判断依据类型：${verified(d) ? "同类厂商商品例证 + 工序推断" : "工序与供餐逻辑推断（无直接商品例证）"}\n网页核实方向：${D.focus[d.focus].short}（不是门店结论）\n建议询问：${d.ask}\n记录依据：${basisChoices[r.basis]}\n自己记录的路径：${stageChoices[r.stage]}\n备注：${r.note || "（尚未记录）"}\n商品例证：${
-            d.refs
-              .filter((id) => D.sources[id]?.verified)
-              .map((id) => D.sources[id].url)
-              .join("；") || "无直接例证，制作工序参考"
-          }\n官网公开产品数据：${
-            d.refs
-              .map((id) => D.sources[id]?.dataUrl || "")
-              .filter(Boolean)
-              .join("；") || "见原页"
-          }`;
-        })
-        .join("\n\n");
-    download(ui.notebookName, text, "text/markdown;charset=utf-8");
-  };
   $("evidence-cards").innerHTML = Object.entries(D.sources)
     .filter(([, s]) => s.verified)
     .map(
@@ -538,13 +362,8 @@
       risk: "all",
       query: d.name,
       proof: true,
-      saved: false,
     });
-    $("dish-search").value = state.query;
-    $("focus-filter").value = "all";
-    $("risk-filter").value = "all";
-    $("proof-only").checked = true;
-    $("saved-only").checked = false;
+
     renderMenu();
     $("menu-guide").scrollIntoView({ block: "start" });
   };
@@ -557,8 +376,6 @@
       (s) => s.verified,
     ).length;
   renderMenu();
-  renderNotebook();
-  if (storageWarning) $("notebook-status").textContent = storageWarning;
   window.addEventListener("popstate", () => {
     const p = new URLSearchParams(location.search);
     state.category = categories.has(p.get("category"))
@@ -567,9 +384,7 @@
     state.focus = focuses.has(p.get("focus")) ? p.get("focus") : "all";
     state.risk = risks.has(p.get("risk")) ? p.get("risk") : "all";
     state.query = (p.get("q") || "").slice(0, 100);
-    $("dish-search").value = state.query;
-    $("focus-filter").value = state.focus;
-    $("risk-filter").value = state.risk;
+
     renderMenu();
   });
 })();

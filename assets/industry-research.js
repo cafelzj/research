@@ -491,7 +491,8 @@
     document.title =
       (key === "chemical" ? "化工" : data.industries[key].name) +
       " · " +
-      (mode === "atlas" ? "产业链研究" : "行业看板");
+      (mode === "atlas" ? "产业链研究" : "行业看板") +
+      " · 知研集";
     document.querySelectorAll(".site-nav a").forEach((a) => {
       const file = a.getAttribute("href").split("?")[0];
       if (["atlas.html", "index.html"].includes(file))

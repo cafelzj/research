@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>日料预制风险 · 重灾区与60道菜判断</title>
+    <title>日料预制风险 · 重灾区与60道菜判断 · 知研集</title>
     <link rel="stylesheet" href="assets/site.css" />
     <link rel="stylesheet" href="assets/washoku.css" />
     <script defer src="assets/washoku-data.js"></script>
@@ -15,11 +15,10 @@
     <a class="w-skip" href="#menu-guide">跳到菜品目录</a>
     <header class="site-header">
       <a class="site-brand" href="index.html"
-        >化工观测<small>CHEMICAL INDUSTRY / RESEARCH</small></a
+        >知研集<small>IDEAS / EVIDENCE / RESEARCH</small></a
       >
       <nav class="site-nav" aria-label="网站主导航">
         <a href="atlas.html">产业链总览</a><a href="index.html">行业看板</a
-        ><a href="data.html">数据与图表</a
         ><a href="intelli.html">IntelliUI <small>BETA</small></a
         ><a href="daily.html" aria-current="page">日常研究</a>
       </nav>
@@ -200,38 +199,50 @@
             <p class="w-muted">
               分类参考中文日料店常见菜单，包含传统、居酒屋、连锁与融合菜式，并非完整日本料理体系。
             </p>
-            <a href="#research-checklist">查看我的核实清单 ↓</a>
           </aside>
           <div class="w-menu-main">
-            <div class="w-filter-bar">
-              <label class="w-search-label"
-                >搜索菜品或制作环节<input
-                  id="dish-search"
-                  type="search"
-                  placeholder="试试：鳗鱼、拉面、玉子烧、gyoza"
-                  maxlength="100" /></label
-              ><label
-                >预制风险<select id="risk-filter">
-                  <option value="all">全部风险等级</option>
-                </select></label
-              ><label
-                >核实方向<select id="focus-filter">
-                  <option value="all">全部制作路径</option>
-                </select></label
+            <div class="w-filter-bar w-readonly-filters">
+              <div
+                id="risk-buttons"
+                class="w-filter-buttons"
+                role="group"
+                aria-label="按预制风险筛选"
               >
-              <div class="w-filter-checks">
-                <label
-                  ><input
-                    id="proof-only"
-                    type="checkbox"
-                  />只看有厂商商品例证</label
-                ><label
-                  ><input
-                    id="saved-only"
-                    type="checkbox"
-                  />只看我的核实清单</label
-                ><button id="reset-filters" type="button">清除筛选</button>
+                <button
+                  type="button"
+                  data-risk-button="all"
+                  aria-pressed="true"
+                >
+                  全部风险
+                </button>
+                <button
+                  type="button"
+                  data-risk-button="high"
+                  aria-pressed="false"
+                >
+                  高风险
+                </button>
+                <button
+                  type="button"
+                  data-risk-button="medium"
+                  aria-pressed="false"
+                >
+                  中风险
+                </button>
+                <button
+                  type="button"
+                  data-risk-button="low"
+                  aria-pressed="false"
+                >
+                  低风险
+                </button>
               </div>
+              <div class="w-filter-buttons">
+                <button id="proof-only" type="button" aria-pressed="false">
+                  只看商品例证</button
+                ><button id="reset-filters" type="button">显示全部菜品</button>
+              </div>
+              <p id="active-selection" class="w-active-selection" hidden></p>
             </div>
             <p
               id="menu-status"
@@ -278,38 +289,7 @@
           </article>
         </div>
       </section>
-      <section
-        tabindex="-1"
-        id="research-checklist"
-        data-outline="我的到店核实清单"
-        class="w-section"
-      >
-        <div class="w-section-heading">
-          <div>
-            <p class="w-kicker">04 / TAKE A QUESTION TO THE TABLE</p>
-            <h2>留一份你自己的点单研究。</h2>
-          </div>
-          <button id="export-checklist" type="button">↓ 导出核实笔记</button>
-        </div>
-        <div class="w-notebook-intro">
-          <label
-            >店铺 / 本次研究名称（可不填）<input
-              id="restaurant-name"
-              maxlength="100"
-              placeholder="只保存在你的浏览器，不公开发布"
-          /></label>
-          <p class="w-muted">
-            从菜品卡片加入清单，再记录店家说法、包装/菜单信息与具体工序。自己的记录不会改动网页公共标签；仅保存本浏览器，可随时导出。
-          </p>
-        </div>
-        <p
-          id="notebook-status"
-          class="w-status"
-          role="status"
-          aria-live="polite"
-        ></p>
-        <div id="checklist-items"></div>
-      </section>
+
       <section
         id="evidence-library"
         data-outline="商品例证与研究边界"
@@ -317,7 +297,7 @@
       >
         <div class="w-section-heading">
           <div>
-            <p class="w-kicker">05 / FOLLOW THE EVIDENCE</p>
+            <p class="w-kicker">04 / FOLLOW THE EVIDENCE</p>
             <h2>商品存在，是一条线索。</h2>
           </div>
           <span class="w-muted">不是某家店的采购记录</span>
@@ -349,7 +329,7 @@
     </main>
     <noscript
       ><p class="w-noscript">
-        菜品筛选与个人清单需要JavaScript。上方风险判断口径、典型例子和研究边界仍可直接阅读。
+        菜品分类与筛选需要JavaScript。上方风险判断口径、典型例子和研究边界仍可直接阅读。
       </p></noscript
     >
   </body>

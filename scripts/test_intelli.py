@@ -1,9 +1,11 @@
+import sys
 from pathlib import Path
 from playwright.sync_api import sync_playwright, expect
+BASE=(sys.argv[1] if len(sys.argv)>1 else 'http://127.0.0.1:8000/').rstrip('/')+'/'
 with sync_playwright() as p:
  b=p.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox'])
  page=b.new_page(viewport={'width':1440,'height':1000});errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
- page.goto('http://127.0.0.1:8000/intelli.html');expect(page.locator('#empty')).to_be_visible()
+ page.goto(BASE+'intelli.html');expect(page.locator('#empty')).to_be_visible()
  # The reported natural-language request must execute without a clarification.
  for prompt in ['价格折线图，按品种区分不同颜色', '价格折线图，按产品分色', '价格柱状图，不同产品用不同颜色']:
   result=page.evaluate('(text)=>IntelliUI.resolvePlan(text)',prompt)
@@ -40,8 +42,11 @@ with sync_playwright() as p:
  expect(page.locator('#status')).to_have_class('status error');expect(page.locator('#sourceName')).to_have_text('custom.csv')
  page.locator('#demoData').click();page.locator('#undo').click();expect(page.locator('#sourceName')).to_have_text('custom.csv');expect(page.locator('.work-card')).to_have_count(1)
  page.locator('#clear').click();expect(page.locator('.work-card')).to_have_count(0);page.locator('#undo').click();expect(page.locator('.work-card')).to_have_count(1)
- page.goto('http://127.0.0.1:8000/data.html');expect(page.locator('#records')).to_contain_text('Test')
- page.goto('http://127.0.0.1:8000/intelli.html');page.locator('#demoData').click()
+ page.locator('.section-tabs a[href="data.html"]').click();expect(page.locator('#records')).to_contain_text('Test')
+ expect(page.locator('.site-nav a[aria-current]')).to_have_attribute('href','intelli.html')
+ page.locator('.section-tabs a[href="studio.html"]').click();expect(page.locator('#chart')).to_be_visible()
+ expect(page.locator('.section-tabs a[aria-current]')).to_have_attribute('href','studio.html')
+ page.goto(BASE+'intelli.html');page.locator('#demoData').click()
  for i in range(8):page.get_by_role('button',name='◈ 最新指标概览').click()
  expect(page.locator('.work-card')).to_have_count(8);page.get_by_role('button',name='◈ 最新指标概览').click();expect(page.locator('#status')).to_contain_text('最多8张')
  page.locator('#clear').click();page.get_by_role('button',name='↗ 观察指标走势').click()
@@ -53,17 +58,17 @@ with sync_playwright() as p:
  page.screenshot(path='/tmp/intelli-mobile.png',full_page=True)
  page.locator('#command').fill('近6个月甲醇价格折线图');page.locator('#command').press('Control+Enter');expect(page.locator('.work-card')).to_have_count(2)
  for name in ['index.html','atlas.html','data.html','studio.html']:
-  page.goto('http://127.0.0.1:8000/'+name);expect(page.locator('.site-nav a[href="intelli.html"]')).to_have_count(1)
+  page.goto(BASE+''+name);expect(page.locator('.site-nav a[href="intelli.html"]')).to_have_count(1);expect(page.locator('.site-nav a[href="data.html"]')).to_have_count(0)
  assert not errors,errors
  # Storage-disabled mode keeps working and reports that persistence is unavailable.
  context=b.new_context();context.add_init_script("Storage.prototype.setItem=function(){throw new Error('blocked')}")
- q=context.new_page();q.goto('http://127.0.0.1:8000/intelli.html');q.get_by_role('button',name='↗ 观察指标走势').click();expect(q.locator('.work-card')).to_have_count(1);expect(q.locator('#status')).to_contain_text('无法保存')
+ q=context.new_page();q.goto(BASE+'intelli.html');q.get_by_role('button',name='↗ 观察指标走势').click();expect(q.locator('.work-card')).to_have_count(1);expect(q.locator('#status')).to_contain_text('无法保存')
  # Declarative extension is registered by a trusted deferred script before restore.
  context2=b.new_context();x=context2.new_page()
  html=Path('intelli.html').read_text().replace('</head>', '<script defer src="extension-test.js"></script></head>')
  x.route('**/intelli.html',lambda route:route.fulfill(status=200,content_type='text/html',body=html))
  x.route('**/extension-test.js',lambda route:route.fulfill(status=200,content_type='text/javascript',body="IntelliUI.registerView('range',{label:'区间统计',aliases:['区间统计'],render(el,plan,rows){el.textContent='观测数 '+rows.length;}});"))
- x.goto('http://127.0.0.1:8000/intelli.html');x.locator('#command').fill('近6个月甲醇价格区间统计');x.locator('#commandForm').evaluate('(f)=>f.requestSubmit()')
+ x.goto(BASE+'intelli.html');x.locator('#command').fill('近6个月甲醇价格区间统计');x.locator('#commandForm').evaluate('(f)=>f.requestSubmit()')
  expect(x.locator('.card-content')).to_contain_text('观测数 6');x.reload();expect(x.locator('.card-content')).to_contain_text('观测数 6')
  x.locator('#importFile').set_input_files({'name':'safe.csv','mimeType':'text/csv','buffer':b'date,product,price\n2026-01,<img src=x onerror=alert(1)>,100\n'})
  expect(x.locator('#sourceName')).to_have_text('safe.csv');x.get_by_role('button',name='▤ 核对数据明细').click();expect(x.locator('tbody')).to_contain_text('<img src=x onerror=alert(1)>');expect(x.locator('tbody img')).to_have_count(0)

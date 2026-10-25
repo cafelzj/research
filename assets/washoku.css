@@ -1158,3 +1158,34 @@ h1 span {
   color: #969d88;
   font-size: 10px;
 }
+.w-filter-bar.w-readonly-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.w-filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.w-filter-buttons button {
+  font-size: 12px;
+  padding: 7px 12px;
+}
+.w-filter-buttons button[aria-pressed="true"] {
+  background: #364d3d;
+  color: #fffaf1;
+  border-color: #364d3d;
+}
+.w-filter-buttons [data-risk-button="high"][aria-pressed="true"] {
+  background: #a33d33;
+  border-color: #a33d33;
+}
+.w-active-selection {
+  margin: 0;
+  color: #6d705b;
+  font-size: 11px;
+}
+.w-legend button[aria-pressed="true"] {
+  outline: 2px solid #62745b;
+}

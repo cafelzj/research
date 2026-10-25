@@ -3,11 +3,8 @@
 window.MenuRiskData = {
   "version": 1,
   "ui": {
-    "storageKey": "chinese-menu.research.v1",
     "aliasLabel": "适用场景",
     "csvName": "中餐预制风险避雷清单.csv",
-    "notebookTitle": "中餐点单避雷核实清单",
-    "notebookName": "中餐点单核实笔记.md",
     "defaultView": "table",
     "starterIds": [
       "meicai",

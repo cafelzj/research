@@ -1,4 +1,4 @@
-"""Browser checks for menu research, source scope and independent private notes."""
+"""Browser checks for menu research, source scope and a read-only menu."""
 import csv
 import io
 import sys
@@ -16,6 +16,8 @@ with sync_playwright() as p:
     page.on('pageerror', lambda e: errors.append(str(e)))
     page.goto(BASE+'chinese-menu.html')
     expect(page.locator('[data-quick-dish]')).to_have_count(94)
+    expect(page.locator('input,textarea,select,form,[data-pin],#research-checklist')).to_have_count(0)
+    expect(page.locator('.c-quick-table').first.locator('thead th')).to_have_count(3)
     expect(page.locator('.w-category-section')).to_have_count(9)
     expect(page.locator('.w-evidence-card')).to_have_count(31)
     expect(page.locator('.w-hotspot')).to_have_count(6)
@@ -34,7 +36,7 @@ with sync_playwright() as p:
     page.locator('#high-risk-shortcut').click()
     expect(page.locator('[data-quick-dish]')).to_have_count(66)
     assert 'risk=high' in page.url
-    page.locator('#proof-only').check()
+    page.locator('#proof-only').click()
     assert 0 < page.locator('[data-quick-dish]').count() < 66
     page.locator('[data-category="dim-sum"]').click()
     expect(page.locator('[data-quick-dish]')).to_have_count(10)
@@ -43,7 +45,7 @@ with sync_playwright() as p:
     expect(page.locator('[data-menu-view="cards"]')).to_have_attribute('aria-pressed','true')
     page.locator('[data-risk-filter="low"]').click()
     expect(page.locator('.w-dish')).to_have_count(8)
-    expect(page.locator('#proof-only')).not_to_be_checked()
+    expect(page.locator('#proof-only')).to_have_attribute('aria-pressed','false')
     page.locator('[data-hotspot-dish="xiaosurou"]').click()
     expect(page.locator('.w-dish')).to_have_count(1)
     expect(page.locator('.w-dish .w-risk-reason')).to_contain_text('鸡肉')
@@ -57,32 +59,16 @@ with sync_playwright() as p:
     assert rows[0]['预制风险（定性判断，非门店查实）'].startswith('高风险')
     assert '鸡肉' in rows[0]['风险判断理由'] and rows[0]['适用场景']
     assert 'menuId=44' in rows[0]['官网公开产品数据URL']
-    # Chinese and Japanese notebooks cannot overwrite each other.
-    page.evaluate("localStorage.setItem('washoku.research.v1',JSON.stringify({version:1,pinned:['wakame'],records:{wakame:{basis:'staff',stage:'whole',note:'日料历史记录'}},restaurant:'日料笔记'}))")
-    page.locator('[data-pin="xiaosurou"]').click()
-    note=page.locator('[data-note-card="xiaosurou"]')
-    note.locator('textarea').fill('<img src=x onerror=alert(1)> 询问肉种与腌裹地点')
-    note.locator('[data-field="basis"]').select_option('staff')
-    page.locator('#restaurant-name').fill('我的中餐避雷清单')
-    page.reload()
-    expect(note.locator('textarea')).to_have_value('<img src=x onerror=alert(1)> 询问肉种与腌裹地点')
-    expect(page.locator('.w-note-card img')).to_have_count(0)
-    with page.expect_download() as download:
-        page.locator('#export-checklist').click()
-    report=Path(download.value.path()).read_text()
-    assert '中餐点单避雷核实清单' in report and '网页预制风险判断：高风险' in report and '肉种与腌裹地点' in report
-    assert '官网公开产品数据' in report
     page.goto(BASE+'washoku.html')
     expect(page.locator('.w-dish')).to_have_count(60)
-    expect(page.locator('#restaurant-name')).to_have_value('日料笔记')
-    expect(page.locator('[data-note-card="wakame"] textarea')).to_have_value('日料历史记录')
+    expect(page.locator('input,textarea,select,form,[data-pin],#research-checklist')).to_have_count(0)
     page.locator('.w-topics a[href="chinese-menu.html"]').click()
-    expect(page.locator('#restaurant-name')).to_have_value('我的中餐避雷清单')
+    expect(page.locator('[data-quick-dish]')).to_have_count(94)
     # Deep links, source-only reset, no-match state, and responsive semantic tables.
     page.goto(BASE+'chinese-menu.html?category=seafood&risk=low')
     expect(page.locator('[data-quick-dish]')).to_have_count(2)
     page.locator('#reset-filters').click()
-    page.locator('#dish-search').fill('不存在的菜xyz')
+    page.goto(BASE+'chinese-menu.html?q=不存在的菜xyz')
     expect(page.locator('#export-menu')).to_be_disabled()
     expect(page.locator('#dish-results .w-empty')).to_contain_text('没有匹配')
     page.locator('[data-starter="hongshao"]').click()
@@ -109,8 +95,7 @@ with sync_playwright() as p:
     context=browser.new_context()
     context.add_init_script("Storage.prototype.getItem=function(){throw Error('blocked')};Storage.prototype.setItem=function(){throw Error('blocked')}")
     q=context.new_page();q.goto(BASE+'chinese-menu.html')
-    q.locator('[data-pin="meicai"]').click()
-    expect(q.locator('.w-note-card')).to_have_count(1)
-    expect(q.locator('#notebook-status')).to_contain_text('无法保存')
-    print('PASS 94 entries/9 categories, 66 high/20 medium/8 low, 56 linked examples/31 sources, table/cards, combined filters, risk scope and meat species, exports, independent safe notebooks, source APIs, deep links, mobile/outline/navigation and storage failure')
+    expect(q.locator('[data-quick-dish]')).to_have_count(94)
+    expect(q.locator('input,textarea,select,form,[data-pin]')).to_have_count(0)
+    print('PASS 94 entries/9 categories, 66 high/20 medium/8 low, 56 linked examples/31 sources, table/cards, combined filters, risk scope and meat species, exports, no inputs/favorites/notebooks, source APIs, deep links, mobile/outline/navigation without storage dependence')
     browser.close()

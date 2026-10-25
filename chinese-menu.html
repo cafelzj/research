@@ -7,7 +7,7 @@
       name="description"
       content="中餐点单预制风险速查：扣肉、熟料浇头、鱼虾、炸物、凉菜与面点。逐项标记风险，提供厂家商品例证、判断理由和可导出的点单清单。"
     />
-    <title>中餐预制菜避雷 · 菜名、风险与来源速查</title>
+    <title>中餐预制菜避雷 · 菜名、风险与来源速查 · 知研集</title>
     <link rel="stylesheet" href="assets/site.css" />
     <link rel="stylesheet" href="assets/washoku.css" />
     <link rel="stylesheet" href="assets/chinese-menu.css" />
@@ -20,11 +20,10 @@
     <a class="w-skip" href="#menu-guide">跳到中餐避雷速查表</a>
     <header class="site-header">
       <a class="site-brand" href="index.html"
-        >化工观测<small>CHEMICAL INDUSTRY / RESEARCH</small></a
+        >知研集<small>IDEAS / EVIDENCE / RESEARCH</small></a
       >
       <nav class="site-nav" aria-label="网站主导航">
         <a href="atlas.html">产业链总览</a><a href="index.html">行业看板</a
-        ><a href="data.html">数据与图表</a
         ><a href="intelli.html">IntelliUI <small>BETA</small></a
         ><a href="daily.html" aria-current="page">日常研究</a>
       </nav>
@@ -144,36 +143,50 @@
             <p class="w-muted">
               覆盖家常菜、川湘菜、江浙粤菜、外卖盖饭、宴席、火锅和小吃。相同菜名在不同场景下，判断可能不同。
             </p>
-            <a href="#research-checklist">我的点单核实清单 ↓</a>
           </aside>
           <div class="w-menu-main">
-            <div class="w-filter-bar">
-              <label class="w-search-label"
-                >搜索菜名、场景或环节<input
-                  id="dish-search"
-                  type="search"
-                  maxlength="100"
-                  placeholder="试试：扣肉、外卖、猪肚鸡、鸡肉、汤底"
-              /></label>
-              <label
-                >预制风险<select id="risk-filter">
-                  <option value="all">全部风险等级</option>
-                </select></label
-              ><label
-                >供餐路径<select id="focus-filter">
-                  <option value="all">全部制作路径</option>
-                </select></label
+            <div class="w-filter-bar w-readonly-filters">
+              <div
+                id="risk-buttons"
+                class="w-filter-buttons"
+                role="group"
+                aria-label="按预制风险筛选"
               >
-              <div class="w-filter-checks">
-                <label
-                  ><input
-                    id="proof-only"
-                    type="checkbox"
-                  />只看有厂家商品例证</label
-                ><label
-                  ><input id="saved-only" type="checkbox" />只看我的清单</label
-                ><button id="reset-filters" type="button">清除筛选</button>
+                <button
+                  type="button"
+                  data-risk-button="all"
+                  aria-pressed="true"
+                >
+                  全部风险
+                </button>
+                <button
+                  type="button"
+                  data-risk-button="high"
+                  aria-pressed="false"
+                >
+                  高风险
+                </button>
+                <button
+                  type="button"
+                  data-risk-button="medium"
+                  aria-pressed="false"
+                >
+                  中风险
+                </button>
+                <button
+                  type="button"
+                  data-risk-button="low"
+                  aria-pressed="false"
+                >
+                  低风险
+                </button>
               </div>
+              <div class="w-filter-buttons">
+                <button id="proof-only" type="button" aria-pressed="false">
+                  只看商品例证</button
+                ><button id="reset-filters" type="button">显示全部菜品</button>
+              </div>
+              <p id="active-selection" class="w-active-selection" hidden></p>
             </div>
             <div class="c-menu-tools">
               <div id="menu-view" role="group" aria-label="菜品展示方式">
@@ -191,7 +204,7 @@
                   详细卡片
                 </button>
               </div>
-              <span>高风险优先 · 可加入私人清单</span>
+              <span>高风险优先 · 直接阅读与下载</span>
             </div>
             <p
               id="menu-status"
@@ -242,38 +255,7 @@
           >炖菜本来就需要提前备料，店内批量炖不等于外购；同名炒菜既可能有整袋熟制版本，也可能现场切肉炒制。大菜单、出餐快、味道浓只适合触发追问，不能单独当证据。
         </div>
       </section>
-      <section
-        id="research-checklist"
-        tabindex="-1"
-        class="w-section"
-        data-outline="我的点单核实清单"
-      >
-        <div class="w-section-heading">
-          <div>
-            <p class="w-kicker">04 / YOUR PRIVATE LIST</p>
-            <h2>收藏你常点的菜，下次带着问。</h2>
-          </div>
-          <button id="export-checklist" type="button">↓ 导出核实笔记</button>
-        </div>
-        <div class="w-notebook-intro">
-          <label
-            >店铺 / 本次研究名称<input
-              id="restaurant-name"
-              maxlength="100"
-              placeholder="只保存在此浏览器"
-          /></label>
-          <p class="w-muted">
-            记录店家原话、包装配料和所见工序。自己的记录与网页风险判断分开，支持导出备份；中餐与日料清单各自保存。
-          </p>
-        </div>
-        <p
-          id="notebook-status"
-          class="w-status"
-          role="status"
-          aria-live="polite"
-        ></p>
-        <div id="checklist-items"></div>
-      </section>
+
       <section
         id="evidence-library"
         class="w-section"
@@ -281,7 +263,7 @@
       >
         <div class="w-section-heading">
           <div>
-            <p class="w-kicker">05 / CHECK THE SUPPLY</p>
+            <p class="w-kicker">04 / CHECK THE SUPPLY</p>
             <h2>把判断，落到实际供货资料。</h2>
           </div>
           <span class="w-muted">资料读取于 2026-10-25</span>
@@ -310,7 +292,7 @@
     </main>
     <noscript
       ><p class="w-noscript">
-        速查表、筛选与私人清单需要
+        速查表与筛选需要
         JavaScript。上方重点菜名、点单建议和研究口径仍可阅读。
       </p></noscript
     >

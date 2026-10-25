@@ -106,10 +106,7 @@
   width: 22%;
 }
 .c-quick-table thead th:nth-child(3) {
-  width: 43%;
-}
-.c-quick-table thead th:last-child {
-  width: 14%;
+  width: 57%;
 }
 .c-quick-table tbody th {
   font-size: 14px;
@@ -254,9 +251,5 @@
   }
   .c-quick-table tr {
     break-inside: avoid;
-  }
-  .c-quick-table td:last-child,
-  .c-quick-table th:last-child {
-    display: none;
   }
 }
