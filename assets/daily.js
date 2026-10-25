@@ -33,38 +33,6 @@
         ).defaultYear,
     sort: "desc",
   };
-  const KEY = "daily.research.france.v1";
-  let book = { version: 1, views: [], notes: {} },
-    storageProblem = "";
-  const noteFields = ["question", "facts", "hypotheses", "next", "review"];
-  try {
-    const old = JSON.parse(localStorage.getItem(KEY) || "null");
-    if (old) {
-      if (
-        old.version !== 1 ||
-        !Array.isArray(old.views) ||
-        !old.notes ||
-        typeof old.notes !== "object"
-      )
-        throw Error("format");
-      book.views = old.views
-        .filter(
-          (v) =>
-            v &&
-            metricById.has(v.metric) &&
-            countryById.has(v.country) &&
-            years.includes(v.year),
-        )
-        .slice(0, 12)
-        .map((v) => ({ metric: v.metric, country: v.country, year: v.year }));
-      for (const k of noteFields)
-        if (typeof old.notes[k] === "string")
-          book.notes[k] = old.notes[k].slice(0, k === "review" ? 10 : 10000);
-    }
-  } catch (_) {
-    storageProblem =
-      "浏览器存储不可用或暂存格式无效；当前笔记仅在本页内存保留，请导出备份。";
-  }
   const metric = () => metricById.get(state.metric),
     observations = () => metric().values[String(state.year)] || {},
     value = (code) => observations()[code]?.value;
@@ -79,14 +47,6 @@
   function status(text, error = false) {
     $("daily-status").textContent = text;
     $("daily-status").classList.toggle("error", error);
-  }
-  function persist() {
-    try {
-      localStorage.setItem(KEY, JSON.stringify(book));
-      return "已保存到此浏览器。";
-    } catch (_) {
-      return "浏览器无法保存，当前内容仅在本页有效，请导出。";
-    }
   }
   function syncUrl() {
     const u = new URL(location.href);
@@ -326,33 +286,6 @@
         : `${m.name}目前没有通过核验的跨国数值。保留缺失，不用其他制度、年份或分母替代。`,
     );
   }
-  function renderSaved() {
-    const host = $("saved-views");
-    host.innerHTML = book.views.length
-      ? book.views
-          .map(
-            (v, i) =>
-              `<div class="saved-view"><button type="button" data-open-view="${i}">${esc(countryById.get(v.country).name)} · ${esc(metricById.get(v.metric).name)}<br><small>${v.year}年</small></button><button type="button" data-remove-view="${i}" aria-label="删除第${i + 1}个视角">移除</button></div>`,
-          )
-          .join("")
-      : '<p class="empty-message">还没有保存视角。选择一个指标与国家，点击“保存研究视角”。</p>';
-    host.querySelectorAll("[data-open-view]").forEach(
-      (el) =>
-        (el.onclick = () => {
-          Object.assign(state, book.views[+el.dataset.openView]);
-          render();
-          $("research-map").scrollIntoView({ block: "start" });
-        }),
-    );
-    host.querySelectorAll("[data-remove-view]").forEach(
-      (el) =>
-        (el.onclick = () => {
-          book.views.splice(+el.dataset.removeView, 1);
-          renderSaved();
-          $("notes-status").textContent = persist();
-        }),
-    );
-  }
   function download(name, text, type) {
     const url = URL.createObjectURL(new Blob([text], { type })),
       a = document.createElement("a");
@@ -405,30 +338,6 @@
     $("daily-sort").value = "desc";
     render();
   };
-  $("save-view").onclick = () => {
-    if (
-      book.views.some(
-        (v) =>
-          v.country === state.country &&
-          v.metric === state.metric &&
-          v.year === state.year,
-      )
-    ) {
-      status("该研究视角已经保存。");
-      return;
-    }
-    if (book.views.length >= 12) {
-      status("最多保存12个视角，请先移除一个或导出笔记。", true);
-      return;
-    }
-    book.views.unshift({
-      country: state.country,
-      metric: state.metric,
-      year: state.year,
-    });
-    renderSaved();
-    status("已保存当前国家、指标和年份。" + persist());
-  };
   $("download-view").onclick = () => {
     const m = metric(),
       s = D.sources[m.source],
@@ -478,39 +387,6 @@
       "image/svg+xml;charset=utf-8",
     );
   };
-  const notesForm = $("daily-notes-form");
-  for (const name of noteFields) {
-    const el = notesForm.elements.namedItem(name);
-    el.value = book.notes[name] || "";
-    el.oninput = () => {
-      book.notes[name] = el.value;
-      $("notes-status").textContent = persist();
-    };
-  }
-  notesForm.onsubmit = (e) => e.preventDefault();
-  $("export-notes").onclick = () => {
-    const m = metric(),
-      text =
-        `# 日常研究：法国事件与欧洲对照\n\n整理日 ${D.retrievedAt}\n事件线索：${D.event.label}\n${D.event.url}\n${D.event.status}\n\n## 当前视角\n${countryById.get(state.country).name} / ${m.name} / ${state.year} / ${present(state.country) ? value(state.country) + " " + m.unit : "缺失"}\n${D.evidenceNote}\n\n` +
-        noteFields
-          .map(
-            (name) =>
-              `## ${{ question: "研究问题", facts: "已核实事实与来源", hypotheses: "解释、替代解释与反证", next: "下一步", review: "复核日期" }[name]}\n${book.notes[name] || "（未填写）"}`,
-          )
-          .join("\n\n") +
-        "\n\n## 已保存视角\n" +
-        book.views
-          .map(
-            (v) =>
-              `${countryById.get(v.country).name} / ${metricById.get(v.metric).name} / ${v.year}`,
-          )
-          .join("\n") +
-        "\n\n## 镜像来源与版本\n" +
-        Object.values(D.sources)
-          .map((s) => `${s.label}\n${s.mirror || s.official}\n${s.status}`)
-          .join("\n\n");
-    download("日常研究-法国与欧洲.md", text, "text/markdown;charset=utf-8");
-  };
   const mechanisms = [
     {
       title: "财政空间 → 政策取舍",
@@ -558,8 +434,6 @@
       .join("") +
     `<article class="source-card"><span class="status-pill">地图底图</span><h3>Natural Earth · 国家轮廓</h3><p>${esc(D.geometry.provenance.note)} 使用1:110m简化经纬度投影，只用于国家级比较，不展示街区或事件位置。底图数据为公共领域；背景国家没有被赋予指标。</p><a href="${esc(D.geometry.provenance.url)}" target="_blank" rel="noopener noreferrer">固定版本GeoJSON ↗</a><p class="source-version">版本 ${esc(D.geometry.provenance.commit)}</p></article>`;
   render();
-  renderSaved();
-  if (storageProblem) $("notes-status").textContent = storageProblem;
   window.addEventListener("popstate", () => {
     const p = new URLSearchParams(location.search);
     if (metricById.has(p.get("metric"))) state.metric = p.get("metric");

@@ -17,10 +17,7 @@
           })[c],
       );
   let industry = "chemical",
-    state = {},
-    storageMessage = "",
     demoVisible = false;
-  const memoryStates = new Map();
   const allKeys = ["chemical", ...Object.keys(data.industries)];
   function refs(keys) {
     return `<div class="ir-source-links">相关阅读 / 核验入口：${keys.map((k) => `<a href="#ir-source-${esc(k)}">${esc(data.sources[k].title.split("：")[0].split(" · ")[0])}〔${esc(data.sources[k].status)}〕</a>`).join("")}</div>`;
@@ -33,69 +30,6 @@
   }
   function field(label, text) {
     return `<h4>${esc(label)}</h4><p>${esc(text)}</p>`;
-  }
-  function readState() {
-    if (memoryStates.has(industry)) {
-      state = memoryStates.get(industry);
-      return;
-    }
-    storageMessage = "";
-    try {
-      const raw = JSON.parse(
-        localStorage.getItem("industry.research.v1." + industry) || "null",
-      );
-      if (
-        raw &&
-        (raw.version !== 1 ||
-          !Array.isArray(raw.records) ||
-          typeof raw.notes !== "string" ||
-          !Array.isArray(raw.checks))
-      )
-        throw Error("format");
-      state = raw || { version: 1, records: [], notes: "", checks: [] };
-      state.records = state.records
-        .filter(
-          (r) =>
-            r &&
-            data.industries[industry].metrics.some((m) => m.id === r.metric) &&
-            typeof r.id === "string" &&
-            typeof r.metric === "string" &&
-            typeof r.value === "string" &&
-            typeof r.date === "string" &&
-            typeof r.url === "string" &&
-            typeof r.note === "string" &&
-            ["待核验", "多源一致", "存在矛盾"].includes(r.verdict),
-        )
-        .slice(0, 60);
-      state.checks = [
-        ...new Set(
-          state.checks.filter((i) => Number.isInteger(i) && i >= 0 && i < 4),
-        ),
-      ];
-    } catch (_) {
-      state = { version: 1, records: [], notes: "", checks: [] };
-      storageMessage =
-        "浏览器存储不可用或历史格式异常，当前记录仅在本页内存保留，请导出备份。";
-    }
-    memoryStates.set(industry, state);
-  }
-  function save() {
-    try {
-      localStorage.setItem(
-        "industry.research.v1." + industry,
-        JSON.stringify(state),
-      );
-      return "已保存到此浏览器。";
-    } catch (_) {
-      return "浏览器无法保存，当前内容仅在本页有效，请立即导出。";
-    }
-  }
-  function message(text, error = false) {
-    const el = hub.querySelector("#ir-status");
-    if (el) {
-      el.textContent = text;
-      el.classList.toggle("error", error);
-    }
   }
   function sourceSection() {
     return section(
@@ -178,7 +112,7 @@
     const learning = section(
       "learning",
       "07 / 四周入门到研究练习",
-      `<p>四周是开始建立研究习惯，不代表完成专业训练。每周都要产出可复核的材料，再持续跟踪和改错。</p><div class="ir-grid">${data.learning.map((x, i) => card(x.week, `<p>${esc(x.task)}</p>${field("交付成果", x.deliverable)}${field("自测标准", x.check)}<label class="ir-check"><input type="checkbox" data-ir-check="${i}" ${state.checks.includes(i) ? "checked" : ""}>我已完成本周成果（自评，不是专业认证）</label>`, false)).join("")}</div>`,
+      `<p>四周是开始建立研究习惯，不代表完成专业训练。每周都要产出可复核的材料，再持续跟踪和改错。</p><div class="ir-grid">${data.learning.map((x) => card(x.week, `<p>${esc(x.task)}</p>${field("交付成果", x.deliverable)}${field("自测标准", x.check)}`, false)).join("")}</div>`,
     );
     return (
       routes +
@@ -189,65 +123,26 @@
       tech +
       terms +
       learning +
-      notes(s) +
       sourceSection()
-    );
-  }
-  function notes(s) {
-    return section(
-      "notes",
-      "研究备忘录与导出",
-      `<div class="ir-form ir-notes"><label for="ir-notes-input">${esc(s.name)}研究笔记</label><textarea id="ir-notes-input" maxlength="20000" placeholder="核心问题：\n已核验事实（来源/发布时间/观察期）：\n我的解释与替代解释：\n预测假设与三种情景：\n反证 / 失效条件：\n估值与风险：\n下次复核日期：">${esc(state.notes)}</textarea><p class="ir-muted">家电和电新分别保存。仅存此浏览器，不上传服务器；隐私模式、清除数据或更换设备会丢失，建议导出。</p><button type="button" id="ir-export-notes">↓ 导出研究笔记 Markdown</button></div>`,
-    );
-  }
-  function evidenceRows(s) {
-    return (
-      state.records
-        .map((r) => {
-          const m = s.metrics.find((m) => m.id === r.metric);
-          return `<article class="ir-evidence"><span class="ir-badge">${esc(r.verdict)}</span><h3>${esc(m?.name || r.metric)}：${esc(r.value)}</h3><p>观察日期：${esc(r.date)} · 单位：${esc(m?.unit || "以原始记录为准")}</p>${/^https?:\/\//i.test(r.url) ? `<a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">查看原始来源 ↗</a>` : "<span>无有效来源地址</span>"}<p>${esc(r.note)}</p><button type="button" data-ir-delete="${esc(r.id)}">删除此记录</button></article>`;
-        })
-        .join("") ||
-      '<p class="ir-empty">尚无人工采集记录。页面不会用模拟值填补真实观察，请先阅读指标口径，再记录原始来源。</p>'
     );
   }
   function dashboard(s) {
-    const summary = `<div class="ir-stats"><div><strong>${s.metrics.length}</strong>核心跟踪指标</div><div><strong id="ir-recorded">${new Set(state.records.map((r) => r.metric)).size}</strong>已有采集记录的指标</div><div><strong>${s.metrics.length - new Set(state.records.map((r) => r.metric)).size}</strong>待补充指标（非零值）</div></div>`;
+    const summary = `<div class="ir-stats"><div><strong>${s.metrics.length}</strong>核心跟踪指标</div><div><strong>${s.routes.length}</strong>产业链研究方向</div><div><strong>${s.methods.length}</strong>研究方法</div></div>`;
     const watch = section(
       "watch",
       "01 / 行业观察与反证清单",
-      `<p class="ir-muted">这里是研究跟踪表，尚未接入自动行情。缺失值表示待采集，不表示行业停产或指标为零；人工记录的证据状态不代表网站已核验。</p><div class="ir-table-scroll"><table class="ir-table"><caption>${esc(s.name)}核心指标；判断须结合历史、季节与多源验证</caption><thead><tr><th scope="col">指标与频率</th><th scope="col">最近录入的观察</th><th scope="col">支持改善的证据</th><th scope="col">反证 / 注意</th></tr></thead><tbody>${s.metrics
+      `<p class="ir-muted">这里提供指标口径、改善证据与反证方向，尚未接入自动行情。缺失不表示行业停产或指标为零。</p><div class="ir-table-scroll"><table class="ir-table"><caption>${esc(s.name)}核心指标；判断须结合历史、季节与多源验证</caption><thead><tr><th scope="col">指标与频率</th><th scope="col">数据状态</th><th scope="col">支持改善的证据</th><th scope="col">反证 / 注意</th></tr></thead><tbody>${s.metrics
         .map((m) => {
-          const r = state.records.find((r) => r.metric === m.id);
-          return `<tr><th scope="row">${esc(m.name)}<small>${esc(m.unit)} · ${esc(m.freq)}</small></th><td>${r ? `${esc(r.value)}<small>${esc(r.date)} · ${esc(r.verdict)}</small>` : "待采集（无真实数据）"}</td><td>${esc(m.positive)}</td><td>${esc(m.negative)}<details><summary>查看统计口径</summary><p>${esc(m.definition)}</p><p>${esc(m.trap)}</p>${refs(m.refs)}</details></td></tr>`;
+          return `<tr><th scope="row">${esc(m.name)}<small>${esc(m.unit)} · ${esc(m.freq)}</small></th><td>暂无已核验数据</td><td>${esc(m.positive)}</td><td>${esc(m.negative)}<details><summary>查看统计口径</summary><p>${esc(m.definition)}</p><p>${esc(m.trap)}</p>${refs(m.refs)}</details></td></tr>`;
         })
         .join("")}</tbody></table></div>`,
     );
-    const form = section(
-      "record",
-      "02 / 添加带来源的观察",
-      `<form class="ir-form" id="ir-evidence-form"><div class="ir-fields"><label>指标<select name="metric">${s.metrics.map((m) => `<option value="${esc(m.id)}">${esc(m.name)} / ${esc(m.unit)}</option>`).join("")}</select></label><label>观察日期<input name="date" type="date" required></label><label>观察值或事实描述<input name="value" maxlength="160" required placeholder="例：零售量同比；必须注明可比样本"></label><label>证据状态（人工判断）<select name="verdict"><option>待核验</option><option>多源一致</option><option>存在矛盾</option></select></label><label class="ir-wide">原始来源 URL<input name="url" type="url" required maxlength="600" placeholder="https:// 原始统计、公告或报告地址"></label><label class="ir-wide">口径、发布时间、反证与备注<textarea name="note" maxlength="1500" required placeholder="记录地区、渠道、观察期间、发布日期、单位、同比基期和需要继续验证的事项。"></textarea></label></div><button type="submit">保存这条观察</button><p class="ir-muted">只保存在此浏览器，最多60条；请勿输入商业秘密。数值不会自动变成投资评级。</p></form>`,
-    );
-    const records = section(
-      "records",
-      "03 / 我的证据记录",
-      `<div class="ir-tools"><button id="ir-export-records" type="button" ${state.records.length ? "" : "disabled"}>↓ 导出采集记录 CSV</button></div><div id="ir-evidence-list">${evidenceRows(s)}</div>`,
-    );
     const teaching = section(
       "demo",
-      "04 / 教学演示与敏感性练习",
-      `<p class="ir-warning">此区域完全是教学假设，不是行业统计，也不与上方采集记录混合。曲线不用于当前景气判断。</p><button id="ir-demo-toggle" type="button" aria-expanded="${demoVisible}">${demoVisible ? "收起" : "显示"}教学指数曲线（非真实数据）</button><div id="ir-demo-chart" class="ir-demo" ${demoVisible ? "" : "hidden"}></div><form class="ir-form" id="ir-calc-form"><h3>${industry === "appliances" ? "量价如何一起影响收入？" : "储能时长与单循环价差练习"}</h3>${industry === "appliances" ? `<div class="ir-fields"><label>销量变化（%，教学假设）<input name="a" type="number" value="10" min="-100" max="10000" step="any" required></label><label>ASP变化（%，教学假设）<input name="b" type="number" value="5" min="-100" max="10000" step="any" required></label></div>` : `<div class="ir-fields"><label>额定放电功率（MW）<input name="power" type="number" value="2" min="0.001" max="100000" step="any" required></label><label>可用放电能量（MWh，教学假设）<input name="energy" type="number" value="4" min="0.001" max="1000000" step="any" required></label><label>交流侧往返效率（%）<input name="eff" type="number" value="90" min="0.001" max="100" step="any" required></label><label>购电价（元/kWh）<input name="buy" type="number" value="0.3" min="0" max="100" step="any" required></label><label>售电价（元/kWh）<input name="sell" type="number" value="0.8" min="0" max="100" step="any" required></label></div>`}<button type="submit">计算教学情景</button><p id="ir-calc-result" role="status" class="ir-status"></p><p class="ir-muted">${industry === "appliances" ? "公式：(1+销量变化)×(1+ASP变化)−1。未考虑渠道样本与产品结构；收入增长不等于利润增长。" : "时长=可用放电能量÷功率；购电量=放电量÷RTE。单循环毛价差=售电收入−购电成本，不含衰减、辅机以外其他成本、运维、税费、容量费、融资或CAPEX，不是利润或IRR。假设RTE已包含交流侧辅机损耗，且可完成一个完整循环。"}</p></form>`,
+      "02 / 教学演示与敏感性练习",
+      `<p class="ir-warning">此区域完全是教学假设，不是行业统计，与已核验的历史数据分开展示。曲线不用于当前景气判断。</p><button id="ir-demo-toggle" type="button" aria-expanded="${demoVisible}">${demoVisible ? "收起" : "显示"}教学指数曲线（非真实数据）</button><div id="ir-demo-chart" class="ir-demo" ${demoVisible ? "" : "hidden"}></div><form class="ir-form" id="ir-calc-form"><h3>${industry === "appliances" ? "量价如何一起影响收入？" : "储能时长与单循环价差练习"}</h3>${industry === "appliances" ? `<div class="ir-fields"><label>销量变化（%，教学假设）<input name="a" type="number" value="10" min="-100" max="10000" step="any" required></label><label>ASP变化（%，教学假设）<input name="b" type="number" value="5" min="-100" max="10000" step="any" required></label></div>` : `<div class="ir-fields"><label>额定放电功率（MW）<input name="power" type="number" value="2" min="0.001" max="100000" step="any" required></label><label>可用放电能量（MWh，教学假设）<input name="energy" type="number" value="4" min="0.001" max="1000000" step="any" required></label><label>交流侧往返效率（%）<input name="eff" type="number" value="90" min="0.001" max="100" step="any" required></label><label>购电价（元/kWh）<input name="buy" type="number" value="0.3" min="0" max="100" step="any" required></label><label>售电价（元/kWh）<input name="sell" type="number" value="0.8" min="0" max="100" step="any" required></label></div>`}<button type="submit">计算教学情景</button><p id="ir-calc-result" role="status" class="ir-status"></p><p class="ir-muted">${industry === "appliances" ? "公式：(1+销量变化)×(1+ASP变化)−1。未考虑渠道样本与产品结构；收入增长不等于利润增长。" : "时长=可用放电能量÷功率；购电量=放电量÷RTE。单循环毛价差=售电收入−购电成本，不含衰减、辅机以外其他成本、运维、税费、容量费、融资或CAPEX，不是利润或IRR。假设RTE已包含交流侧辅机损耗，且可完成一个完整循环。"}</p></form>`,
     );
-    return (
-      summary +
-      watch +
-      form +
-      records +
-      measuredHistory() +
-      teaching +
-      notes(s) +
-      sourceSection()
-    );
+    return summary + watch + measuredHistory() + teaching + sourceSection();
   }
   function renderDemo() {
     const target = hub.querySelector("#ir-demo-chart");
@@ -265,7 +160,7 @@
     const s = data.industries[industry];
     const cross = mode === "atlas" ? "index.html" : "atlas.html";
     const crossLabel = mode === "atlas" ? "打开本行业看板" : "学习本行业产业链";
-    hub.innerHTML = `<div class="ir-intro"><div><span class="ir-kicker">${mode === "atlas" ? "INDUSTRY RESEARCH / LEARN" : "INDUSTRY MONITOR / VERIFY"} · ${esc(s.name)}</span><h1>${esc(s.subtitle)}</h1><p>${esc(s.intro)}</p><p class="ir-muted">研究范围：${esc(s.scope)}</p><a href="${cross}?industry=${industry}">${crossLabel} ↗</a></div><div class="ir-context"><b>研究主线</b><p>${esc(s.core)}</p></div></div><p class="ir-warning">内容整理：${esc(data.preparedAt)}。${esc(data.researchStatus)}</p><p id="ir-status" role="status" class="ir-status" aria-live="polite">${esc(storageMessage || "先理解口径，再采集事实；把解释与预测分开。")}</p>${mode === "atlas" ? `<div class="ir-search-row"><label>搜索本行业的链条、指标、技术、术语<input id="ir-search" type="search" placeholder="试试：库存、热泵、LCOE、现金流"></label><span id="ir-search-count" class="ir-muted" role="status"></span></div>` : ""}<nav class="ir-jump" aria-label="本行业章节">${(mode ===
+    hub.innerHTML = `<div class="ir-intro"><div><span class="ir-kicker">${mode === "atlas" ? "INDUSTRY RESEARCH / LEARN" : "INDUSTRY MONITOR / VERIFY"} · ${esc(s.name)}</span><h1>${esc(s.subtitle)}</h1><p>${esc(s.intro)}</p><p class="ir-muted">研究范围：${esc(s.scope)}</p><a href="${cross}?industry=${industry}">${crossLabel} ↗</a></div><div class="ir-context"><b>研究主线</b><p>${esc(s.core)}</p></div></div><p class="ir-warning">内容整理：${esc(data.preparedAt)}。${esc(data.researchStatus)}</p>${mode === "atlas" ? `<div class="ir-search-row"><label>搜索本行业的链条、指标、技术、术语<input id="ir-search" type="search" placeholder="试试：库存、热泵、LCOE、现金流"></label><span id="ir-search-count" class="ir-muted" role="status"></span></div>` : ""}<nav class="ir-jump" aria-label="本行业章节">${(mode ===
     "atlas"
       ? [
           ["chains", "产业链"],
@@ -275,15 +170,11 @@
           ["technology", "技术"],
           ["glossary", "术语"],
           ["learning", "学习路径"],
-          ["notes", "笔记"],
           ["sources", "资料"],
         ]
       : [
           ["watch", "指标跟踪"],
-          ["record", "采集观察"],
-          ["records", "证据记录"],
           ["demo", "教学练习"],
-          ["notes", "笔记"],
           ["sources", "资料"],
         ]
     )
@@ -294,50 +185,7 @@
     bind();
     renderDemo();
   }
-  function download(name, text, type) {
-    const url = URL.createObjectURL(new Blob([text], { type })),
-      a = document.createElement("a");
-    a.href = url;
-    a.download = name;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }
   function bind() {
-    const s = data.industries[industry];
-    hub.querySelector("#ir-notes-input").oninput = (e) => {
-      state.notes = e.target.value;
-      message(save());
-    };
-    hub.querySelectorAll("[data-ir-check]").forEach(
-      (el) =>
-        (el.onchange = () => {
-          state.checks = [
-            ...hub.querySelectorAll("[data-ir-check]:checked"),
-          ].map((e) => +e.dataset.irCheck);
-          message(save());
-        }),
-    );
-    hub.querySelector("#ir-export-notes").onclick = () =>
-      download(
-        s.name + "研究笔记.md",
-        `# ${s.name}研究笔记\n\n整理框架：${data.preparedAt}\n${data.researchStatus}\n\n` +
-          data.learning
-            .map(
-              (x, i) =>
-                `- [${state.checks.includes(i) ? "x" : " "}] ${x.week}：${x.deliverable}`,
-            )
-            .join("\n") +
-          "\n\n## 我的研究\n" +
-          state.notes +
-          "\n\n## 证据记录\n" +
-          state.records
-            .map(
-              (r) =>
-                `${r.date} | ${s.metrics.find((m) => m.id === r.metric)?.name || r.metric} | ${r.value} | ${r.verdict}\n${r.url}\n${r.note}`,
-            )
-            .join("\n\n"),
-        "text/markdown;charset=utf-8",
-      );
     const search = hub.querySelector("#ir-search");
     if (search)
       search.oninput = () => {
@@ -350,81 +198,6 @@
         hub.querySelector("#ir-search-count").textContent = q
           ? `匹配 ${visible} 张卡片；清空搜索查看全部。`
           : "";
-      };
-    const form = hub.querySelector("#ir-evidence-form");
-    if (form)
-      form.onsubmit = (e) => {
-        e.preventDefault();
-        const f = new FormData(form),
-          r = Object.fromEntries(f);
-        if (state.records.length >= 60) {
-          message("最多60条记录，请先导出并删除不再需要的记录。", true);
-          return;
-        }
-        if (!/^https?:\/\//i.test(r.url) || !r.value.trim() || !r.note.trim()) {
-          message("请填写观察事实、http(s)来源地址与口径备注。", true);
-          return;
-        }
-        if (!s.metrics.some((m) => m.id === r.metric)) {
-          message("指标无效，请重新选择。", true);
-          return;
-        }
-        r.id =
-          Date.now().toString(36) + "-" + Math.random().toString(36).slice(2);
-        state.records.unshift(r);
-        const saved = save();
-        render();
-        message("已记录；这是人工采集，尚未由网站核验。" + saved);
-        hub.querySelector("#ir-records").scrollIntoView({ block: "start" });
-      };
-    hub.querySelectorAll("[data-ir-delete]").forEach(
-      (el) =>
-        (el.onclick = () => {
-          state.records = state.records.filter(
-            (r) => r.id !== el.dataset.irDelete,
-          );
-          const saved = save();
-          render();
-          message("已删除记录。" + saved);
-        }),
-    );
-    const exportRecords = hub.querySelector("#ir-export-records");
-    if (exportRecords)
-      exportRecords.onclick = () => {
-        const cell = (v) =>
-          '"' +
-          String(/^\s*[=+\-@]|^[\t\r]/.test(String(v)) ? "'" + v : v).replace(
-            /"/g,
-            '""',
-          ) +
-          '"';
-        const table = [
-          [
-            "行业",
-            "指标",
-            "单位",
-            "观察日期",
-            "观察值",
-            "证据状态",
-            "来源URL",
-            "口径与备注",
-          ],
-          ...state.records.map((r) => [
-            s.name,
-            s.metrics.find((m) => m.id === r.metric)?.name || r.metric,
-            s.metrics.find((m) => m.id === r.metric)?.unit || "",
-            r.date,
-            r.value,
-            r.verdict,
-            r.url,
-            r.note,
-          ]),
-        ];
-        download(
-          s.name + "采集记录.csv",
-          "\ufeff" + table.map((row) => row.map(cell).join(",")).join("\r\n"),
-          "text/csv;charset=utf-8",
-        );
       };
     const toggle = hub.querySelector("#ir-demo-toggle");
     if (toggle)
@@ -485,7 +258,6 @@
         ),
       );
     if (key !== "chemical") {
-      readState();
       render();
     }
     document.title =
