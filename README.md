@@ -121,3 +121,9 @@ GitHub 的文件浏览页面显示源码，不直接运行网页。已加入 `.g
 已验证 JavaScript 语法、内容渲染、产业链切换、搜索、计算和无效输入处理。尚未完成浏览器视觉检查。价差模型未包含固定成本、折旧、税费及联产品，不能直接视为实际装置利润。
 
 本网页提供通用行业知识与研究方法，不构成当前景气判断或证券推荐。
+
+### 六大化工研究手册
+
+`atlas.html#product-applications` 提供聚氨酯、纯碱、钛白粉、磷化工、氟化工、硅化工六个完整专题，48 组产品与材料应用详解。逐项解释材料机制、用途、优势、替代方案、验收指标和边界，并展开工艺、客户选材情景、行业指标、成本与周期研究方法。39 份相关技术资料保留来源与证据范围；未确认的牌号性能和数据缺口明确说明。
+
+可通过 `?chemChain=pu|soda|tio2|phosphate|fluoro|silicon` 直达专题；[完整手册](assets/chemical-research-handbook.md)与网页同源。维护和证据说明见 [chemical-research.md](docs/chemical-research.md)。
