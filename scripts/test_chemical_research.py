@@ -35,7 +35,7 @@ with sync_playwright() as p:
     result=page.locator('#atlas-product-results a').first
     result.click()
     assert 'chemChain=pu' in page.url and '#chem-product-' in page.url
-    assert page.locator('#'+page.url.split('#')[1]).is_visible()
+    expect(page.locator('#'+page.url.split('#')[1])).to_be_visible(timeout=30000)
     page.locator('#search').fill('')
     expect(page.locator('#atlas-product-results')).to_be_hidden()
     host=page.locator('#product-applications')
