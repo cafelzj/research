@@ -20,7 +20,7 @@
     demoVisible = false;
   const allKeys = ["chemical", ...Object.keys(data.industries)];
   function refs(keys) {
-    return `<div class="ir-source-links">相关阅读 / 核验入口：${keys.map((k) => `<a href="#ir-source-${esc(k)}">${esc(data.sources[k].title.split("：")[0].split(" · ")[0])}〔${esc(data.sources[k].status)}〕</a>`).join("")}</div>`;
+    return `<div class="ir-source-links">相关阅读 / 核验入口：${keys.map((k) => `<a href="#ir-source-${esc(k)}">${esc(data.sources[k].shortTitle || data.sources[k].title.split("：")[0].split(" · ")[0])}〔${esc(data.sources[k].status)}〕</a>`).join("")}</div>`;
   }
   function section(id, title, body) {
     return `<section class="ir-block" id="ir-${id}" data-outline="${esc(title)}"><h2>${esc(title)}</h2>${body}</section>`;
@@ -47,7 +47,7 @@
             data.industries[industry].history.some((x) =>
               x.refs.includes(key),
             ) ||
-            key === "owid",
+            (key === "owid" && industry === "electrical"),
         )
         .map(
           ([key, s]) =>
@@ -112,7 +112,7 @@
     const learning = section(
       "learning",
       "07 / 四周入门到研究练习",
-      `<p>四周是开始建立研究习惯，不代表完成专业训练。每周都要产出可复核的材料，再持续跟踪和改错。</p><div class="ir-grid">${data.learning.map((x) => card(x.week, `<p>${esc(x.task)}</p>${field("交付成果", x.deliverable)}${field("自测标准", x.check)}`, false)).join("")}</div>`,
+      `<p>四周是开始建立研究习惯，不代表完成专业训练。每周都要产出可复核的材料，再持续跟踪和改错。</p><div class="ir-grid">${(s.learning || data.learning).map((x) => card(x.week, `<p>${esc(x.task)}</p>${field("交付成果", x.deliverable)}${field("自测标准", x.check)}`, false)).join("")}</div>`,
     );
     return (
       routes +
@@ -158,9 +158,9 @@
   function render() {
     if (industry === "chemical") return;
     const s = data.industries[industry];
-    const cross = mode === "atlas" ? "index.html" : "atlas.html";
-    const crossLabel = mode === "atlas" ? "打开本行业看板" : "学习本行业产业链";
-    hub.innerHTML = `<div class="ir-intro"><div><span class="ir-kicker">${mode === "atlas" ? "INDUSTRY RESEARCH / LEARN" : "INDUSTRY MONITOR / VERIFY"} · ${esc(s.name)}</span><h1>${esc(s.subtitle)}</h1><p>${esc(s.intro)}</p><p class="ir-muted">研究范围：${esc(s.scope)}</p><a href="${cross}?industry=${industry}">${crossLabel} ↗</a></div><div class="ir-context"><b>研究主线</b><p>${esc(s.core)}</p></div></div><p class="ir-warning">内容整理：${esc(data.preparedAt)}。${esc(data.researchStatus)}</p>${mode === "atlas" ? `<div class="ir-search-row"><label>搜索本行业的链条、指标、技术、术语<input id="ir-search" type="search" placeholder="试试：库存、热泵、LCOE、现金流"></label><span id="ir-search-count" class="ir-muted" role="status"></span></div>` : ""}<nav class="ir-jump" aria-label="本行业章节">${(mode ===
+    const cross = industry === "medicine" ? "#ir-metrics" : (mode === "atlas" ? "index.html" : "atlas.html") + `?industry=${industry}`;
+    const crossLabel = industry === "medicine" ? "查看创新药研究指标" : mode === "atlas" ? "打开本行业看板" : "学习本行业产业链";
+    hub.innerHTML = `<div class="ir-intro"><div><span class="ir-kicker">${mode === "atlas" ? "INDUSTRY RESEARCH / LEARN" : "INDUSTRY MONITOR / VERIFY"} · ${esc(s.name)}</span><h1>${esc(s.subtitle)}</h1><p>${esc(s.intro)}</p><p class="ir-muted">研究范围：${esc(s.scope)}</p><a href="${cross}">${crossLabel} ↗</a></div><div class="ir-context"><b>研究主线</b><p>${esc(s.core)}</p></div></div><p class="ir-warning">内容整理：${esc(s.preparedAt || data.preparedAt)}。${esc(s.researchStatus || data.researchStatus)}</p>${mode === "atlas" ? `<div class="ir-search-row"><label>搜索本行业的链条、指标、技术、术语<input id="ir-search" type="search" placeholder="${esc(s.searchHint || "试试：库存、热泵、LCOE、现金流")}"></label><span id="ir-search-count" class="ir-muted" role="status"></span></div>` : ""}<nav class="ir-jump" aria-label="本行业章节">${(mode ===
     "atlas"
       ? [
           ["chains", "产业链"],
@@ -181,7 +181,7 @@
       .map(([id, label]) => `<a href="#ir-${id}">${label}</a>`)
       .join(
         "",
-      )}</nav>${mode === "atlas" ? atlas(s) : dashboard(s)}<footer class="ir-foot">家电 / 电新研究入门 · 不含实时行情或当前评级。资料核验未完成的部分已逐项标注。内容是研究训练，不能代替原始统计与公司公告。</footer>`;
+      )}</nav>${mode === "atlas" ? atlas(s) : dashboard(s)}<footer class="ir-foot">${esc(s.name)}研究入门 · 不含实时行情或当前评级。资料核验未完成的部分已逐项标注。内容是研究训练，不能代替原始统计与公司公告。</footer>`;
     bind();
     renderDemo();
   }
@@ -268,7 +268,7 @@
     document.querySelectorAll(".site-nav a").forEach((a) => {
       const file = a.getAttribute("href").split("?")[0];
       if (["atlas.html", "index.html"].includes(file))
-        a.href = file + (key === "chemical" ? "" : "?industry=" + key);
+        a.href = file + (key === "chemical" || (key === "medicine" && file === "index.html") ? "" : "?industry=" + key);
     });
     if (push) {
       const url = new URL(location.href);
