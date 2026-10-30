@@ -4,7 +4,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import urlopen
-ITEMS=[('NY.GDP.MKTP.CD','国内生产总值 GDP（现价美元）',['GDP','国内生产总值','经济总量']),('NY.GDP.MKTP.KD.ZG','GDP 实际增长率（年度）',['实际GDP增长','GDP增速']),('NY.GDP.PCAP.CD','人均 GDP（现价美元）',['人均GDP']),('FP.CPI.TOTL.ZG','居民消费价格通胀率（年度）',['CPI','消费者物价','居民消费价格','通胀']),('NE.EXP.GNFS.CD','商品与服务出口额（现价美元）',['出口','出口额']),('NE.IMP.GNFS.CD','商品与服务进口额（现价美元）',['进口','进口额']),('NV.IND.MANF.CD','制造业增加值（现价美元）',['制造业','工业增加值']),('GC.DOD.TOTL.GD.ZS','中央政府债务占 GDP 比例',['政府债务','政府杠杆','债务GDP']),('SE.XPD.TOTL.GD.ZS','政府教育支出占 GDP 比例',['教育投入','教育经费','教育支出']),('EG.ELC.ACCS.ZS','电力可及人口比例',['电力','电气化'])]
+ITEMS=[('NY.GDP.MKTP.CD','国内生产总值 GDP（现价美元）',['GDP','国内生产总值','经济总量']),('NY.GDP.MKTP.KD.ZG','GDP 实际增长率（年度）',['实际GDP增长','GDP增速']),('NY.GDP.PCAP.CD','人均 GDP（现价美元）',['人均GDP']),('FP.CPI.TOTL.ZG','居民消费价格通胀率（年度）',['CPI','消费者物价','居民消费价格','通胀']),('NE.EXP.GNFS.CD','商品与服务出口额（现价美元）',['出口','出口额']),('NE.IMP.GNFS.CD','商品与服务进口额（现价美元）',['进口','进口额']),('NV.IND.MANF.CD','制造业增加值（现价美元）',['制造业','制造业增加值']),('GC.DOD.TOTL.GD.ZS','中央政府债务占 GDP 比例',['政府债务','政府杠杆','债务GDP']),('SE.XPD.TOTL.GD.ZS','政府教育支出占 GDP 比例',['教育投入','教育经费','教育支出']),('EG.ELC.ACCS.ZS','电力可及人口比例',['电力','电气化'])]
 def fetch(item):
  code,name,aliases=item
  with urlopen('https://api.worldbank.org/v2/indicator/'+code+'?format=json',timeout=30) as r:
