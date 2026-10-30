@@ -11,13 +11,13 @@
 | 栏目 | 入口 | 用途 |
 | --- | --- | --- |
 | 日常研究 | `daily.html` | 以事件线索组织跨国指标地图、来源核验与研究逻辑 |
-| IntelliUI | `intelli.html` | 智能工作区、数据明细与图表制作的统一入口，支持撤销和CSV共享 |
+| IntelliUI | `intelli.html` | 智能工作区、指标研究台、数据明细与图表制作的统一入口，支持撤销和CSV共享 |
 | 产业链总览 | `atlas.html` | 上下游关系、六条工艺主链、分析框架与子行业研究 |
 | 行业看板 | `index.html` | 价格、产量、开工率等模拟月度数据的快速观察 |
 
-**IntelliUI** 包含三个子栏目：**智能工作区**（`intelli.html`）、**数据明细**（`data.html`）和**图表制作**（`studio.html`），三个页面共用子导航，主导航统一高亮IntelliUI。明细支持日期/产品/关键词筛选、字段显示、排序、分页、CSV导入和筛选结果导出；可将全部筛选结果或单条记录带入制作页。制作页保留自然语言绘图、设置问答、字段映射、图形与样式配置，也可返回查看本次数据。
+**IntelliUI** 包含智能工作区（`intelli.html`）、指标研究台（`indicators.html`）、数据明细（`data.html`）、图表制作（`studio.html`）四个子栏目。指标研究台管理目录身份、口径、分类、关联候选和质量；另外三个视图继续共享 CSV 数据，不把指标名称误当成时间序列观测。
 
-三个子栏目共享 `assets/data-core.js` 的数据生成、CSV校验和会话暂存逻辑。数据仅保存在当前浏览器标签页的 sessionStorage 中，刷新和同标签页站内导航后可继续使用，不上传服务器。完整数据与分析筛选快照分开保存，分析一个子集不会覆盖完整数据；关闭标签页后会话结束。存储不可用时明确提示，可通过CSV手动传递。行业看板继续使用固定模拟样本，导入自定义数据的主入口为数据明细。
+智能工作区、数据明细与图表制作共享 `assets/data-core.js` 的数据生成、CSV校验和会话暂存逻辑。数据仅保存在当前浏览器标签页的 sessionStorage 中，刷新和同标签页站内导航后可继续使用，不上传服务器。完整数据与分析筛选快照分开保存，分析一个子集不会覆盖完整数据；关闭标签页后会话结束。存储不可用时明确提示，可通过CSV手动传递。行业看板继续使用固定模拟样本，导入自定义数据的主入口为数据明细。
 
 产业链总览末尾新增[入门术语表](https://cafelzj.github.io/research/atlas.html#glossary)：45个术语分为原料与产品、工艺路线、供需指标、成本与财务、数据与交易口径。每项提供中文名、常见缩写/英文、通俗解释、示例和易混点，可搜索、分类筛选，并返回关联产业链。页顶搜索提供术语匹配入口；无JavaScript时仍可阅读全部定义。内容来源文件为 `assets/glossary.json`，修改后运行 `python3 scripts/build_glossary.py` 更新页面中的静态内容，脚本可重复运行。
 
@@ -133,3 +133,14 @@ GitHub 的文件浏览页面显示源码，不直接运行网页。已加入 `.g
 `atlas.html#product-applications` 提供聚氨酯、纯碱、钛白粉、磷化工、氟化工、硅化工六个完整专题，48 组产品与材料应用详解。逐项解释材料机制、用途、优势、替代方案、验收指标和边界，并展开工艺、客户选材情景、行业指标、成本与周期研究方法。39 份相关技术资料保留来源与证据范围；未确认的牌号性能和数据缺口明确说明。
 
 可通过 `?chemChain=pu|soda|tio2|phosphate|fluoro|silicon` 直达专题；[完整手册](assets/chemical-research-handbook.md)与网页同源。维护和证据说明见 [chemical-research.md](docs/chemical-research.md)。
+
+
+### 指标研究台与本地指标引擎
+
+`indicators.html` 提供解释性规则搜索、原行业/研究角色/频率/口径/来源/健康筛选、同名消歧、派生候选、六条研究路径、目录审计与 JSON 本地导入。公开版内置30条人工演示元数据和10项世界银行公共指标注册；完整上传目录不随站点公开，也没有声称接入大模型或商业数据API。
+
+这份Excel已在本地完整处理：62,241行业引用、61,781独立指标、460跨行业代码、23,857待核验派生关系。原表没有数值日期或公式，不能得出真实数值异常或因果。原始行业与规则推断标签并列保留；累计、同比、期末、来源等不可随意合并。
+
+运行方式和CSV契约见 [indicator_lab/README.md](indicator_lab/README.md)，架构与数据处理方法见 [docs/indicator-architecture.md](docs/indicator-architecture.md)。全量索引应生成在网站目录之外，本地运行 `python3 -m indicator_lab serve --db /私有路径/catalog.sqlite --port 8765` 后打开本地页面自动读取；也可把导出的 JSON 导入公开前端，仅留在当前浏览器内存。
+
+验证：`node scripts/test_indicator_search.cjs`、`python3 scripts/test_indicator_engine.py`、`python3 scripts/test_indicator_ui.py [静态站点URL]`；启动本地私有服务后运行 `python3 scripts/test_indicator_private_ui.py [本地URL]`。真实目录回归用 `INDICATOR_CATALOG` / `INDICATOR_TEST_DB` 指向私有产物，不提交原始工作簿与完整元数据。

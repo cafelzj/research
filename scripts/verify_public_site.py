@@ -14,7 +14,7 @@ def verify(base_url, attempts=12, delay=10):
     if parsed.scheme != "https" or not parsed.netloc:
         raise ValueError("The public site URL must use HTTPS")
     root = Path(__file__).resolve().parents[1]
-    files = ["index.html", "atlas.html", "data.html", "studio.html", "intelli.html", "daily.html", "washoku.html", "chinese-menu.html"]
+    files = ["indicators.html", "index.html", "atlas.html", "data.html", "studio.html", "intelli.html", "daily.html", "washoku.html", "chinese-menu.html"]
     files.extend(str(path.relative_to(root)) for path in sorted((root / "assets").rglob("*")) if path.is_file())
     pending = {name: (root / name).read_bytes() for name in files}
     for attempt in range(attempts):

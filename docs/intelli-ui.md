@@ -2,7 +2,7 @@
 
 入口：`intelli.html`。这是一个在静态站点内运行的研究工作区，不需要后端、API 密钥或新的构建工具。
 
-IntelliUI统一包含“智能工作区”“数据明细”“图表制作”三个子栏目，分别使用 `intelli.html`、`data.html`、`studio.html`，三个页面顶部互链并统一高亮主导航中的IntelliUI。旧页面地址继续有效，原本共享的CSV与会话数据沿用，无需重复导入。
+IntelliUI统一包含“智能工作区”“指标研究台”“数据明细”“图表制作”四个子栏目。指标研究台提供元数据检索与关系治理（详见 [indicator-architecture.md](indicator-architecture.md)）；原三个CSV视图共享会话数据的行为保持。四个页面顶部互链，主导航统一高亮IntelliUI。
 
 ## 使用方式
 

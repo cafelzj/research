@@ -1,0 +1,2 @@
+# Only Excel import needs an external package; SQLite/CLI/API/CP use stdlib.
+openpyxl==3.1.5

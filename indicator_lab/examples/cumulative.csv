@@ -1,0 +1,8 @@
+series_id,date,value,unit,frequency,region,source,coverage
+DEMO_CUMULATIVE,2023-12,1200,演示单位,月,演示地区,人工合成教学数值,
+DEMO_CUMULATIVE,2024-01,100,演示单位,月,演示地区,人工合成教学数值,
+DEMO_CUMULATIVE,2024-02,210,演示单位,月,演示地区,人工合成教学数值,
+DEMO_CUMULATIVE,2024-03,330,演示单位,月,演示地区,人工合成教学数值,
+DEMO_CUMULATIVE,2024-05,600,演示单位,月,演示地区,人工合成教学数值,
+DEMO_CUMULATIVE,2025-02,250,演示单位,月,演示地区,人工合成教学数值,合并1-2月
+DEMO_CUMULATIVE,2025-03,370,演示单位,月,演示地区,人工合成教学数值,

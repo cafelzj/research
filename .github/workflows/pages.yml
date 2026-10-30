@@ -25,10 +25,19 @@ jobs:
         uses: actions/checkout@v4
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
+      - name: Set up Python for indicator checks
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check indicator engine and retrieval boundaries
+        run: |
+          python3 -m pip install -r indicator_lab/requirements.txt
+          python3 scripts/test_indicator_engine.py
+          node scripts/test_indicator_search.cjs
       - name: Prepare static website
         run: |
           mkdir -p _site
-          cp index.html atlas.html data.html studio.html intelli.html daily.html washoku.html chinese-menu.html _site/
+          cp indicators.html index.html atlas.html data.html studio.html intelli.html daily.html washoku.html chinese-menu.html _site/
           cp -R assets _site/assets
       - name: Upload website
         uses: actions/upload-pages-artifact@v3

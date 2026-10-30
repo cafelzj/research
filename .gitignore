@@ -1,0 +1,7 @@
+
+# Private indicator catalogs / local runtime
+__pycache__/
+*.py[cod]
+*.sqlite
+*.sqlite-*
+indicator-lab-private/
