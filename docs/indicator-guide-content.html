@@ -1,0 +1,110 @@
+<div class="guide-intro" id="guide-overview">
+  <p class="guide-kicker">INDICATOR HANDBOOK / 审计 · 分类 · 关联 · 使用</p>
+  <h2>把指标的定义、关系和用法，放在同一张研究地图里</h2>
+  <p class="guide-lead">读懂一个指标，需要知道它在量什么、来自哪里、怎样统计，以及能和谁一起使用。这里把工作簿审计和工具规则固定下来，按“理解目录 → 选准指标 → 检验关系 → 处理数值”的顺序阅读。</p>
+  <div class="guide-intro-links"><a class="guide-primary" href="#view=search" data-guide-action>进入指标检索 →</a><a href="#guide-audit">先看原文件审计</a><a href="#guide-start">完整目录如何使用</a><button type="button" data-guide-print>打印 / 另存 PDF</button></div>
+  <p class="guide-note">本手册无需导入文件即可阅读。审计数字对应原工作簿的固定快照；研究台中的结果和质量统计随当前目录变化。完整目录保留在本地，公开页仅展示汇总与通用示例。</p>
+</div>
+<nav class="guide-contents" aria-label="研究手册目录"><a href="#guide-audit">01 文件审计</a><a href="#guide-taxonomy">02 多维分类</a><a href="#guide-search">03 精准检索</a><a href="#guide-relations">04 关联证据</a><a href="#guide-quality">05 异常分层</a><a href="#guide-pipeline">06 数据处理</a><a href="#guide-capabilities">07 能力范围</a><a href="#guide-start">08 开始使用</a></nav>
+<section class="guide-chapter" id="guide-audit" data-outline="01 · 原工作簿审计">
+  <header><p class="guide-kicker">01 / KNOW YOUR CATALOG</p><h3>这份文件提供了什么，缺少什么？</h3></header>
+  <p>工作表“全行业指标”的两行标题和一行示例不计入有效引用。目录里每行是一次行业归属；相同指标可能在两个行业下出现，因此“行数”和“独立指标数”需要分开。</p>
+  {{audit_cards}}
+  <div class="guide-insight"><h4>460 组重复代码，为什么保留成多行业标签？</h4><p>逐项核对后，这些代码的名称、频率、单位、来源等非行业属性一致，差异只有行业归属。归并后保留一个指标实体，同时记录全部行业标签与原表行号。相同名称但代码不同的指标继续独立保留，以便核对历史、来源和修订。</p><p><strong>62,241 条行业引用 − 460 条重复引用 = 61,781 个指标实体。</strong>本文件同代码的非行业属性冲突为 0，这不代表全部指标定义已经通过人工核验。</p></div>
+  <h4>覆盖结构：原行业标签分布</h4><p>家用电器的 47,650 条引用约占全表 76.6%。这说明目录条目集中在家电的品牌、品类、渠道、统计口径等组合，不能推导为该行业更重要。按多个研究维度筛选，可以避免大量细分条目淹没其他行业的结果。</p>
+  <figure class="guide-industry-figure"><figcaption>按原始引用行计的前六个行业标签</figcaption>{{industry_bars}}</figure>
+  <details class="guide-details"><summary>查看全部 21 个原行业标签及引用数</summary>{{industry_table}}</details>
+  <h4>相同文件，用两种分母观察质量</h4><p>原始行计数保留每次行业引用；实体计数归并了跨行业重复。单位缺失 709 行对应 508 个实体，停更 27,451 行对应 27,179 个实体。二者都来自同一个文件。</p>
+  {{audit_quality_table}}
+  <p class="guide-note">“停更”“预警”“正常”均为原表标记；没有观测日期就无法核实最近更新时间。单位空缺是需治理的问题，缺失原因仍需回到来源核验。上述提示不能解释为经济运行异常。</p>
+  <h4>元数据可用性</h4><ul><li>127 条引用登记了别名；“联想查询”列全为空，需要逐步补充可审核的同义词和研究线索。</li><li>明确的别名分隔符是 <code>@,@</code>。产品规格里的普通逗号保留，避免拆坏名称。</li><li>原文件没有观测日期、数值序列或 Excel 公式。现阶段不能据此计算数值相关系数、滞后关系或实际离群点。</li></ul>
+  <details class="guide-details"><summary>审计口径与追溯</summary><dl class="guide-definitions"><div><dt>原文件 / 工作表</dt><dd>{{source_file}} / {{source_sheet}}</dd></div><div><dt>文件 SHA-256</dt><dd><code>{{source_hash}}</code></dd></div><div><dt>审计版本</dt><dd>{{snapshot_version}}；本页为固定快照。换一份目录后，请到“目录质量”检查当前文件。</dd></div><div><dt>候选关系</dt><dd>最终导入器生成 23,857 条待核验派生候选；候选数量取决于规则版本，不表示公式或因果已经成立。</dd></div></dl><a href="assets/indicator-audit-summary.json" download>下载公共审计摘要 JSON</a></details>
+  <p class="guide-tool-link"><a href="#view=quality" data-guide-action>查看当前目录的质量 →</a></p>
+</section>
+<section class="guide-chapter" id="guide-taxonomy" data-outline="02 · 指标多维分类">
+  <header><p class="guide-kicker">02 / CLASSIFY WITHOUT LOSING MEANING</p><h3>一个指标，可以有多种研究位置</h3></header>
+  <p>“家电”“价格”“月度”“线上”分别回答不同问题。原行业决定它在原表中放在哪里，研究角色帮助你组织供需与盈利，统计口径决定哪些数据能够比较。这些维度需要同时保留。</p>
+  <div class="guide-table-wrap" tabindex="0" aria-label="多维分类表，可横向滚动"><table><thead><tr><th>分类维度</th><th>要回答的问题</th><th>例子与注意事项</th><th>当前实现</th></tr></thead><tbody>
+    <tr><th scope="row">指标身份</th><td>究竟是哪一条序列？</td><td>命名空间、code、来源和原表定位；同名多源独立保留。</td><td>保留 id、code、来源、文件哈希及原行号。</td></tr>
+    <tr><th scope="row">原行业</th><td>原文件如何归类？</td><td>一个指标可同时归入多个行业；原标签可能存在不合适的归类。</td><td>原行业多标签筛选，不自动覆盖。</td></tr>
+    <tr><th scope="row">研究角色</th><td>它解释供给、需求还是成本？</td><td>价格成本、供给产能、需求消费、库存物流、贸易、财务、宏观政策。</td><td>名称规则生成，可筛选；未知保留待分类。</td></tr>
+    <tr><th scope="row">对象与范围</th><td>什么产品、地区、品牌和渠道？</td><td>纯/聚合 MDI，轻/重碱，线上/线下，总量/品牌；这些差别不能作为同义词消除。</td><td>名称和受控词典参与检索；全行业对象字典尚不完备。</td></tr>
+    <tr><th scope="row">统计口径</th><td>在哪个时间和单位下量什么？</td><td>日/周/月/季，原值/同比/环比，当月/累计/期末，元/台或万元。</td><td>保留频率、单位、变换类别，解析常见口径和否定条件。</td></tr>
+    <tr><th scope="row">证据状态</th><td>结论来自原表、规则还是验证？</td><td>原字段、规则推断、关系候选和已验证公式的可信范围不同。</td><td>显示匹配理由、候选状态与质量提示；没有已验证公式依赖。</td></tr>
+  </tbody></table></div>
+  <div class="guide-example"><h4>用“空调线上零售均价”练习拆解</h4><dl class="guide-definitions"><div><dt>对象</dt><dd>空调；还需区分全市场和某个品牌。</dd></div><div><dt>渠道</dt><dd>线上；不与线下默认混用。</dd></div><div><dt>度量</dt><dd>均价；不等于零售额、零售量或市场份额。</dd></div><div><dt>统计口径</dt><dd>当月均价与当月均价同比是两条不同序列。</dd></div><div><dt>来源与单位</dt><dd>确认同一供数来源及单位，再比较和计算。</dd></div></dl><p>若范围、渠道或来源改变，即使名称很相近，也应回到定义重新核对。</p></div>
+</section>
+<section class="guide-chapter" id="guide-search" data-outline="03 · 自然语言与精准检索">
+  <header><p class="guide-kicker">03 / FIND THE RIGHT SERIES</p><h3>搜索要把“找到相似名字”推进到“选准口径”</h3></header>
+  <ol class="guide-flow"><li><b>归一写法</b><span>处理全半角、大小写及常见标点，保留原名称。</span></li><li><b>先查身份</b><span>代码、全名和原表登记别名优先；同名多代码仍分别展示。</span></li><li><b>提取约束</b><span>识别对象、地区、频率、同比/累计、来源及排除条件。</span></li><li><b>过滤再排序</b><span>按对象与口径匹配。冲突明确提示，不悄悄放宽条件。</span></li><li><b>人工消歧</b><span>看每条结果的单位、频率、来源和匹配理由。</span></li></ol>
+  <p>当前自然语言解析由词典与规则完成，未调用大模型。支持的是可解释的常见表达；遇到未识别的词或冲突条件，会提示或返回空结果。排序分数用于排候选，不是经过校准的正确概率。</p>
+  <div class="guide-table-wrap" tabindex="0" aria-label="检索案例表，可横向滚动"><table><thead><tr><th>可以这样搜索</th><th>你应检查什么</th><th>用当前目录试搜</th></tr></thead><tbody>
+    <tr><th scope="row">甲醇价格，周频，不要同比</th><td>周频原值；不同代码或来源并列，不能用同比代替价格。</td><td><a href="#view=search&amp;q=%E7%94%B2%E9%86%87%E4%BB%B7%E6%A0%BC%EF%BC%8C%E5%91%A8%E9%A2%91%EF%BC%8C%E4%B8%8D%E8%A6%81%E5%90%8C%E6%AF%94&amp;scope=local" data-guide-action>试搜甲醇周价 →</a></td></tr>
+    <tr><th scope="row">DMC</th><td>可能指二甲基环硅氧烷，也可能指碳酸二甲酯。先确认化学对象，再沿产业链研究。</td><td><a href="#view=search&amp;q=DMC&amp;scope=local" data-guide-action>查看 DMC 消歧 →</a></td></tr>
+    <tr><th scope="row">纯 MDI 价格</th><td>纯 MDI 与聚合 MDI 分开；再核对地区、来源与频率。</td><td><a href="#view=search&amp;q=%E7%BA%AFMDI%E4%BB%B7%E6%A0%BC&amp;scope=local" data-guide-action>试搜纯 MDI →</a></td></tr>
+    <tr><th scope="row">空调零售均价同比</th><td>同比率与均价原值不同；还需区分品牌、线上/线下及当月/期末。</td><td><a href="#view=search&amp;q=%E7%A9%BA%E8%B0%83%E9%9B%B6%E5%94%AE%E5%9D%87%E4%BB%B7%E5%90%8C%E6%AF%94&amp;scope=local" data-guide-action>查看空调均价同比 →</a></td></tr>
+    <tr><th scope="row">SCFI</th><td>SCFI 与 CCFI 的样本和定义不同，不能因字母相近混用。</td><td><a href="#view=search&amp;q=SCFI&amp;scope=local" data-guide-action>试搜 SCFI →</a></td></tr>
+    <tr><th scope="row">CPI</th><td>当前本地目录没有准确项时返回空；CCPI 不能补成 CPI。世界银行另有年度消费价格通胀率，和 CPI 指数水平仍需区分。</td><td><a href="#view=search&amp;q=CPI&amp;scope=local" data-guide-action>查本地 CPI →</a><br><a href="#view=search&amp;q=CPI&amp;scope=remote" data-guide-action>查世界银行年度通胀 →</a></td></tr>
+  </tbody></table></div>
+  <div class="guide-insight"><h4>示例没搜到，先看“当前目录”</h4><p>工具页默认是 30 条人工演示元数据；导入全量私有目录后才有 61,781 个实体。上面的预设检索使用当前目录，清空额外筛选并按示例口径查询；不会替换或公开你的目录文件。同一条查询在两种目录下可能有不同结果。</p><p>频率筛选与句子冲突时，例如下拉框选“日”、句子指定“月度”，先明确要哪一个条件，再重查。不能把冲突静默当成新的查询。</p></div>
+</section>
+<section class="guide-chapter" id="guide-relations" data-outline="04 · 关联关系与证据">
+  <header><p class="guide-kicker">04 / RELATION IS NOT YET A FORMULA</p><h3>先给关系定类型，再决定能不能计算</h3></header>
+  <p>本次导入规则生成 <strong>23,857 条派生关系候选</strong>。名称主体、来源、频率、已识别地区及口径兼容，意味着值得核对；仍要检查原始定义和真实数值。目录本身未提供公式。</p>
+  <div class="guide-table-wrap" tabindex="0" aria-label="关系证据表，可横向滚动"><table><thead><tr><th>关系类型</th><th>能帮助你做什么</th><th>成立还需要什么</th></tr></thead><tbody>
+    <tr><th scope="row">同名 / 同义候选</th><td>发现重复概念、别名或同名多来源。</td><td>核对 code、历史、来源、单位、频率和统计范围，不能凭名字自动合并。</td></tr>
+    <tr><th scope="row">派生候选</th><td>连接原值与同比、环比、累计等相关口径。</td><td>准确公式、基期、流量/存量属性与真实观测验证。</td></tr>
+    <tr><th scope="row">产业链研究假说</th><td>组织成本、供给、库存、需求与盈利的传导问题。</td><td>核验共同驱动、方向、时滞、政策和季节性，不将上下游位置当成因果证明。</td></tr>
+    <tr><th scope="row">已验证公式依赖</th><td>进入可执行计算计划。</td><td>精确输入序列、单位换算、时间对齐、公式版本、审核与边界测试。本次目录为 0 条。</td></tr>
+  </tbody></table></div>
+  <div class="guide-example"><h4>量、价、额可以互证，但要先算对单位</h4><p>教学情景：某同口径家电月销量为 100 台，均价 2,000 元/台，则销售额应约为 20 万元：</p><div class="guide-formula">100 台 × 2,000 元/台 ÷ 10,000 = 20 万元</div><p>应用到真实指标时，还要确认同品牌、品类、渠道、期间、折扣与退货处理。真实统计的“均价”不一定能按另一份销量表精确还原销售额，因此这只是需验证的会计关系候选。</p></div>
+  <div class="guide-example"><h4>同比增长率与百分点变化要分开</h4><p>教学情景：份额从 20% 到 25%，是提高 <strong>5 个百分点</strong>，相对增长率则为 <strong>25%</strong>。原名称只写“同比”时，不能擅自选其中一个公式。比率、均价和期末存量也不能直接按月求和。</p></div>
+  <h4>六条研究路径已经可以浏览</h4><ul class="guide-path-list"><li>原油 → 芳烃 → PU：成本传导与终端保温需求。</li><li>纯碱 → 玻璃：原料库存、玻璃运行与终端需求。</li><li>家电量价与渠道：零售量、均价、零售额及库存。</li><li>锂电材料：区分 LFP 正极、LiPF₆ 电解液盐与 PVDF。</li><li>硅材料分支：工业硅、有机硅、多晶硅与 DMC 消歧。</li><li>航运供需：船队运力、SCFI、CCFI 与吞吐量。</li></ul><p class="guide-note">路径按研究问题连接节点，不宣称每个箭头都是直接化学反应或已证实经济因果。打开节点后，仍需回到结果页核对指标定义。</p>
+  <p class="guide-tool-link"><a href="#view=paths" data-guide-action>沿产业链查看当前目录 →</a></p>
+</section>
+<section class="guide-chapter" id="guide-quality" data-outline="05 · 异常分层与复核">
+  <header><p class="guide-kicker">05 / SEPARATE QUALITY FROM ECONOMIC SIGNAL</p><h3>看到异常提示，先知道它在提示哪一层</h3></header>
+  <ol class="guide-quality-layers"><li><h4>目录层：字段和定义疑点</h4><p>单位缺失、名称与频率冲突、比率名称配数量单位、来源缺失等。当前规则标出 21 条名称/频率疑点和 6 条名称/单位疑点；只是待复核，不自动改成推测的正确值。</p></li><li><h4>计算层：有没有算数的条件</h4><p>重复期、缺基期、零基期、合并期、单位/来源混用、非有限值与溢出。程序保留原值，给出不能计算或需复核的原因。</p></li><li><h4>统计层：变化是否值得核验</h4><p>拿到真实月度观测后，程序可用过去窗口的一阶差分 MAD 标记候选；历史不足或 MAD 为零时不假造确定分数。季节性、修订和尺度变化都可能影响结果。</p></li><li><h4>研究层：变化意味着什么</h4><p>回到装置、订单、库存、政策与来源公告交叉验证。数据真实、口径变化、季节波动和采集错误都可能解释候选，不能由一个离群分数直接得出拐点或因果。</p></li></ol>
+  <div class="guide-insight"><h4>“正常”也需要检查更新时间</h4><p>原表健康标记属于元数据，没有最近观测日期就不能保证新鲜度。停更序列仍可能用于历史研究，所以工具保留并可筛选，不直接删除。</p></div>
+  <p class="guide-tool-link"><a href="#view=quality" data-guide-action>检查并导出当前目录的质量报告 →</a></p>
+</section>
+<section class="guide-chapter" id="guide-pipeline" data-outline="06 · 数据处理与复现">
+  <header><p class="guide-kicker">06 / FROM METADATA TO OBSERVATIONS</p><h3>数据处理要经过哪些关口？</h3></header>
+  <p>这里将“数据 CP”按清洗、口径对齐、派生计算和质量验证解释。指标目录负责身份和定义；数值计算需要另行取得真实观测。当前可执行 CSV 程序限于已明确身份、单位、地区、来源的月度数据。</p>
+  <ol class="guide-flow"><li><b>保留原始输入</b><span>记下文件哈希、来源、日期、单位与行号，原值不覆盖。</span></li><li><b>选准序列</b><span>核对 code、来源、对象和统计口径。同名不能静默拼接。</span></li><li><b>按月对齐</b><span>每条序列内检查重复、缺月、合并期和单位一致性。</span></li><li><b>执行指定操作</b><span>原值、同比、环比，或经确认可加的累计转当期。</span></li><li><b>输出与复核</b><span>保留输入值、基期行、派生值与质量原因，再进入图表和研究。</span></li></ol>
+  <div class="guide-table-wrap" tabindex="0" aria-label="衍生计算边界表，可横向滚动"><table><thead><tr><th>操作</th><th>适用定义</th><th>关键边界</th></tr></thead><tbody>
+    <tr><th scope="row">同比</th><td>(本期 / 上年同月 − 1) × 100%</td><td>同序列同单位；零基期、缺上年同月不能计算。率的同比定义还需单独确认。</td></tr>
+    <tr><th scope="row">环比</th><td>(本期 / 前月 − 1) × 100%</td><td>找真正前月，不能把上一个非空记录当作前月。</td></tr>
+    <tr><th scope="row">累计转当期</th><td>同年本期累计 − 上期累计</td><td>仅适用于已确认可加的流量；1 月特殊处理，缺月或合并 1–2 月不强拆，存量与比率不套用。</td></tr>
+    <tr><th scope="row">异常候选扫描</th><td>过去窗口内的月度差分 MAD 复核</td><td>只生成需检查的统计候选；不补零、删原值或使用未来值。</td></tr>
+  </tbody></table></div>
+  <details class="guide-details"><summary>开发与复现：CSV 契约、命令和程序入口</summary><p>必填列为 <code>series_id,date,value,unit,frequency,region,source</code>，可选 <code>coverage</code> 标注合并期。示例 CSV 为人工合成，只用于理解计算。</p><pre>python3 -m indicator_lab prepare --input observations.csv --output result.json --operation yoy
+python3 -m indicator_lab prepare --input cumulative.csv --output period.json --operation cumulative_to_period --measure flow</pre><p>输出保留输入文件哈希、原始日期和值、输入行、基期行和质量标记。混单位/地区/来源拒绝拼接；缺失保留空值，计算溢出标记原因。</p><a href="https://github.com/cafelzj/research/tree/main/indicator_lab" target="_blank" rel="noopener">查看程序与完整命令 ↗</a></details>
+  <p class="guide-tool-link"><a href="#view=method" data-guide-action>查看研究台中的数据处理方法 →</a></p>
+</section>
+<section class="guide-chapter" id="guide-capabilities" data-outline="07 · 已实现与待接入">
+  <header><p class="guide-kicker">07 / KNOW WHAT IS CONNECTED</p><h3>页面能做什么，哪些还需要接入和验证？</h3></header>
+  <div class="guide-table-wrap" tabindex="0" aria-label="能力状态表，可横向滚动"><table><thead><tr><th>能力</th><th>状态</th><th>适用范围</th></tr></thead><tbody>
+    <tr><th scope="row">目录导入、索引与多维筛选</th><td><span class="guide-status">已实现</span></td><td>公开页人工演示；导入 JSON 或本地服务后检索完整私有目录。</td></tr>
+    <tr><th scope="row">自然语言与同义词检索</th><td><span class="guide-status">规则已实现</span></td><td>受控词典、明确口径、排除条件与匹配解释；未知表达会拒绝或提示。</td></tr>
+    <tr><th scope="row">关系与研究路径</th><td><span class="guide-status">候选与线索已实现</span></td><td>同名消歧、名称派生候选和六条研究路径；没有已验证公式或因果。</td></tr>
+    <tr><th scope="row">CSV 衍生计算与候选扫描</th><td><span class="guide-status">本地程序已实现</span></td><td>月度原值、同比、环比、累计转当期；网页展示方法，计算在本地 Python 程序执行。</td></tr>
+    <tr><th scope="row">世界银行公共指标</th><td><span class="guide-status">已连接</span></td><td>前端登记 10 项年度指标，点击获取指定国家数值；本地连接器另支持 WDI 英文/代码检索。</td></tr>
+    <tr><th scope="row">大模型、向量服务</th><td><span class="guide-status pending">未连接</span></td><td>架构允许生成受约束检索计划；现在不把规则结果称为模型理解。</td></tr>
+    <tr><th scope="row">商业行业数据库</th><td><span class="guide-status pending">需授权接入</span></td><td>Excel 的“来源”字段不是接口或授权证明，需独立适配器和服务端凭据。</td></tr>
+    <tr><th scope="row">跨频、单位换算、修订回测及实证因果</th><td><span class="guide-status pending">尚未实现</span></td><td>需定义对齐、转换、可知时点与专项验证，不从名称自动推导。</td></tr>
+  </tbody></table></div>
+  <div class="guide-insight"><h4>远程的“CPI”仍要看定义</h4><p>世界银行登记的是年度居民消费价格通胀率，不能直接当作本地月度 CPI 指数水平。国家、频率、单位、时期都要核对；接口缺失值按缺失显示，错误不会回退成模拟数值。</p><a href="#view=search&amp;q=CPI&amp;scope=remote" data-guide-action>查看远程定义与取数入口 →</a></div>
+</section>
+<section class="guide-chapter" id="guide-start" data-outline="08 · 使用与架构入口">
+  <header><p class="guide-kicker">08 / START WITH THE RIGHT WORKSPACE</p><h3>把说明用到实际研究里</h3></header>
+  <ol class="guide-start-steps"><li><h4>先用演示理解操作</h4><p>进入研究台，试搜 DMC、甲醇周价、空调均价同比。打开指标详情，查看频率、单位、来源、同名候选和关系状态。演示是 30 条人工元数据，没有真实观测值。</p><a href="#view=search&amp;q=DMC&amp;scope=local" data-guide-action>从 DMC 消歧开始 →</a></li><li><h4>再导入完整目录</h4><p>将私有资料包中的 <code>catalog.json</code> 解压，在“导入目录 JSON”中选择。文件只读入当前浏览器内存，不上传；刷新或关闭后需重新导入。阅读同页“研究说明”不会替换当前目录。</p><a href="#catalog-manager" data-guide-action>回到目录导入区 →</a></li><li><h4>沿路径核对候选</h4><p>按研究问题选择上下游节点，用指标身份与口径检查每条结果。搜索不到时，区分“未覆盖”“约束冲突”和“尚未接入”，不要强行用近似指标替代。</p><a href="#view=paths" data-guide-action>打开产业链与关联 →</a></li><li><h4>有真实观测后再计算</h4><p>用本地程序导入 Excel、保留私有索引，并按 CSV 契约准备数值。运行月度处理与质量检查，再将结果用于后续图表；公开工具页不自动取得商业数据。</p></li></ol>
+  <details class="guide-details"><summary>本地运行完整研究台</summary><pre>python3 -m pip install -r indicator_lab/requirements.txt
+python3 -m indicator_lab build --input "/你的指标.xlsx" --output /私有目录/catalog.sqlite
+python3 -m indicator_lab export --db /私有目录/catalog.sqlite --output /私有目录/catalog.json
+python3 -m indicator_lab serve --db /私有目录/catalog.sqlite --port 8765
+# 打开 http://127.0.0.1:8765/，页面自动读取本地完整目录</pre><p>SQLite 与完整 JSON 放在网站目录外。公开 GitHub Pages 承载前端，本地服务提供私有目录与 Python 计算；完整目录未在公开摘要中分发。</p></details>
+  <h4>整套架构怎样连接？</h4><ol class="guide-architecture"><li><b>输入</b><span>Excel 目录 / 授权 API / 独立观测 CSV</span></li><li><b>身份与溯源</b><span>code、来源、定义、单位、频率、行号、文件版本</span></li><li><b>分类与关系</b><span>多维标签、候选关系和公式审核状态</span></li><li><b>检索计划</b><span>对象、口径、排除条件、命名空间与候选选择</span></li><li><b>计算与验证</b><span>真实观测对齐、指定公式、边界检查与质量输出</span></li><li><b>研究呈现</b><span>结果、解释、来源和可复核的计算记录</span></li></ol>
+  <p>当前前端和 Python 检索器各自实现规则解析，共同要求不放宽明确口径；不保证任意自然语言句子在两端完全一致。未来模型只生成受约束计划，仍需经过身份、口径与权限检查。</p>
+  <p class="guide-resources"><a href="https://github.com/cafelzj/research/blob/main/docs/indicator-architecture.md" target="_blank" rel="noopener">开发架构文档 ↗</a><a href="https://github.com/cafelzj/research/tree/main/indicator_lab" target="_blank" rel="noopener">程序与测试 ↗</a><a href="assets/indicator-audit-summary.json" download>公共审计摘要 ↓</a></p>
+</section>

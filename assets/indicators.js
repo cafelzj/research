@@ -120,20 +120,76 @@
     if(catalog.audit?.counts)Object.assign(counts,catalog.audit.counts);else for(const i of issues)counts[i.kind]=(counts[i.kind]||0)+1;
     const stats=[['指标实体',rec.length],['跨行业引用代码',catalog.meta?.cross_industry_codes||0],['单位未填',rec.filter(r=>!r.unit).length],['表内停更标记',rec.filter(r=>r.health?.includes('停更')).length]];
     $('#quality-stats').innerHTML=stats.map(([k,v])=>`<div class="quality-stat"><b>${fmt(v)}</b><span>${esc(k)}</span></div>`).join('');
-    $('#quality-issues').innerHTML=`<div class="notice">当前目录${catalog.meta?.mode==='demo'?'是人工功能演示，不是原表审计结果。':'的统计按去重后实体计算，可能与 Excel 行数统计不同。'}没有真实观测序列，不执行数值离群或经济异常判断。</div>`+Object.entries(counts).map(([kind,count])=>{const sample=kind==='source_health'?rec.filter(r=>r.health&&r.health!=='正常').slice(0,5).map(r=>({record_id:r.id,message:'原表健康标记需核验；不代表数值异常或新鲜度验证。'})):issues.filter(i=>i.kind===kind).slice(0,5);return `<article class="quality-item"><h3>${esc(issueLabels[kind]||kind)} · ${fmt(count)}</h3><p>${esc(sample[0]?.message||'')}</p>${sample.map(i=>byId.get(i.record_id)).filter(Boolean).map(r=>`<button type="button" data-quality-id="${esc(r.id)}">${esc(r.code)} · ${esc(r.name)}</button>`).join('')}</article>`}).join('')+`<article class="quality-item"><h3>同名异代码候选 · ${fmt(catalog.audit?.homonyms?.length||0)} 组</h3><p>代码、来源和统计范围分开保留，先消歧再取数。不同代码同名不自动合并。</p></article>`;
+    $('#quality-issues').innerHTML=`<div class="notice">当前目录${catalog.meta?.mode==='demo'?'是人工功能演示，不是原表审计结果。':'的统计：上方卡片按去重实体统计；下方规则计数分别注明引用行、实体或代码。'}没有真实观测序列，不执行数值离群或经济异常判断。</div>`+Object.entries(counts).map(([kind,count])=>{const sample=kind==='source_health'?rec.filter(r=>r.health&&r.health!=='正常').slice(0,5).map(r=>({record_id:r.id,message:'原表健康标记需核验；不代表数值异常或新鲜度验证。'})):issues.filter(i=>i.kind===kind).slice(0,5);const basis=kind.startsWith('missing_')?'条原始引用':kind==='cross_industry_membership'?'个多行业代码':['source_health','name_unit_conflict','name_frequency_conflict'].includes(kind)?'个指标实体':'条规则提示';return `<article class="quality-item"><h3>${esc(issueLabels[kind]||kind)} · ${fmt(count)} ${basis}</h3><p>${esc(sample[0]?.message||'')}</p>${sample.map(i=>byId.get(i.record_id)).filter(Boolean).map(r=>`<button type="button" data-quality-id="${esc(r.id)}">${esc(r.code)} · ${esc(r.name)}</button>`).join('')}</article>`}).join('')+`<article class="quality-item"><h3>同名异代码候选 · ${fmt(catalog.audit?.homonyms?.length||0)} 组</h3><p>代码、来源和统计范围分开保留，先消歧再取数。不同代码同名不自动合并。</p></article>`;
   }
   function view(name){document.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===name)));document.querySelectorAll('.workspace-view').forEach(e=>e.hidden=e.id!=='view-'+name);}
+  const views = new Set(['search','paths','quality','method','guide']);
+  let lastRoute = null;
+  function moveTo(target, scroll) {
+    if (!target || !scroll) return;
+    requestAnimationFrame(() => {
+      target.scrollIntoView({block:'start',behavior:'instant'});
+      if (target.hasAttribute('tabindex')) target.focus({preventScroll:true});
+    });
+  }
+  function applyRoute({scroll=false,force=false}={}) {
+    const hash = location.hash;
+    if (!force && hash === lastRoute) return;
+    lastRoute = hash;
+    if (hash.startsWith('#guide-')) {
+      const target = document.getElementById(hash.slice(1));
+      if (target && target.closest('#view-guide')) {
+        view('guide'); moveTo(target,scroll);
+      }
+      return;
+    }
+    if (hash === '#catalog-manager') {
+      view('search'); moveTo($('#catalog-manager'),scroll); return;
+    }
+    const params = new URLSearchParams(hash.slice(1));
+    const name = params.get('view') || (hash ? null : 'search');
+    if (!views.has(name)) return;
+    view(name);
+    if (name === 'search' && params.has('q')) {
+      const query = params.get('q');
+      if (query.length > 1000) { status('预设检索超过 1000 字，请缩短后查询。',true); return; }
+      const requestedScope = params.get('scope') || 'local';
+      if (!['local','remote'].includes(requestedScope)) { status('检索范围无效，请选择本地或世界银行目录。',true); return; }
+      filters.forEach(f=>$('#filter-'+f).value='');
+      scope=requestedScope;
+      $(`[name=scope][value=${scope}]`).checked=true;
+      $('#metric-query').value=query;
+      runSearch(true);
+    }
+    moveTo($('#view-'+name),scroll);
+  }
+  function navigate(fragment,scroll=true) {
+    if (location.hash !== fragment) history.pushState(null,'',fragment);
+    if ($('#metric-dialog').open) $('#metric-dialog').close();
+    applyRoute({scroll,force:true});
+  }
+  // A preset is an explicit query replacement, not a directory replacement.
+  document.addEventListener('click',e=>{
+    const link=e.target.closest('a[data-guide-action],.indicator-guide a[href^="#"]');
+    if (!link || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const href=link.getAttribute('href');
+    if (href?.startsWith('#view=') || href?.startsWith('#guide-') || href==='#catalog-manager') {
+      e.preventDefault();navigate(href);
+    }
+  });
+  window.addEventListener('hashchange',()=>applyRoute({scroll:true}));
+  window.addEventListener('popstate',()=>applyRoute({scroll:true}));
   document.addEventListener('click',e=>{
     const b=e.target.closest('button');if(!b)return;
-    if(b.dataset.view)view(b.dataset.view);
+    if(b.dataset.view&&views.has(b.dataset.view))navigate('#view='+b.dataset.view,false);
     if(b.dataset.query){$('#metric-query').value=b.dataset.query;runSearch(true);}
     if(b.dataset.id)openDetail(b.dataset.id);
     if(b.dataset.detailId)openDetail(b.dataset.detailId);
     if(b.dataset.qualityId){scope='local';$('[name=scope][value=local]').checked=true;openDetail(b.dataset.qualityId);}
     if(b.dataset.path)renderPaths(Number(b.dataset.path));
-    if(b.dataset.find){scope='local';$('[name=scope][value=local]').checked=true;filters.forEach(f=>$('#filter-'+f).value='');$('#metric-query').value=b.dataset.find;view('search');runSearch(true);$('#metric-query').focus();}
+    if(b.dataset.find){scope='local';$('[name=scope][value=local]').checked=true;filters.forEach(f=>$('#filter-'+f).value='');$('#metric-query').value=b.dataset.find;navigate('#view=search',false);runSearch(true);$('#metric-query').focus();}
   });
-  $('#metric-search-form').onsubmit=e=>{e.preventDefault();runSearch(true);};
+  $('#metric-search-form').onsubmit=e=>{e.preventDefault();if(location.hash.includes('q=')){history.replaceState(null,'','#view=search');lastRoute=location.hash;}runSearch(true);};
   for(const f of filters)$('#filter-'+f).onchange=()=>runSearch(true);
   document.querySelectorAll('[name=scope]').forEach(e=>e.onchange=()=>{scope=e.value;runSearch(true);});
   $('#clear-filters').onclick=()=>{filters.forEach(f=>$('#filter-'+f).value='');runSearch(true);};
@@ -146,6 +202,8 @@
   $('#demo-reset').onclick=()=>{loadToken++;install(window.IndicatorDemo,'演示目录');status('已恢复演示。');};
   $('#cp-command').textContent='python3 -m indicator_lab prepare --input observations.csv --output result.json --operation yoy\npython3 -m indicator_lab prepare --input cumulative.csv --output result.json --operation cumulative_to_period --measure flow\n# 必填 CSV 列：series_id,date,value,unit,frequency,region,source\n# 不同单位/频率/地区/来源不可静默拼接；coverage 可标记合并期。';
   renderPaths();install(window.IndicatorDemo,'演示目录');
+  document.body.classList.add('guide-js-ready');
+  applyRoute({scroll:Boolean(location.hash)});
   if(['127.0.0.1','localhost','[::1]'].includes(location.hostname)){
     const startupToken=loadToken;
     fetch('/health').then(r=>r.ok?r.json():null).then(async health=>{if(health?.service!=='indicator-lab'||startupToken!==loadToken)return;status('检测到本地指标服务，正在加载私有全量目录…');const r=await fetch('/catalog');if(!r.ok)throw Error('目录接口 HTTP '+r.status);const data=await r.json();if(startupToken===loadToken){install(data,data.meta?.source_file||'本地完整目录');status('已连接本地私有目录。');}}).catch(e=>{if(startupToken===loadToken)status('本地目录加载失败：'+e.message+'。当前仍为演示目录，请重试导入或检查本地服务。',true);});

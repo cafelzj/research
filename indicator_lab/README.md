@@ -117,3 +117,8 @@ INDICATOR_TEST_DB='/私有/catalog.sqlite' python3 scripts/test_indicator_engine
 python3 -m indicator_lab prepare --input indicator_lab/examples/monthly.csv --output /tmp/indicator-yoy-demo.json --operation yoy --scan-anomalies
 python3 -m indicator_lab prepare --input indicator_lab/examples/cumulative.csv --output /tmp/indicator-period-demo.json --operation cumulative_to_period --measure flow
 ```
+
+
+## 网页研究手册
+
+本地服务同时提供 `/indicator-guide.html`，也可以在研究台切换“研究说明”。说明正文是共享源生成的静态内容：包括原工作簿固定汇总、计数分母、分类、检索、关联证据、异常及处理边界。它与当前浏览器加载的目录分开标注，不依赖公开完整目录；同页案例可以沿用已加载的私有索引。

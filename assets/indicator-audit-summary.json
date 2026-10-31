@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "snapshot_version": "workbook-audit-v1",
+  "scope": "上传工作簿的固定元数据审计快照，不是当前浏览器目录或实时数据质量",
+  "provenance": {
+    "source_file": "1-行业指标预料和联想治理.xlsx",
+    "sheet": "全行业指标",
+    "source_sha256": "94ef3267be2757cba87290584319e40c4bdecce28a032120814327659cfce89e",
+    "header_rows": 2,
+    "excluded_example_rows": 1,
+    "method": "逐行读取原始字段；相同code且全部非行业属性相同才合并；关系仅按受控名称与口径规则形成候选"
+  },
+  "totals": {
+    "references": 62241,
+    "entities": 61781,
+    "industries": 21,
+    "cross_industry_codes": 460,
+    "code_conflicts": 0,
+    "alias_records": 127,
+    "association_records": 0,
+    "formula_cells": 0,
+    "derived_candidates": 23857,
+    "verified_formulas": 0,
+    "has_observations": false
+  },
+  "reference_counts": {
+    "industry": {
+      "交通运输": 493,
+      "传媒": 692,
+      "公用事业": 1535,
+      "医药生物": 9,
+      "固收": 571,
+      "基础化工": 1559,
+      "宏观": 17,
+      "家用电器": 47650,
+      "建筑材料": 937,
+      "房地产": 1371,
+      "旅游酒店": 14,
+      "有色金属": 24,
+      "汽车": 2453,
+      "煤炭": 546,
+      "电子": 51,
+      "电新": 111,
+      "社会服务": 323,
+      "轻工制造": 156,
+      "非银金融": 3639,
+      "非银金融(A股)": 42,
+      "食品饮料": 48
+    },
+    "frequency": {
+      "月": 28317,
+      "周": 15946,
+      "日": 1216,
+      "年": 7575,
+      "旬": 2,
+      "季": 9143,
+      "半年": 42
+    },
+    "health": {
+      "正常": 33743,
+      "停更": 27451,
+      "预警": 1041,
+      "未填": 6
+    },
+    "missing_unit": 709,
+    "missing_health": 6
+  },
+  "entity_counts": {
+    "frequency": {
+      "月": 28317,
+      "周": 15526,
+      "日": 1176,
+      "年": 7575,
+      "旬": 2,
+      "季": 9143,
+      "半年": 42
+    },
+    "health": {
+      "正常": 33555,
+      "停更": 27179,
+      "预警": 1041,
+      "未填": 6
+    },
+    "missing_unit": 508
+  },
+  "quality_candidates": {
+    "name_frequency": 21,
+    "name_unit": 6
+  },
+  "notes": [
+    "原始行业为表内标签，不等于经过核验的经济分类。",
+    "同名不同code不合并；同code有属性冲突时另保留实体。",
+    "引用行数与去重后的实体数采用不同分母，不能混用。",
+    "健康标记来自原表，未代表最近观测更新或数值异常。",
+    "单条元数据、全量目录、SQLite与原始Excel不包含在本公共摘要中。"
+  ]
+}

@@ -144,3 +144,10 @@ GitHub 的文件浏览页面显示源码，不直接运行网页。已加入 `.g
 运行方式和CSV契约见 [indicator_lab/README.md](indicator_lab/README.md)，架构与数据处理方法见 [docs/indicator-architecture.md](docs/indicator-architecture.md)。全量索引应生成在网站目录之外，本地运行 `python3 -m indicator_lab serve --db /私有路径/catalog.sqlite --port 8765` 后打开本地页面自动读取；也可把导出的 JSON 导入公开前端，仅留在当前浏览器内存。
 
 验证：`node scripts/test_indicator_search.cjs`、`python3 scripts/test_indicator_engine.py`、`python3 scripts/test_indicator_ui.py [静态站点URL]`；启动本地私有服务后运行 `python3 scripts/test_indicator_private_ui.py [本地URL]`。真实目录回归用 `INDICATOR_CATALOG` / `INDICATOR_TEST_DB` 指向私有产物，不提交原始工作簿与完整元数据。
+
+
+### 网页版指标研究说明
+
+从[指标研究台 · 研究说明](https://cafelzj.github.io/research/indicators.html#view=guide)阅读固定审计快照、分类架构、检索案例、关系证据、异常分层和数据处理方法；另有可收藏和打印的[独立手册](https://cafelzj.github.io/research/indicator-guide.html)。无需导入目录即可阅读，案例可以回到当前目录检索，同页切换保留已导入内容。
+
+原始引用行与去重实体分开统计。公共摘要仅含聚合计数和审计溯源，不含全量目录或逐条异常。维护 `docs/indicator-guide-content.html` 与 `assets/indicator-audit-summary.json`，再运行 `python3 scripts/build_indicator_guide.py` 同时生成内嵌/独立版本，CI 执行 `--check`。浏览器验证：`python3 scripts/test_indicator_guide.py [站点URL]`。

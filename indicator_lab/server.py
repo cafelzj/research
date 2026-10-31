@@ -8,7 +8,7 @@ from .catalog import export_sqlite
 from .search import get_record,get_relations,search
 from .remote import search_worldbank,observations_worldbank
 
-HTML = {'indicators.html','intelli.html','data.html','studio.html','atlas.html','index.html','daily.html','washoku.html','chinese-menu.html'}
+HTML = {'indicator-guide.html','indicators.html','intelli.html','data.html','studio.html','atlas.html','index.html','daily.html','washoku.html','chinese-menu.html'}
 
 
 def serve(db,port=8765,allow_remote=False,root=None):

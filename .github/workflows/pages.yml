@@ -34,10 +34,11 @@ jobs:
           python3 -m pip install -r indicator_lab/requirements.txt
           python3 scripts/test_indicator_engine.py
           node scripts/test_indicator_search.cjs
+          python3 scripts/build_indicator_guide.py --check
       - name: Prepare static website
         run: |
           mkdir -p _site
-          cp indicators.html index.html atlas.html data.html studio.html intelli.html daily.html washoku.html chinese-menu.html _site/
+          cp indicator-guide.html indicators.html index.html atlas.html data.html studio.html intelli.html daily.html washoku.html chinese-menu.html _site/
           cp -R assets _site/assets
       - name: Upload website
         uses: actions/upload-pages-artifact@v3

@@ -14,6 +14,12 @@ with sync_playwright() as p:
  expect(page.locator('#catalog-description')).to_contain_text('62,241')
  expect(page.locator('#catalog-description')).to_contain_text('460')
  expect(page.locator('#catalog-mode')).not_to_contain_text('演示')
+ page.locator('[data-view=guide]').click()
+ expect(page.locator('#view-guide')).to_be_visible()
+ page.locator('#guide-search a[href*="q=DMC"]').click()
+ expect(page.locator('#view-search')).to_be_visible()
+ expect(page.locator('#catalog-label')).to_contain_text('61,781')
+ assert 'DEMO-' not in page.locator('#metric-results').inner_text()
  def find(query,count):
   page.locator('#metric-query').fill(query);page.locator('#metric-search-form').evaluate('(e)=>e.requestSubmit()');expect(page.locator('.metric-row')).to_have_count(count)
  find('甲醇价格，华东周频，不要同比',2)

@@ -1,6 +1,6 @@
 # 指标研究台：分类、检索、关系与数据处理
 
-入口：`indicators.html`（IntelliUI 的“指标研究台”）。公开站点内置人工功能演示，原 Excel、全量目录、SQLite 和真实指标审计结果默认只在本地保存。上传到浏览器的 JSON 不发送服务器、不持久存储；本地服务自动加载其私有索引。程序不需要模型密钥。
+入口：`indicators.html`（IntelliUI 的“指标研究台”）。公开站点内置人工功能演示，原 Excel、全量目录、SQLite 和逐条审计结果默认只在本地保存；固定汇总审计与研究说明可在网页阅读。上传到浏览器的 JSON 不发送服务器、不持久存储；本地服务自动加载其私有索引。程序不需要模型密钥。网页手册见 [指标研究手册](https://cafelzj.github.io/research/indicator-guide.html)，或在研究台切换“研究说明”。
 
 ## 1. 先读清这份 Excel
 
@@ -99,3 +99,12 @@ python3 -m indicator_lab prepare --input observations.csv --output result.json -
 ```
 
 回归验证覆盖引擎导入/口径/序列计算/远程安全、浏览器检索/同名/同义/目录导入/错误状态/手机宽度；全量验收使用本地私有目录。测试中的演示观测不作为生产研究事实。
+
+
+## 9. 固定在网页中的研究说明
+
+研究台的 `#view=guide` 与独立的 `indicator-guide.html` 共用 `docs/indicator-guide-content.html` 内容源，审计汇总来自白名单字段的 `assets/indicator-audit-summary.json`，运行 `python3 scripts/build_indicator_guide.py` 生成两处静态正文；`--check` 用于 CI 检查同步和计数核对。生成器不读取或发布私有工作簿、目录、SQLite或逐条问题记录。
+
+说明分为文件审计、分类、检索、关联、异常、处理流程、能力状态和使用八章。原文件计数为固定快照，研究台当前目录的统计另算；缺单位709引用行与508实体明确分开。即使未导入完整目录或禁用脚本，手册正文仍可阅读，独立页支持移动大纲与章节链接；打印会临时展开详细定义并恢复原阅读状态。
+
+工具内案例链接使用当前已加载目录，按示例清空额外筛选和设置范围，不导入、替换或持久化目录。`#view=search&q=...&scope=local|remote` 是预设检索，`#guide-章节名` 是说明锚点；查询写在片段中，不随页面请求发送服务器。浏览器返回恢复对应视图；完整目录的内存生命周期保持原约定。
