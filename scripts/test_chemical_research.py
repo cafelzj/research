@@ -1,6 +1,7 @@
 """Exercise real reading/navigation flows; public TLS uses the configured system trust."""
 import json
 import sys
+import os
 from pathlib import Path
 from urllib.request import urlopen
 from playwright.sync_api import sync_playwright, expect
@@ -15,7 +16,7 @@ for c in data['chapters']:
             assert p[key], (c['name'],p['name'],key)
         assert all(s in data['sources'] for s in p['refs'].split(','))
 with sync_playwright() as p:
-    b=p.chromium.launch(channel="chrome", args=['--no-sandbox'])
+    b=p.chromium.launch(executable_path=os.environ.get("ATLAS_BROWSER"), channel=None if os.environ.get("ATLAS_BROWSER") else "chrome", args=['--no-sandbox'])
     page=b.new_page(viewport={'width':1440,'height':1000}); errors=[]
     page.on('pageerror',lambda e:errors.append(str(e)))
     if BASE.startswith('https:'):

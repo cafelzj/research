@@ -20,7 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Validate 31-sector content and scripts
-        run: node scripts/test_sw_atlas.cjs
+        run: |
+          node scripts/test_sw_atlas.cjs
+          python3 scripts/check_sw_research.py
       - name: Use preinstalled Chrome for reader checks
         run: |
           python3 -m pip install playwright

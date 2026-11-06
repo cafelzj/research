@@ -1,5 +1,6 @@
 """Exercise the 31-sector catalog, reader, legacy links and mobile navigation."""
 import sys
+import os
 from pathlib import Path
 from urllib.request import urlopen
 from playwright.sync_api import sync_playwright, expect
@@ -7,8 +8,8 @@ import json
 BASE=(sys.argv[1] if len(sys.argv)>1 else "http://127.0.0.1:8000/").rstrip("/")+"/"
 data=json.loads(Path("assets/sw-atlas.json").read_text())
 with sync_playwright() as p:
-    browser=p.chromium.launch(channel="chrome", args=["--no-sandbox"])
-    context=browser.new_context(viewport={"width":1440,"height":1000})
+    browser=p.chromium.launch(executable_path=os.environ.get("ATLAS_BROWSER"), channel=None if os.environ.get("ATLAS_BROWSER") else "chrome", args=["--no-sandbox"])
+    context=browser.new_context(viewport={"width":1440,"height":1000}, reduced_motion="reduce")
     if BASE.startswith("https:"):
         def relay(route):
             with urlopen(route.request.url,timeout=40) as r:
@@ -32,6 +33,14 @@ with sync_playwright() as p:
     for s in data["sectors"]:
         page.locator('[data-sw-code="'+s["code"]+'"]').click()
         expect(page.locator("#sw-detail h1")).to_have_text(s["name"])
+        research=s["research"]
+        expect(page.locator(".sw-research-title")).to_have_text(research["title"])
+        expect(page.locator(".sw-research-contents")).to_be_visible()
+        expect(page.locator("#sw-worked-model .sw-status")).to_contain_text("教学假设")
+        expect(page.locator(".sw-case-facts li")).to_have_count(len(research["caseStudy"]["observations"]))
+        for chapter in research["chapters"]:
+            expect(page.locator("#sw-research-"+chapter["id"]+" .sw-essay")).to_be_visible()
+        assert page.locator("#sw-worked-model").evaluate("el=>el.compareDocumentPosition(document.getElementById('sw-chains')) & Node.DOCUMENT_POSITION_FOLLOWING")
         expect(page.locator("#sw-chains article")).to_have_count(len(s["chains"]))
         expect(page.locator("#sw-metrics article")).to_have_count(len(s["metrics"]))
         expect(page.locator("#sw-methods article")).to_have_count(len(s["methods"]))
@@ -44,6 +53,9 @@ with sync_playwright() as p:
         assert page.locator("#sw-chains article:visible").count()>=3
         page.locator("#sw-detail [data-sw-home]").first.click()
         expect(page.locator(".sw-sector-link")).to_have_count(31)
+    page.goto(BASE+"atlas.html?sw=801780#sw-worked-model")
+    expect(page.locator("#sw-worked-model")).to_be_visible()
+    page.reload();expect(page.locator("#sw-worked-model")).to_be_visible()
     page.goto(BASE+"atlas.html?sw=801780#sw-metrics")
     expect(page.locator("#sw-detail h1")).to_have_text("银行")
     page.reload();expect(page.locator("#sw-metrics")).to_be_visible()
