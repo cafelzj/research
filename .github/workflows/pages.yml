@@ -11,20 +11,19 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   validate-sw:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Validate 31-sector content and scripts
         run: node scripts/test_sw_atlas.cjs
-      - name: Install browser for reader checks
+      - name: Use preinstalled Chrome for reader checks
         run: |
           python3 -m pip install playwright
-          python3 -m playwright install --with-deps chromium
       - name: Exercise industry catalog and existing research
         run: |
           python3 -m http.server 8000 --bind 127.0.0.1 >/tmp/atlas-server.log 2>&1 &
@@ -37,7 +36,7 @@ jobs:
   deploy:
     needs: validate-sw
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -78,5 +77,4 @@ jobs:
           SITE_URL: ${{ steps.deployment.outputs.page_url }}
         run: |
           python3 -m pip install playwright
-          python3 -m playwright install --with-deps chromium
           python3 scripts/test_sw_atlas.py "$SITE_URL"

@@ -15,7 +15,7 @@ for c in data['chapters']:
             assert p[key], (c['name'],p['name'],key)
         assert all(s in data['sources'] for s in p['refs'].split(','))
 with sync_playwright() as p:
-    b=p.chromium.launch(args=['--no-sandbox'])
+    b=p.chromium.launch(channel="chrome", args=['--no-sandbox'])
     page=b.new_page(viewport={'width':1440,'height':1000}); errors=[]
     page.on('pageerror',lambda e:errors.append(str(e)))
     if BASE.startswith('https:'):
