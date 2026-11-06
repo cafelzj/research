@@ -199,5 +199,6 @@
   window.addEventListener("scroll", schedule, { passive: true });
   window.addEventListener("resize", schedule);
   window.addEventListener("hashchange", schedule);
+  document.addEventListener("sw:change", schedule);
   update();
 })();
