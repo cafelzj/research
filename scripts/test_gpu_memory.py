@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import sys
 from urllib.request import urlopen
+from urllib.parse import urljoin
 
 from playwright.sync_api import expect, sync_playwright
 
@@ -48,13 +49,17 @@ with sync_playwright() as p:
     node.focus();node.press('Enter')
     expect(page.locator('#graph-detail h3')).to_have_text('Tensor Core')
     page.locator('#graph-detail a').click()
-    assert page.url.endswith('gpu.html#tensor')
+    expect(page).to_have_url(BASE+'gpu-memory/gpu.html#tensor')
+    page.wait_for_load_state('domcontentloaded')
     assert page.locator('#tensor').evaluate('e=>e.getBoundingClientRect().top')>=95
     page.locator('#search-trigger').click()
     page.locator('#global-search').fill('CoWoS')
     expect(page.locator('#search-results a').first).to_be_visible()
-    page.locator('#search-results a').first.click()
-    assert '/gpu-memory/' in page.url
+    result = page.locator('#search-results a').first
+    destination = urljoin(page.url, result.get_attribute('href'))
+    result.click()
+    expect(page).to_have_url(destination)
+    page.wait_for_load_state('domcontentloaded')
     page.locator('#search-trigger').click()
     page.locator('#global-search').fill('zzzz不存在')
     expect(page.locator('#search-results')).to_contain_text('未找到')
