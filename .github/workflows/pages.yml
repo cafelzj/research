@@ -23,6 +23,8 @@ jobs:
         run: |
           node scripts/test_sw_atlas.cjs
           python3 scripts/check_sw_research.py
+          python3 scripts/check_appliances.py
+          python3 scripts/build_appliances.py --check
       - name: Use preinstalled Chrome for reader checks
         run: |
           python3 -m pip install playwright
@@ -35,6 +37,7 @@ jobs:
           python3 scripts/test_industries.py
           python3 scripts/test_medicine.py
           python3 scripts/test_chemical_research.py http://127.0.0.1:8000/
+          python3 scripts/test_appliances.py
   deploy:
     needs: validate-sw
     if: github.ref == 'refs/heads/main'
@@ -60,7 +63,7 @@ jobs:
       - name: Prepare static website
         run: |
           mkdir -p _site
-          cp indicator-guide.html indicators.html index.html atlas.html data.html studio.html intelli.html daily.html washoku.html chinese-menu.html _site/
+          cp appliances.html indicator-guide.html indicators.html index.html atlas.html data.html studio.html intelli.html daily.html washoku.html chinese-menu.html _site/
           cp -R assets _site/assets
       - name: Upload website
         uses: actions/upload-pages-artifact@v3
@@ -80,3 +83,4 @@ jobs:
         run: |
           python3 -m pip install playwright
           python3 scripts/test_sw_atlas.py "$SITE_URL"
+          python3 scripts/test_appliances.py "$SITE_URL"

@@ -31,6 +31,8 @@
 
 ## 家电与电新：产业链入门与研究看板
 
+家电新增独立的[研究框架与学习手册](https://cafelzj.github.io/research/appliances.html)，从申万家用电器与原家电专题均可进入。按品类展开重要公司、上游部件、技术原理与最新披露、渠道和利润、行业指标与反证；用最新可得财报核读、四个教学模型和十周交付训练连接到实际研究。来源逐项说明读取范围、时点与数据权限，企业宣传、研究推断和教学假设分别标注。维护与验证见[家电研究说明](docs/appliance-research.md)。
+
 在“产业链总览”和“行业看板”顶部切换 **化工 / 家电 / 电新**，导航会保留所选行业。
 
 - 家电覆盖空调热泵、冰洗、厨卫、清洁小家电、彩电；电新覆盖光伏、风电、电池、储能、电网和充电设施。
@@ -105,9 +107,9 @@ GitHub 的文件浏览页面显示源码，不直接运行网页。已加入 `.g
 
 首次部署需要在仓库 Settings → Pages → Build and deployment → Source 选择 **GitHub Actions**。然后在 Actions 中打开 `Deploy research atlas to GitHub Pages`，使用 Run workflow 启动，或重跑先前失败的部署。部署成功后的预期访问地址为：https://cafelzj.github.io/research/ 。以 GitHub Pages 返回的实际地址为准。
 
-此后每次推送到 `main` 都会自动发布。站点发布 `index.html`、`atlas.html`、`data.html`、`studio.html`、`intelli.html`、`daily.html`、`washoku.html`、`chinese-menu.html` 和 `assets/`；不发布 README、验证脚本或研究笔记。
+此后每次推送到 `main` 都会自动发布。站点发布 `index.html`、`atlas.html`、`appliances.html`、`indicator-guide.html`、`indicators.html`、`data.html`、`studio.html`、`intelli.html`、`daily.html`、`washoku.html`、`chinese-menu.html` 和 `assets/`；不发布 README、验证脚本或研究笔记。
 
-部署后，Actions 的 `Verify public website matches this commit` 步骤会通过公网请求七个页面及所有站点资源，检查 HTTP 200、网页的 HTML 类型及文件内容是否与本次提交完全一致，等待 CDN 更新后重试，持续失败会使工作流失败。可在具备访问权限的环境手动执行 `python3 scripts/verify_public_site.py https://cafelzj.github.io/research/`。这验证公网内容发布结果，交互行为还需浏览器检查。
+部署后，Actions 的 `Verify public website matches this commit` 步骤会通过公网请求所有发布页面及站点资源，检查 HTTP 200、网页的 HTML 类型及文件内容是否与本次提交完全一致，等待 CDN 更新后重试，持续失败会使工作流失败。可在具备访问权限的环境手动执行 `python3 scripts/verify_public_site.py https://cafelzj.github.io/research/`。这验证公网内容发布结果，交互行为还需浏览器检查。
 
 ## 内容
 
