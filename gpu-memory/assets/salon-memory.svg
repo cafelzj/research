@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="480" viewBox="0 0 420 480" role="img" aria-labelledby="salon-title salon-desc">
+  <title id="salon-title">宫廷记忆之章</title>
+  <desc id="salon-desc">古金椭圆画框中的 GPU 芯片与分层高带宽内存，配以珍珠、星形珠宝与克制的维也纳花饰，采用原创科学版画式线描。</desc>
+  <defs>
+    <linearGradient id="ivory" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#fffdf7"/>
+      <stop offset="1" stop-color="#f2eadb"/>
+    </linearGradient>
+    <linearGradient id="wine" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#895360"/>
+      <stop offset="1" stop-color="#713746"/>
+    </linearGradient>
+    <pattern id="engraving" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-32)">
+      <path d="M0 0V5" fill="none" stroke="#b29053" stroke-width=".55" opacity=".35"/>
+    </pattern>
+    <g id="pearl" fill="#fffcf2" stroke="#b29053" stroke-width=".75">
+      <circle r="2.35"/>
+      <circle cx="-.55" cy="-.65" r=".55" fill="#fff" stroke="none"/>
+    </g>
+    <g id="star" stroke="#b29053" stroke-linejoin="round">
+      <path d="m0-11 2.5 7.3L10-5 5.2 1l4.1 6.5-7.1-2L0 13-2.2 5.5l-7.1 2L-5.2 1-10-5l7.5 1.3Z" fill="#f8f0dc" stroke-width=".9"/>
+      <path d="M0-7V8M-6-3l12 7M6-3-6 4" stroke-width=".55"/>
+      <circle r="2.1" fill="#713746" stroke-width=".65"/>
+    </g>
+    <g id="sprig" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M0 0C-13-30-18-63-8-97" stroke="#b29053" stroke-width="1.25"/>
+      <path d="M-8-23C-25-24-29-35-27-42-15-42-7-33-8-23ZM-13-43C-1-48 4-58 1-65-11-62-16-53-13-43ZM-13-62C-29-65-30-76-27-83-16-80-11-73-13-62ZM-11-80C1-84 5-95 2-102-10-97-13-89-11-80ZM-8-97C-17-106-15-117-10-122-1-113-2-104-8-97Z" fill="#a6ad96" fill-opacity=".27" stroke="#929d86" stroke-width=".85"/>
+      <path d="m-9-25-15-14m11-8 12-15m-13-4-10-14m14-3 9-15m-8-3-1-14" stroke="#b29053" stroke-width=".65"/>
+    </g>
+    <g id="hbm" stroke="#713746" stroke-linejoin="round" stroke-width=".95">
+      <path d="m0 17 22 13 22-13v7L22 37 0 24Z" fill="#dccfba"/>
+      <path d="m0 11 22 13 22-13v6L22 30 0 17Z" fill="#f5eddf"/>
+      <path d="m0 5 22 13L44 5v6L22 24 0 11Z" fill="#dccfba"/>
+      <path d="m0 0 22-13L44 0 22 13Z" fill="#fbf6e9"/>
+      <path d="M0 0v5l22 13L44 5V0M22 13v24" fill="none"/>
+      <path d="m5 0 17-10L39 0 22 10Z" fill="url(#engraving)" stroke="#b29053" stroke-width=".65"/>
+      <path d="m7 15 8 4m-8 2 8 5m14-7 8-4m-8 11 8-5" fill="none" stroke="#b29053" stroke-width=".7"/>
+    </g>
+  </defs>
+
+  <!-- A double oval, small pearls, and a pendant form the salon medallion. -->
+  <ellipse cx="210" cy="234" rx="151" ry="197" fill="url(#ivory)" stroke="#b29053" stroke-width="1.25"/>
+  <ellipse cx="210" cy="234" rx="144" ry="190" fill="none" stroke="#b29053" stroke-width=".55"/>
+  <ellipse cx="210" cy="234" rx="136" ry="181" fill="none" stroke="#b29053" stroke-width=".7" stroke-dasharray=".8 4.5"/>
+  <path d="M77 161c9-39 28-69 57-90M286 71c29 21 48 51 57 90M78 311c11 40 29 67 57 86m150 0c28-20 46-47 57-86" fill="none" stroke="#713746" stroke-width="1.45" opacity=".72"/>
+  <path d="M87 139c-10-10-9-24-2-29 8 7 11 17 2 29Zm5-13c4-16 13-24 24-24-1 13-9 21-24 24ZM333 139c10-10 9-24 2-29-8 7-11 17-2 29Zm-5-13c-4-16-13-24-24-24 1 13 9 21 24 24Z" fill="#b29053" fill-opacity=".13" stroke="#b29053" stroke-width=".85"/>
+  <g>
+    <use href="#pearl" x="131" y="66"/><use href="#pearl" x="145" y="56"/><use href="#pearl" x="160" y="48"/>
+    <use href="#pearl" x="289" y="66"/><use href="#pearl" x="275" y="56"/><use href="#pearl" x="260" y="48"/>
+    <use href="#pearl" x="121" y="394"/><use href="#pearl" x="135" y="407"/><use href="#pearl" x="151" y="417"/>
+    <use href="#pearl" x="299" y="394"/><use href="#pearl" x="285" y="407"/><use href="#pearl" x="269" y="417"/>
+  </g>
+  <path d="M174 43c9-9 21-11 36-11s27 2 36 11M180 45c8-6 19-8 30-8s22 2 30 8" fill="none" stroke="#b29053" stroke-width=".8"/>
+  <use href="#star" transform="translate(210 30)"/>
+  <path d="M192 426q18 13 36 0m-32 6q14 10 28 0M210 440v7" fill="none" stroke="#b29053" stroke-width=".9"/>
+  <path d="m210 447 4 6-4 8-4-8Z" fill="#713746" stroke="#b29053" stroke-width=".9"/>
+
+  <!-- Restrained botanical flourishes stay outside the technical silhouette. -->
+  <use href="#sprig" transform="translate(85 355) rotate(-8)"/>
+  <use href="#sprig" transform="translate(335 355) scale(-1 1) rotate(-8)"/>
+  <g fill="none" stroke="#b29053" stroke-width=".85" stroke-linecap="round">
+    <path d="M81 259c-14-7-21-19-17-27 4-8 14-4 13 2-1 5-7 5-9 2m271 23c14-7 21-19 17-27-4-8-14-4-13 2 1 5 7 5 9 2"/>
+    <path d="M100 365c-3 9 1 18 8 19 7 2 12-4 8-9-2-3-6-2-6 1m210-11c3 9-1 18-8 19-7 2-12-4-8-9 2-3 6-2 6 1"/>
+  </g>
+
+  <!-- Fine construction lines recall a nineteenth-century scientific plate. -->
+  <g fill="none" stroke="#b29053" stroke-width=".55" opacity=".6">
+    <path d="M210 101v36m0 163v51M105 220h-8m226 0h-8M140 151l-6-7m146 7 6-7"/>
+    <path d="M126 157a117 117 0 0 1 168 0M116 290a130 130 0 0 0 188 0" stroke-dasharray="2 5"/>
+    <path d="M200 117h20m-16-4v8m12-8v8M200 335h20m-16-4v8m12-8v8"/>
+  </g>
+  <path d="M151 126q59-28 118 0M163 130q47-21 94 0" fill="none" stroke="#b29053" stroke-width=".8"/>
+  <circle cx="210" cy="105" r="3.6" fill="#b29053" fill-opacity=".17" stroke="#b29053" stroke-width=".8"/>
+
+  <!-- The porcelain-colored substrate carries a raised GPU and two layered HBM stacks. -->
+  <path d="m108 221 102-60 102 60v15l-102 60-102-60Z" fill="#e7ddca" stroke="#713746" stroke-width="1.15" stroke-linejoin="round"/>
+  <path d="m108 221 102 60 102-60-102-60Z" fill="#faf5e9" stroke="#713746" stroke-width="1.15" stroke-linejoin="round"/>
+  <path d="M210 281v15m-102-75 102 60 102-60" fill="none" stroke="#b29053" stroke-width="1"/>
+  <path d="m116 225 94 55 94-55v7l-94 55-94-55Z" fill="url(#engraving)"/>
+  <g fill="none" stroke="#b29053" stroke-width=".9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m145 240 29 17 16-9m-38-4 22 13 14-8m87-9-29 17-16-9m38-4-22 13-14-8"/>
+    <path d="m170 185 15-9 17 10m48-1-15-9-17 10M190 264l20 11 20-11"/>
+    <path d="m153 226 19 11 11-6m84-5-19 11-11-6"/>
+  </g>
+  <g fill="#b29053">
+    <circle cx="145" cy="240" r="1.5"/><circle cx="275" cy="240" r="1.5"/>
+    <circle cx="170" cy="185" r="1.5"/><circle cx="250" cy="185" r="1.5"/>
+    <circle cx="190" cy="264" r="1.4"/><circle cx="230" cy="264" r="1.4"/>
+  </g>
+  <use href="#hbm" x="124" y="205"/>
+  <use href="#hbm" x="252" y="205"/>
+
+  <g stroke-linejoin="round">
+    <path d="m169 207 41 24 41-24v16l-41 24-41-24Z" fill="#713746" stroke="#713746" stroke-width="1.1"/>
+    <path d="m169 207 41-24 41 24-41 24Z" fill="url(#wine)" stroke="#713746" stroke-width="1.1"/>
+    <path d="m177 207 33-19 33 19-33 19Z" fill="none" stroke="#dfc38e" stroke-width=".85"/>
+    <path d="m185 207 25-14 25 14-25 14Z" fill="url(#engraving)" stroke="#c9a96d" stroke-width=".65"/>
+    <g fill="none" stroke="#d5b77d" stroke-width=".7">
+      <path d="m191 203 25 14m-18-18 25 14m-18-18 25 14m-39 2 25-14m-18 18 25-14m-18 18 25-14"/>
+      <path d="m173 214 33 19m-33-14 33 19m8-5 33-19m-33 24 33-19M210 231v12"/>
+    </g>
+  </g>
+
+  <!-- A quiet ribbon and jeweled rosette anchor the lower field. -->
+  <g fill="none" stroke="#b29053" stroke-linecap="round">
+    <path d="M147 320c18 8 39 12 63 12s45-4 63-12M157 326c16 7 34 10 53 10s37-3 53-10" stroke-width=".85"/>
+    <path d="M137 350c13-8 27-6 39 0m68 0c12-6 26-8 39 0M148 354c10-4 19-2 27 2m70 0c8-4 17-6 27-2" stroke-width=".75"/>
+    <path d="M176 373q34 13 68 0m-58 7q24 8 48 0" stroke-width=".7"/>
+  </g>
+  <use href="#star" transform="translate(210 359) scale(.8)"/>
+  <circle cx="184" cy="358" r="1.7" fill="#b29053"/>
+  <circle cx="236" cy="358" r="1.7" fill="#b29053"/>
+  <g fill="#a88188" fill-opacity=".45" stroke="#b29053" stroke-width=".7">
+    <path d="M163 389c-8-2-14 1-15 6 6 4 12 2 15-6Zm94 0c8-2 14 1 15 6-6 4-12 2-15-6Z"/>
+    <path d="M174 398c-8-2-13 1-14 6 6 3 11 1 14-6Zm72 0c8-2 13 1 14 6-6 3-11 1-14-6Z"/>
+  </g>
+</svg>
