@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta name="description" content="GPU 显卡显存技术学习网站：HBM/GDDR、Tensor Core、先进封装、产业链与 2026 时间线"><title>来源与核验 · GPU 与显存技术知识网络</title><link rel="stylesheet" href="assets/style.css"></head><body>
+<header class="site-header"><nav class="research-return" aria-label="返回知研集"><a href="../daily.html">← 知研集 · 日常研究</a><span>GPU 与显存技术专题</span></nav><div class="header-inner"><button class="mobile-toggle" id="mobile-toggle" aria-label="打开导航">☰</button><a href="index.html" class="brand"><span class="brand-icon">G</span><span><span class="brand-name">GPU & MEMORY ATLAS</span><span class="brand-sub">显卡与显存 · 技术知识网络</span></span></a><nav class="top-nav"><a class="" href="index.html">总览与知识图谱</a>
+<a class="" href="memory.html">显存与内存技术</a>
+<a class="" href="gpu.html">GPU 内部架构</a>
+<a class="" href="packaging.html">先进封装难点</a>
+<a class="" href="timeline.html">产品 / 技术时间线</a>
+<a class="" href="trends.html">未来存储架构</a>
+<a class="" href="ecosystem.html">产业链与稀缺</a></nav><button class="search-trigger" id="search-trigger" aria-label="全站检索">⌕ 检索 <span class="micro">⌘K</span></button></div></header>
+<div class="layout"><aside class="sidebar" id="sidebar"><div class="group">知识模块 · CHAPTERS</div><a class="side-link " href="index.html">首页 · 技术知识图谱</a>
+<a class="side-link " href="memory.html">01 · 显存与内存</a>
+<a class="side-link " href="gpu.html">02 · GPU 内部架构</a>
+<a class="side-link " href="packaging.html">03 · 先进封装</a>
+<a class="side-link " href="timeline.html">04 · 时间线</a>
+<a class="side-link " href="trends.html">05 · 未来架构</a>
+<a class="side-link " href="ecosystem.html">06 · 产业链</a>
+<a class="side-link " href="glossary.html">07 · 技术词典</a>
+<a class="side-link " href="dialogues.html">讨论问题索引</a>
+<a class="side-link active" href="sources.html">资料核验</a><div class="side-hint"><strong>阅读说明</strong><br>资料截止 2026 年 11 月 7 日。离线阅读正常，外部核验链接需要网络。<br><br><a href="sources.html">核验方法 →</a></div></aside><main class="content"><header class="page-head"><div class="eyebrow">EVIDENCE & METHODOLOGY</div><h1>资料来源与核验说明</h1><p class="lead">技术和产品时间线优先参考 NVIDIA、AMD、Intel、三星、SK 海力士、闪迪等厂商一手资料。所有网页内容截止 2026-11-07；点击来源可在线查证。</p></header>
+<section class="section"><div class="panel tinted"><h3>使用边界</h3><p>本站依据本次及可访问的此前相关对话主题重新组织为学习材料，<strong>并非逐字完整导出了账户中的全部历史聊天记录</strong>。对产品型号、日期及参数进行二次核对，并修正或提示了个别公开版本冲突。</p><p>所有示意图均是教学绘制，不是工程图纸。计算例子使用清晰标注的假设，不代表厂家实测；公司产品参数取指定官方规格与公布时点。</p></div></section>
+<section class="section"><h2>主要一手来源</h2><ul class="source-list">
+<li id="s-h200"><strong>NVIDIA H200 官方技术规格</strong><small>H200 · HBM3E · 141 GB · 4.8 TB/s</small><a href="https://resources.nvidia.com/en-us-gpu-resources/hpc-datasheet-sc23?xs=443995" target="_blank" rel="noopener">NVIDIA Datasheet ↗</a></li>
+<li id="s-hopper"><strong>NVIDIA Hopper 架构深度技术博客</strong><small>Tensor Core、FP8、DPX、SM、TMA 与 H100</small><a href="https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/" target="_blank" rel="noopener">NVIDIA Developer ↗</a></li>
+<li id="s-nvidia-ref"><strong>NVIDIA HGX H100/H200/B200/B300 参考架构与 Rubin 技术说明</strong><small>内存规格与设备层级；留意不同时期版本差异</small><a href="https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/components.html" target="_blank" rel="noopener">HGX 规格 ↗</a><span> · </span><a href="https://developer.nvidia.com/blog/inside-nvidia-rubin-gpu-architecture-powering-the-era-of-agentic-ai/" target="_blank" rel="noopener">Rubin 架构 ↗</a></li>
+<li id="s-rtx"><strong>NVIDIA GeForce RTX 50 系列官方参数</strong><small>RTX 5090 · 32GB GDDR7 · 1792GB/s</small><a href="https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/" target="_blank" rel="noopener">NVIDIA GeForce ↗</a></li>
+<li id="s-amd"><strong>AMD Instinct MI350X 与 MI455X 官方资料</strong><small>MI350X · 288GB HBM3E；MI455X · 432GB HBM4 · 23.3TB/s</small><a href="https://www.amd.com/en/products/accelerators/instinct/mi350/mi350x.html" target="_blank" rel="noopener">MI350X ↗</a><span> · </span><a href="https://www.amd.com/en/products/accelerators/instinct/mi400/mi455x.html" target="_blank" rel="noopener">MI455X ↗</a></li>
+<li id="s-intel"><strong>Intel Arc Pro B70 官方参数和上市信息</strong><small>Xe2 · 32GB GDDR6 · Q1 2026</small><a href="https://www.intel.com/content/www/us/en/products/sku/245797/intel-arc-pro-b70-graphics/specifications.html" target="_blank" rel="noopener">Intel 产品规格 ↗</a></li>
+<li id="s-samsung"><strong>三星 2026-02-12 HBM4 量产与出货公告</strong><small>2048 位、11.7Gb/s 标称量产速率、最高 13Gb/s 能力</small><a href="https://news.samsung.com/global/samsung-ships-industry-first-commercial-hbm4-with-ultimate-performance-for-ai-computing" target="_blank" rel="noopener">Samsung Newsroom ↗</a></li>
+<li id="s-hbm4e"><strong>三星及 SK 海力士 2026 年 HBM4E 送样公告</strong><small>2026-05-29 / 2026-06-18；12 层，最高 16Gb/s/pin</small><a href="https://news.samsung.com/global/samsung-electronics-begins-shipment-of-industry-first-hbm4e-samples" target="_blank" rel="noopener">三星 ↗</a><span> · </span><a href="https://news.skhynix.com/en/sk-hynix-ships-samples-of-12-layer-next-gen-hbm4e-2/" target="_blank" rel="noopener">SK 海力士 ↗</a></li>
+<li id="s-ihbm"><strong>SK 海力士 iHBM 散热技术</strong><small>2026-05-26，集成散热元件，厂商测试热阻降低约 30%</small><a href="https://news.skhynix.com/en/ihbm-solution/" target="_blank" rel="noopener">SK hynix Newsroom ↗</a></li>
+<li id="s-sphbm"><strong>JEDEC SPHBM4 JESD330-4 标准发布新闻稿转载</strong><small>2026-07；512 个数据接口信号，4:1 串行化，旨在支持有机基板</small><a href="https://www.design-reuse.com/news/202530819-new-jedec-sphbm4-standard-enables-hbm4-class-bandwidth-on-organic-substrates/" target="_blank" rel="noopener">JEDEC 新闻稿转载 ↗</a></li>
+<li id="s-hbf"><strong>闪迪与 SK 海力士 HBF 技术规范</strong><small>2026-08-03；OCP 初版技术规范</small><a href="https://www.sandisk.com/company/newsroom/press-releases/2026/2026-08-03-Sandisk-and-sk-hynix-advance-global-standardization-of-hbf" target="_blank" rel="noopener">Sandisk Press Release ↗</a></li>
+<li id="s-dlss"><strong>NVIDIA DLSS 5 2026-11-05 上线说明</strong><small>《霍格沃茨之遗》中的神经渲染更新</small><a href="https://www.nvidia.com/en-us/geforce/news/hogwarts-legacy-war-thunder-dlss-5-3d-guided-neural-rendering/" target="_blank" rel="noopener">NVIDIA GeForce ↗</a></li>
+</ul></section>
+<section class="section"><h2>为什么不只记录“一个数字”？</h2><div class="data-table-wrap"><table class="data-table"><thead><tr><th>资料状态</th><th>它能证明什么</th><th>它不能证明什么</th></tr></thead><tbody><tr><td>厂商技术演示</td><td>技术目标与初步可行性</td><td>量产、成本、实际良率</td></tr><tr><td>标准发布</td><td>接口或规范已被定义</td><td>相关产品已商业化</td></tr><tr><td>客户送样</td><td>样品进入评估</td><td>所有客户可买到、稳定规模产能</td></tr><tr><td>商业量产公告</td><td>已达到厂商声明的量产阶段</td><td>任何规格都有无限库存或相同良率</td></tr><tr><td>实际第三方部署 / 测试</td><td>在特定条件下的工作负载性能</td><td>可直接外推到所有模型或工作负载</td></tr></tbody></table></div></section>
+<footer class="footer-site"><span>GPU & MEMORY ATLAS · 2026.11.07</span><span>离线知识学习资料 · 示意图非工程图纸 · <a href="sources.html">来源与核验</a></span></footer></main></div>
+<div class="search-modal" id="search-modal" role="dialog" aria-label="全站技术检索"><div class="search-box"><input type="search" id="global-search" placeholder="搜索 HBM、CoWoS、Tensor Core、Rubin..." aria-label="搜索全部章节"><div class="search-results" id="search-results"></div><p class="micro" style="padding:0 21px 12px">按 Esc 关闭 · 支持中英文与缩写 · 离线搜索</p></div></div>
+<script src="assets/search_index.js"></script><script src="assets/app.js"></script></body></html>

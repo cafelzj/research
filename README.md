@@ -56,6 +56,10 @@ FDA研发流程与临床分期科普正文已读取，其余监管、登记、�
 
 ## 日常研究
 
+### GPU 与显存技术
+
+[GPU 与显存技术知识网络](https://cafelzj.github.io/research/gpu-memory/index.html)已接入日常研究专题导航。来自用户上传的静态站，保留GPU架构、显存、先进封装、时间线、未来架构、产业链和技术词典，以及知识图谱、搜索、筛选和计算工具。部署及来源说明见 [gpu-memory-atlas.md](docs/gpu-memory-atlas.md)。
+
 ### 中餐预制菜避雷
 
 新专题 `chinese-menu.html`，与日料专题、法国专题互相导航。按9类整理94项菜品与点单场景：66项高风险、20项中风险、8项低风险参照。默认速查表，可切换详细卡片，支持点击风险/菜类/商品例证按钮筛选与CSV导出；不提供输入、收藏或私人笔记。
@@ -107,7 +111,7 @@ GitHub 的文件浏览页面显示源码，不直接运行网页。已加入 `.g
 
 首次部署需要在仓库 Settings → Pages → Build and deployment → Source 选择 **GitHub Actions**。然后在 Actions 中打开 `Deploy research atlas to GitHub Pages`，使用 Run workflow 启动，或重跑先前失败的部署。部署成功后的预期访问地址为：https://cafelzj.github.io/research/ 。以 GitHub Pages 返回的实际地址为准。
 
-此后每次推送到 `main` 都会自动发布。站点发布 `index.html`、`atlas.html`、`appliances.html`、`indicator-guide.html`、`indicators.html`、`data.html`、`studio.html`、`intelli.html`、`daily.html`、`washoku.html`、`chinese-menu.html` 和 `assets/`；不发布 README、验证脚本或研究笔记。
+此后每次推送到 `main` 都会自动发布。站点发布 `index.html`、`atlas.html`、`appliances.html`、`indicator-guide.html`、`indicators.html`、`data.html`、`studio.html`、`intelli.html`、`daily.html`、`washoku.html`、`chinese-menu.html`、`gpu-memory/` 和 `assets/`；不发布 README、验证脚本或研究笔记。
 
 部署后，Actions 的 `Verify public website matches this commit` 步骤会通过公网请求所有发布页面及站点资源，检查 HTTP 200、网页的 HTML 类型及文件内容是否与本次提交完全一致，等待 CDN 更新后重试，持续失败会使工作流失败。可在具备访问权限的环境手动执行 `python3 scripts/verify_public_site.py https://cafelzj.github.io/research/`。这验证公网内容发布结果，交互行为还需浏览器检查。
 

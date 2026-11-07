@@ -38,6 +38,7 @@ jobs:
           python3 scripts/test_medicine.py
           python3 scripts/test_chemical_research.py http://127.0.0.1:8000/
           python3 scripts/test_appliances.py
+          python3 scripts/test_gpu_memory.py
   deploy:
     needs: validate-sw
     if: github.ref == 'refs/heads/main'
@@ -65,6 +66,7 @@ jobs:
           mkdir -p _site
           cp appliances.html indicator-guide.html indicators.html index.html atlas.html data.html studio.html intelli.html daily.html washoku.html chinese-menu.html _site/
           cp -R assets _site/assets
+          cp -R gpu-memory _site/gpu-memory
       - name: Upload website
         uses: actions/upload-pages-artifact@v3
         with:
@@ -84,3 +86,4 @@ jobs:
           python3 -m pip install playwright
           python3 scripts/test_sw_atlas.py "$SITE_URL"
           python3 scripts/test_appliances.py "$SITE_URL"
+          python3 scripts/test_gpu_memory.py "$SITE_URL"
