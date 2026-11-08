@@ -13,17 +13,12 @@
   </head>
   <body class="data-page">
     <header class="site-header">
-      <a class="site-brand" href="index.html"
+      <a class="site-brand" href="atlas.html"
         >知研集<small>IDEAS / EVIDENCE / RESEARCH</small></a
       >
-      <nav class="site-nav" aria-label="网站主导航">
-        <a href="atlas.html">产业链总览</a><a href="index.html">行业看板</a
-        ><a href="intelli.html" aria-current="page"
-          >IntelliUI <small>BETA</small></a
-        ><a href="daily.html">日常研究</a>
-      </nav>
+      <nav class="site-nav" aria-label="网站主导航"><a href="atlas.html">行业研究</a><a href="daily.html" aria-current="page">日常研究</a></nav>
     </header>
-    <main>
+    <main><nav class="tool-context" aria-label="工具位置"><a href="daily.html">日常研究</a> / <a href="intelli.html">IntelliUI <small>BETA</small></a> / <span>数据明细</span></nav>
       <nav class="section-tabs" aria-label="IntelliUI 子栏目"><a href="intelli.html">智能工作区</a><a href="indicators.html">指标研究台</a><a href="data.html" aria-current="page">数据明细</a><a href="studio.html">图表制作</a></nav>
       <div class="intro">
         <div>
@@ -43,7 +38,7 @@
       </p>
       <noscript
         ><p class="status error">
-          明细筛选需要JavaScript，请用浏览器打开。行业看板提供静态图表预览。
+          明细筛选需要JavaScript，请用浏览器打开。<a href="industry-dashboard.html#trend">查看化工模拟图表静态预览</a>。
         </p></noscript
       >
       <section
@@ -135,15 +130,15 @@
         <div>
           <h2>继续探索</h2>
           <p>
-            产业链总览解释业务联系，行业看板观察整体变化；图表制作提供字段映射、自然语言绘图和设置问答。
+            行业研究解释业务联系，行业指标跟踪观察整体变化；图表制作提供字段映射、自然语言绘图和设置问答。
           </p>
           <p class="small">
             导入数据暂存在当前浏览器标签页会话中，刷新和站内跳转后仍可使用；关闭标签页后结束，不上传服务器。浏览器禁用会话存储时，会提示导出后手动导入。
           </p>
         </div>
         <div class="dataactions">
-          <a class="upload" href="atlas.html">产业链总览</a
-          ><a class="upload" href="index.html">行业看板</a
+          <a class="upload" href="atlas.html">行业研究</a
+          ><a class="upload" href="atlas.html?sw=801030#sw-monitor">行业指标跟踪</a
           ><a class="upload" href="studio.html">图表制作</a
           ><button id="restore" type="button">恢复模拟数据</button
           ><a class="upload" href="data.html" id="fullData" hidden

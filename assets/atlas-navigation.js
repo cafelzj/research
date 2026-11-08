@@ -7,7 +7,7 @@
   const sections = [['sectors','子行业目录'],['map','工艺全景'],['product-applications','产品研究专题'],['framework','分析框架'],['metrics','指标与来源'],['glossary','入门术语']];
   const aside = document.querySelector('aside nav');
   aside.innerHTML = `<small class="atlas-nav-group">选择研究对象</small>${sections.slice(0,3).map(([id,label],i)=>`<a href="#${id}"><span>0${i+1}</span>${label}</a>`).join('')}<small class="atlas-nav-group">通用研究工具</small>${sections.slice(3).map(([id,label],i)=>`<a href="#${id}"><span>0${i+4}</span>${label}</a>`).join('')}`;
-  root.querySelector('.section-guide').innerHTML = '阅读顺序：先选子行业，再看产品与应用，最后查指标与资料。<div class="journey-links"><a href="index.html">行业看板 ↗</a><a href="intelli.html">IntelliUI ↗</a></div>';
+  root.querySelector('.section-guide').innerHTML = '阅读顺序：先选子行业，再看产品与应用，最后查指标与资料。<div class="journey-links"><a href="#ir-monitor">本行业指标跟踪 ↓</a><a href="daily.html#daily-tools">日常研究工具 ↗</a></div>';
   root.querySelector('.hero h1').innerHTML = '化工研究，<br>从<em>行业到产品</em>。';
   root.querySelector('.hero p').textContent = '先建立行业位置，再深入产品机制、应用优势和替代关系。子行业目录是统一入口，完整专题与研究框架分别标明。';
   const steps = document.createElement('nav');

@@ -1,13 +1,25 @@
 import sys
 import os
 """Run against the repository server on port 8000; requires Playwright + Chromium."""
-from pathlib import Path
+from urllib.request import urlopen
 from playwright.sync_api import sync_playwright, expect
 
 BASE = (sys.argv[1] if len(sys.argv)>1 else "http://127.0.0.1:8000/").rstrip("/")+"/"
+
+
+def new_context(browser, **options):
+    context = browser.new_context(**options)
+    if BASE.startswith("https:"):
+        def relay(route):
+            with urlopen(route.request.url, timeout=40) as response:
+                route.fulfill(status=response.status, body=response.read(), headers={"content-type": response.headers.get("content-type", "text/plain")})
+        context.route(BASE + "**", relay)
+    return context
+
+
 with sync_playwright() as p:
     browser = p.chromium.launch(executable_path=os.environ.get("ATLAS_BROWSER"), channel=None if os.environ.get("ATLAS_BROWSER") else "chrome", args=["--no-sandbox"])
-    page = browser.new_page(viewport={"width": 1440, "height": 1000})
+    page = new_context(browser, viewport={"width": 1440, "height": 1000}).new_page()
     errors = []
     page.on("pageerror", lambda e: errors.append(str(e)))
     page.goto(BASE + "atlas.html?industry=chemical")
@@ -32,7 +44,7 @@ with sync_playwright() as p:
         page.locator("#ir-search").fill("")
         expect(page.locator("#ir-notes-input,#ir-evidence-form,[data-ir-check]")).to_have_count(0)
         page.screenshot(path=f"/tmp/{key}-atlas.png", full_page=True)
-        page.goto(BASE + "index.html?industry=" + key)
+        page.goto(BASE + "industry-dashboard.html?industry=" + key)
         expect(page.locator("#ir-notes-input,#ir-evidence-form,#ir-records")).to_have_count(0)
         expect(page.locator("#ir-watch tbody tr")).to_have_count(12)
         expect(page.locator("#ir-watch")).to_contain_text("暂无已核验数据")
@@ -65,7 +77,7 @@ with sync_playwright() as p:
         page.go_back()
         expect(page.locator("#industryHub")).to_be_visible()
     # Existing chemical dashboard and glossary remain interactive.
-    page.goto(BASE + "index.html?industry=chemical")
+    page.goto(BASE + "industry-dashboard.html?industry=chemical")
     expect(page.locator("#trend svg")).to_be_visible()
     page.locator("#period").select_option("3")
     expect(page.locator("#table th")).to_have_count(4)
@@ -74,7 +86,7 @@ with sync_playwright() as p:
     assert 0 < page.locator(".glossary-card:visible").count() < 45
     assert not errors, errors
     # Reading research content has no dependency on private browser storage.
-    context = browser.new_context()
+    context = new_context(browser)
     context.add_init_script("Storage.prototype.getItem=function(){throw Error('blocked')};Storage.prototype.setItem=function(){throw Error('blocked')}")
     q = context.new_page()
     q.goto(BASE + "atlas.html?industry=appliances")

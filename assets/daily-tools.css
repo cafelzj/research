@@ -1,0 +1,65 @@
+.daily-tools {
+  margin: 18px 0 0;
+  padding: 18px 20px;
+  border: 1px solid var(--daily-line);
+  border-radius: 8px;
+  background: #fff;
+}
+.daily-tools-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 12px 24px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.daily-tools-heading h2 {
+  margin: 0;
+  font-size: 16px;
+  letter-spacing: 0;
+}
+.daily-tools-heading h2 small {
+  margin-left: 4px;
+  color: var(--daily-teal);
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+.daily-tools-heading p {
+  margin: 0;
+  color: var(--daily-muted);
+  font-size: 12px;
+}
+.daily-tools-links {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+.daily-tools-links a {
+  padding: 10px 12px;
+  border: 1px solid var(--daily-line);
+  border-radius: 5px;
+  background: var(--daily-bg);
+}
+.daily-tools-links a:hover {
+  border-color: var(--daily-blue);
+  text-decoration: none;
+}
+.daily-tools-links span,
+.daily-tools-links small {
+  display: block;
+}
+.daily-tools-links span {
+  font-size: 13px;
+  font-weight: 650;
+}
+.daily-tools-links small {
+  color: var(--daily-muted);
+  font-size: 11px;
+}
+@media (max-width: 700px) {
+  .daily-tools {
+    padding: 15px;
+  }
+  .daily-tools-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

@@ -1,0 +1,35 @@
+/* This document owns the original dashboard styles and identifiers. */
+html.dashboard-embedded {
+  scroll-behavior: auto;
+  background: transparent;
+}
+
+html.dashboard-embedded body {
+  margin: 0;
+  padding-bottom: 0;
+  background: transparent;
+}
+
+html.dashboard-embedded .site-header,
+html.dashboard-embedded .ir-switch {
+  display: none !important;
+}
+html.dashboard-embedded .ir-intro {
+  display: none;
+}
+
+html.dashboard-embedded main {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+html.dashboard-embedded .ir-hub {
+  padding: 0;
+}
+
+/* Keep the monitor's first heading consistent with its other column headings. */
+.ir-table thead th:first-child {
+  background: #edf3f6;
+}

@@ -40,8 +40,10 @@ with sync_playwright() as p:
     assert page.locator("[data-ir-searchable]:visible").count() == 0
     page.locator("#ir-search").fill("")
     expect(page.locator("#ir-chains .ir-card:visible")).to_have_count(6)
-    # Atlas-only content never links to a non-existent medicine dashboard.
-    expect(page.locator(".site-nav a[href^='index.html']")).to_have_attribute("href", "index.html")
+    # Medicine remains research content without a fabricated historical monitor.
+    expect(page.locator(".site-nav a")).to_have_text(["行业研究", "日常研究"])
+    expect(page.locator(".site-nav a[aria-current='page']")).to_have_attribute("href", "atlas.html")
+    expect(page.locator("#industryHub #ir-monitor,#industryHub [data-monitor-frame]")).to_have_count(0)
     page.get_by_role("link", name="查看创新药研究指标").click()
     assert page.url.endswith("#ir-metrics")
     page.reload()
@@ -68,7 +70,9 @@ with sync_playwright() as p:
     page.set_viewport_size({"width": 1440, "height": 1000})
     page.screenshot(path="/tmp/medicine-atlas-desktop.png")
     page.goto(BASE + "index.html?industry=medicine")
-    expect(page.locator("body")).to_have_attribute("data-industry", "chemical")
+    expect(page).to_have_url(BASE + "atlas.html?sw=801150#sw-detail")
+    expect(page.locator("#sw-detail h1")).to_have_text("医药生物")
+    expect(page.locator("#sw-detail #sw-monitor,#sw-detail [data-monitor-frame]")).to_have_count(0)
     # The new content is also readable when browser storage is blocked.
     page.add_init_script("Storage.prototype.getItem=Storage.prototype.setItem=function(){throw Error('blocked')}")
     page.goto(BASE + "atlas.html?industry=medicine")

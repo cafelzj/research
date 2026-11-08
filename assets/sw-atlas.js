@@ -83,7 +83,7 @@
       document.dispatchEvent(new Event("sw:change"));
       document.getElementById("sw-reader-count").textContent = q ? "匹配 "+count+" 段正文或速查内容；清空搜索恢复全部。" : "";
     };
-    document.title = s.name+" · 产业链与行业研究 · 知研集";
+    document.title = s.name+" · 行业研究 · 知研集";
   }
   function route(scroll = false) {
     const params = new URLSearchParams(location.search), code = params.get("sw");
@@ -92,7 +92,7 @@
       if(sector){renderSector(sector);mode("reader");}
       else {mode("catalog");document.getElementById("sw-count").textContent="未找到该行业代码，请从以下31个行业选择。";}
     } else if(params.has("industry") || params.has("chemChain")) mode("legacy");
-    else { mode("catalog");document.title="31个申万一级行业 · 产业链总览 · 知研集"; }
+    else { mode("catalog");document.title="31个申万一级行业 · 行业研究 · 知研集"; }
     if(scroll) {
       const target = code && !reader.hidden ? reader : root;
       target.scrollIntoView({block:"start",behavior:"auto"});

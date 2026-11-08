@@ -283,3 +283,5 @@
 
 /* Keep all primary destinations available on narrow screens. */
 @media(max-width:720px){.site-header .site-nav{flex-wrap:wrap;justify-content:flex-start;column-gap:18px;row-gap:2px}}
+
+.tool-context{font-size:12px;color:#6c7f90;display:flex;gap:9px;align-items:center;flex-wrap:wrap;padding:0 0 16px}.tool-context a{color:#3f6e87}.tool-context small{font-size:9px}

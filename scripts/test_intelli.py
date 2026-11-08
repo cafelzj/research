@@ -1,10 +1,24 @@
 import sys
+import os
 from pathlib import Path
+from urllib.request import urlopen
 from playwright.sync_api import sync_playwright, expect
 BASE=(sys.argv[1] if len(sys.argv)>1 else 'http://127.0.0.1:8000/').rstrip('/')+'/'
+
+
+def new_context(browser, **options):
+ context=browser.new_context(**options)
+ if BASE.startswith('https:'):
+  def relay(route):
+   with urlopen(route.request.url,timeout=40) as response:
+    route.fulfill(status=response.status,body=response.read(),headers={'content-type':response.headers.get('content-type','text/plain')})
+  context.route(BASE+'**',relay)
+ return context
+
+
 with sync_playwright() as p:
- b=p.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox'])
- page=b.new_page(viewport={'width':1440,'height':1000});errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+ b=p.chromium.launch(executable_path=os.environ.get('ATLAS_BROWSER'),channel=None if os.environ.get('ATLAS_BROWSER') else 'chrome',args=['--no-sandbox'])
+ page=new_context(b,viewport={'width':1440,'height':1000}).new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
  page.goto(BASE+'intelli.html');expect(page.locator('#empty')).to_be_visible()
  # The reported natural-language request must execute without a clarification.
  for prompt in ['价格折线图，按品种区分不同颜色', '价格折线图，按产品分色', '价格柱状图，不同产品用不同颜色']:
@@ -43,7 +57,7 @@ with sync_playwright() as p:
  page.locator('#demoData').click();page.locator('#undo').click();expect(page.locator('#sourceName')).to_have_text('custom.csv');expect(page.locator('.work-card')).to_have_count(1)
  page.locator('#clear').click();expect(page.locator('.work-card')).to_have_count(0);page.locator('#undo').click();expect(page.locator('.work-card')).to_have_count(1)
  page.locator('.section-tabs a[href="data.html"]').click();expect(page.locator('#records')).to_contain_text('Test')
- expect(page.locator('.site-nav a[aria-current]')).to_have_attribute('href','intelli.html')
+ expect(page.locator('.site-nav a[aria-current]')).to_have_attribute('href','daily.html')
  page.locator('.section-tabs a[href="studio.html"]').click();expect(page.locator('#chart')).to_be_visible()
  expect(page.locator('.section-tabs a[aria-current]')).to_have_attribute('href','studio.html')
  page.goto(BASE+'intelli.html');page.locator('#demoData').click()
@@ -54,17 +68,23 @@ with sync_playwright() as p:
  for width in [390,320]:
   page.set_viewport_size({'width':width,'height':844})
   assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),width
-  expect(page.locator('.site-nav a[href="intelli.html"]')).to_be_visible()
+  expect(page.locator('.site-nav a[href="daily.html"]')).to_be_visible()
+  expect(page.locator('.section-tabs a[href="intelli.html"]')).to_be_visible()
  page.screenshot(path='/tmp/intelli-mobile.png',full_page=True)
  page.locator('#command').fill('近6个月甲醇价格折线图');page.locator('#command').press('Control+Enter');expect(page.locator('.work-card')).to_have_count(2)
- for name in ['index.html','atlas.html','data.html','studio.html']:
-  page.goto(BASE+''+name);expect(page.locator('.site-nav a[href="intelli.html"]')).to_have_count(1);expect(page.locator('.site-nav a[href="data.html"]')).to_have_count(0)
+ for name in ['index.html','atlas.html','intelli.html','indicators.html','indicator-guide.html','data.html','studio.html']:
+  page.goto(BASE+name)
+  expect(page.locator('.site-nav a')).to_have_text(['行业研究','日常研究'])
+  assert page.locator('.site-nav a').evaluate_all('(links)=>links.map(a=>a.getAttribute("href"))')==['atlas.html','daily.html'],name
+  expect(page.locator('.site-nav a[aria-current]')).to_have_attribute('href','atlas.html' if name in ['index.html','atlas.html'] else 'daily.html')
+  if name not in ['index.html','atlas.html']:
+   assert page.locator('.section-tabs a').evaluate_all('(links)=>links.map(a=>a.getAttribute("href"))')==['intelli.html','indicators.html','data.html','studio.html'],name
  assert not errors,errors
  # Storage-disabled mode keeps working and reports that persistence is unavailable.
- context=b.new_context();context.add_init_script("Storage.prototype.setItem=function(){throw new Error('blocked')}")
+ context=new_context(b);context.add_init_script("Storage.prototype.setItem=function(){throw new Error('blocked')}")
  q=context.new_page();q.goto(BASE+'intelli.html');q.get_by_role('button',name='↗ 观察指标走势').click();expect(q.locator('.work-card')).to_have_count(1);expect(q.locator('#status')).to_contain_text('无法保存')
  # Declarative extension is registered by a trusted deferred script before restore.
- context2=b.new_context();x=context2.new_page()
+ context2=new_context(b);x=context2.new_page()
  html=Path('intelli.html').read_text().replace('</head>', '<script defer src="extension-test.js"></script></head>')
  x.route('**/intelli.html',lambda route:route.fulfill(status=200,content_type='text/html',body=html))
  x.route('**/extension-test.js',lambda route:route.fulfill(status=200,content_type='text/javascript',body="IntelliUI.registerView('range',{label:'区间统计',aliases:['区间统计'],render(el,plan,rows){el.textContent='观测数 '+rows.length;}});"))

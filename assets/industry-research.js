@@ -158,8 +158,8 @@
   function render() {
     if (industry === "chemical") return;
     const s = data.industries[industry];
-    const cross = industry === "medicine" ? "#ir-metrics" : (mode === "atlas" ? "index.html" : "atlas.html") + `?industry=${industry}`;
-    const crossLabel = industry === "medicine" ? "查看创新药研究指标" : mode === "atlas" ? "打开本行业看板" : "学习本行业产业链";
+    const cross = industry === "medicine" ? "#ir-metrics" : mode === "atlas" ? "#ir-monitor" : "atlas.html?industry=" + industry;
+    const crossLabel = industry === "medicine" ? "查看创新药研究指标" : mode === "atlas" ? "本行业指标跟踪" : "返回本行业研究";
     hub.innerHTML = `<div class="ir-intro"><div><span class="ir-kicker">${mode === "atlas" ? "INDUSTRY RESEARCH / LEARN" : "INDUSTRY MONITOR / VERIFY"} · ${esc(s.name)}</span><h1>${esc(s.subtitle)}</h1><p>${esc(s.intro)}</p><p class="ir-muted">研究范围：${esc(s.scope)}</p><a href="${cross}">${crossLabel} ↗</a>${industry === "appliances" && mode === "atlas" ? '<p><a href="appliances.html">家电研究框架与学习手册 ↗</a></p>' : ""}</div><div class="ir-context"><b>研究主线</b><p>${esc(s.core)}</p></div></div><p class="ir-warning">内容整理：${esc(s.preparedAt || data.preparedAt)}。${esc(s.researchStatus || data.researchStatus)}</p>${mode === "atlas" ? `<div class="ir-search-row"><label>搜索本行业的链条、指标、技术、术语<input id="ir-search" type="search" placeholder="${esc(s.searchHint || "试试：库存、热泵、LCOE、现金流")}"></label><span id="ir-search-count" class="ir-muted" role="status"></span></div>` : ""}<nav class="ir-jump" aria-label="本行业章节">${(mode ===
     "atlas"
       ? [
@@ -263,13 +263,8 @@
     document.title =
       (key === "chemical" ? "化工" : data.industries[key].name) +
       " · " +
-      (mode === "atlas" ? "产业链研究" : "行业看板") +
+      (mode === "atlas" ? "行业研究" : "行业指标跟踪") +
       " · 知研集";
-    document.querySelectorAll(".site-nav a").forEach((a) => {
-      const file = a.getAttribute("href").split("?")[0];
-      if (["atlas.html", "index.html"].includes(file))
-        a.href = file + (key === "chemical" || (key === "medicine" && file === "index.html") ? "" : "?industry=" + key);
-    });
     if (push) {
       const url = new URL(location.href);
       url.searchParams.set("industry", key);

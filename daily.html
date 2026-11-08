@@ -11,18 +11,15 @@
     <link rel="stylesheet" href="assets/outline.css" />
     <script defer src="assets/outline.js"></script>
     <link rel="stylesheet" href="assets/research-topics.css" />
+    <link rel="stylesheet" href="assets/daily-tools.css" />
   </head>
   <body>
     <a class="daily-skip" href="#research-map">跳到指标地图</a>
     <header class="site-header">
-      <a class="site-brand" href="index.html"
+      <a class="site-brand" href="atlas.html"
         >知研集<small>IDEAS / EVIDENCE / RESEARCH</small></a
       >
-      <nav class="site-nav" aria-label="网站主导航">
-        <a href="atlas.html">产业链总览</a><a href="index.html">行业看板</a
-        ><a href="intelli.html">IntelliUI <small>BETA</small></a
-        ><a href="daily.html" aria-current="page">日常研究</a>
-      </nav>
+      <nav class="site-nav" aria-label="网站主导航"><a href="atlas.html">行业研究</a><a href="daily.html" aria-current="page">日常研究</a></nav>
     </header>
     <main>
       <nav class="research-topic-nav" aria-label="日常研究专题">
@@ -30,8 +27,26 @@
         ><a href="daily.html" aria-current="page">法国与欧洲指标</a
         ><a href="washoku.html">日料菜单与预制风险</a
         ><a href="chinese-menu.html">中餐预制菜避雷</a
-        ><a href="gpu-memory/index.html">GPU 与显存技术</a>
+        ><a href="gpu-memory/index.html">GPU 与显存技术</a
+        ><a href="intelli.html">IntelliUI <small>BETA</small></a>
       </nav>
+      <section id="daily-tools" class="daily-tools" aria-labelledby="daily-tools-title">
+        <div class="daily-tools-heading">
+          <h2 id="daily-tools-title">IntelliUI <small>BETA</small></h2>
+          <p>用本地规则辅助研究，支持导入 CSV 查看数据和制作图表。</p>
+        </div>
+        <nav class="daily-tools-links" aria-label="IntelliUI 研究工具">
+          <a href="intelli.html"
+            ><span>智能工作区</span><small>从问题生成图表卡片</small></a
+          ><a href="indicators.html"
+            ><span>指标研究台</span><small>检索指标与核对口径</small></a
+          ><a href="data.html"
+            ><span>数据明细</span><small>筛选、查看与导入数据</small></a
+          ><a href="studio.html"
+            ><span>图表制作</span><small>选择字段并调整图表</small></a
+          >
+        </nav>
+      </section>
       <div class="daily-breadcrumb">
         <span>日常研究 / 001</span><span>社会事件 × 欧洲比较</span>
       </div>

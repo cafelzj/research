@@ -105,3 +105,5 @@
   .ia-hero h1 { font-size: 27px; }
   .ia-hero .hero-actions .btn-outline { display: none; }
 }
+
+.research-return .gpu-site-nav{display:flex;gap:16px;align-items:center}.gpu-site-nav a[aria-current="page"]{font-weight:700;color:#166b7a}

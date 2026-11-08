@@ -69,7 +69,7 @@ with sync_playwright() as p:
             expect(page.locator('.top-nav a')).to_have_count(5)
             expect(page.locator('#sidebar .group')).to_have_count(3)
             expect(page.locator('#sidebar [aria-current="page"]')).to_have_count(1)
-            expect(page.locator('.research-return a')).to_have_attribute('href','../daily.html')
+            expect(page.locator('.research-return > a')).to_have_attribute('href','../daily.html')
             assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'), (name,width)
         if width==320:
             page.locator('#mobile-toggle').click()
@@ -121,7 +121,7 @@ with sync_playwright() as p:
     page.locator('#power-r').fill('10')
     expect(page.locator('#power-current')).to_have_text('1,250 A')
     expect(page.locator('#power-loss')).to_have_text('15.63 W')
-    page.locator('.research-return a').click()
+    page.locator('.research-return > a').click()
     expect(page.locator('#map-host [data-country]')).to_have_count(10)
     context.add_init_script("Storage.prototype.getItem=Storage.prototype.setItem=function(){throw Error('blocked')}")
     page.goto(BASE+'gpu-memory/index.html')

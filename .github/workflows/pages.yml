@@ -41,6 +41,7 @@ jobs:
           python3 scripts/test_chemical_research.py http://127.0.0.1:8000/
           python3 scripts/test_appliances.py
           python3 scripts/test_gpu_memory.py
+          python3 scripts/test_site_structure.py
   deploy:
     needs: validate-sw
     if: github.ref == 'refs/heads/main'
@@ -66,7 +67,7 @@ jobs:
       - name: Prepare static website
         run: |
           mkdir -p _site
-          cp appliances.html indicator-guide.html indicators.html index.html atlas.html data.html studio.html intelli.html daily.html washoku.html chinese-menu.html _site/
+          cp industry-dashboard.html appliances.html indicator-guide.html indicators.html index.html atlas.html data.html studio.html intelli.html daily.html washoku.html chinese-menu.html _site/
           cp -R assets _site/assets
           cp -R gpu-memory _site/gpu-memory
       - name: Upload website
@@ -89,3 +90,4 @@ jobs:
           python3 scripts/test_sw_atlas.py "$SITE_URL"
           python3 scripts/test_appliances.py "$SITE_URL"
           python3 scripts/test_gpu_memory.py "$SITE_URL"
+          python3 scripts/test_site_structure.py "$SITE_URL"
