@@ -1,0 +1,1916 @@
+{
+  "models": {
+    "asOf": "2026-11-08",
+    "intro": [
+      "先按使用场景与交付形态认型号，再读显存、带宽、功耗和精度。数据中心模组、桌面消费卡、工作站显卡服务不同目标；GPU裸片、封装模组、8卡服务器和72卡机柜不是同一个计量对象。",
+      "代表产品覆盖数据中心、消费显卡与工作站，并另列一款专用AI加速器作相邻架构对照。资料以已读取的NVIDIA、AMD、Intel官方正文为主，固定到所注明的形态；当前产品页与早期公告冲突时保留来源差异。未核实的功耗与供货范围直接标注，比较段落中的部署收益属于工程推演。",
+      "容量回答“能否驻留”，带宽回答“每秒能搬多少数据”，计算峰值还依赖数据格式、稀疏性和算子。FP4、FP8、BF16、FP64、游戏帧率与整机吞吐不混成一个排行榜。"
+    ],
+    "families": [
+      {
+        "id": "nvidia-datacenter",
+        "name": "NVIDIA 数据中心：A / H / B / Rubin",
+        "explanation": "A100是Ampere基线，H100/H200属于Hopper，B200/B300分别为Blackwell/Blackwell Ultra，Rubin进入HBM4。HGX、DGX、GB与NVL数字通常提示平台/系统层级，不能只凭尾号判断单GPU规格。"
+      },
+      {
+        "id": "nvidia-graphics",
+        "name": "NVIDIA 桌面：GeForce / RTX PRO",
+        "explanation": "GeForce面向消费图形与创作；RTX PRO按工作站和服务器等版本分化。相同Blackwell名称不保证采用数据中心GPU的HBM、互连或功率。"
+      },
+      {
+        "id": "amd-instinct",
+        "name": "AMD Instinct：CDNA 数据中心路线",
+        "explanation": "MI300X/MI325X为CDNA3，MI350X/MI355X为CDNA4，MI455X为CDNA5；OAM/EAM模组依赖伙伴基板与系统。MI300A是含CPU的APU，Helios是伙伴系统参考设计。"
+      },
+      {
+        "id": "amd-radeon",
+        "name": "AMD Radeon：RDNA 消费与工作站路线",
+        "explanation": "RX9070XT面向消费图形，Radeon AI PRO R9700面向本地AI工作站；本组均为RDNA4，不应套用Instinct的CDNA规格或数据中心部署方式。"
+      },
+      {
+        "id": "intel-gaudi",
+        "name": "Intel Gaudi：专用 AI 加速器参照",
+        "explanation": "Gaudi3采用TPC/MME和以太网互连组织训练与推理。本表作为相邻架构参照收录，并显式注明它不是通用图形GPU。"
+      }
+    ],
+    "models": [
+      {
+        "id": "a100",
+        "name": "NVIDIA A100 80GB SXM",
+        "vendor": "NVIDIA",
+        "segment": "数据中心",
+        "architecture": "Ampere",
+        "form": "单 GPU SXM 模组；另有 80GB PCIe 卡",
+        "stage": "已商业化；保留作 HBM2e 与 Ampere 基线",
+        "stageDate": "2020-11-16：80GB 版本发布；当前规格核验于 2026-11-08",
+        "memoryType": "HBM2e",
+        "capacity": "80 GB / GPU（SXM 80GB 版本）",
+        "bandwidth": "2,039 GB/s / GPU（SXM）；PCIe 80GB 为 1,935 GB/s",
+        "power": "400 W TDP（标准 SXM）；PCIe 为 300 W；特定 CTS SKU 可至 500 W",
+        "whatChanged": "在 A100 40GB 之后，把容量翻倍到 80GB，并保留 TF32、BF16、结构化稀疏与 MIG。",
+        "whyItMatters": "展示容量升级如何改变可容纳的模型、数据表和每个 MIG 实例的规模；架构名相同，显存版本仍可改变部署方式。",
+        "comparisonCaveat": "本行只以 80GB SXM 为主；不要把 A100 40GB、PCIe、SXM 与 8 GPU DGX 的总容量混为一个规格。",
+        "sourceIds": [
+          "model-a100",
+          "model-a100-launch"
+        ]
+      },
+      {
+        "id": "h100",
+        "name": "NVIDIA H100 SXM",
+        "vendor": "NVIDIA",
+        "segment": "数据中心",
+        "architecture": "Hopper",
+        "form": "单 GPU SXM 模组；H100 NVL 是另一 PCIe 产品配置",
+        "stage": "已商业化；Hopper 计算与互连基线",
+        "stageDate": "2022-09-20：宣布量产；当时伙伴产品计划 2022-10 起推出",
+        "memoryType": "HBM3（80GB SXM）",
+        "capacity": "80 GB / GPU（SXM）；H100 NVL 为 94 GB / GPU",
+        "bandwidth": "3.35 TB/s / GPU（SXM）；H100 NVL 为 3.9 TB/s",
+        "power": "最高 700 W TDP（SXM，可配置）；H100 NVL 为 350–400 W / GPU",
+        "whatChanged": "相对 Ampere，引入 FP8 Transformer Engine，并把 SXM 的 NVLink 提升到 900 GB/s。",
+        "whyItMatters": "训练和推理开始同时依赖低精度矩阵计算、HBM 数据供给与跨 GPU 通信，单看 CUDA 核数解释不了变化。",
+        "comparisonCaveat": "不能把 H100 SXM 80GB、普通 H100 PCIe 80GB、H100 NVL 94GB 或双卡总量互换；官方峰值 FP8 表有稀疏脚注。",
+        "sourceIds": [
+          "model-h100",
+          "model-hopper-launch",
+          "model-hopper-memory"
+        ]
+      },
+      {
+        "id": "h200",
+        "name": "NVIDIA H200 SXM",
+        "vendor": "NVIDIA",
+        "segment": "数据中心",
+        "architecture": "Hopper",
+        "form": "单 GPU SXM 模组；另有 H200 NVL PCIe",
+        "stage": "已商业化；官方页面标注 Now available",
+        "stageDate": "2026-11-08：读取当前供货与规格页；首次发布/供货日未在本表单独核验",
+        "memoryType": "HBM3e",
+        "capacity": "141 GB / GPU（SXM 与 NVL 当前表）",
+        "bandwidth": "4.8 TB/s / GPU（SXM 与 NVL 当前表）",
+        "power": "最高 700 W TDP（SXM，可配置）；H200 NVL 最高 600 W",
+        "whatChanged": "沿用 Hopper，重点把 H100 SXM 的 80GB HBM3 改为 141GB HBM3e，带宽由 3.35 升至 4.8 TB/s。",
+        "whyItMatters": "这是理解“显存升级也能带来产品代际变化”的直接案例：可增加模型驻留、KV cache 或批量，而矩阵峰值并未同幅增加。",
+        "comparisonCaveat": "以 SXM 对 SXM 比较；NVL 的功耗、连接方式与部分计算峰值另有版本。官网仍附“初步规格可能变化”脚注。",
+        "sourceIds": [
+          "model-h200",
+          "model-hopper-memory"
+        ]
+      },
+      {
+        "id": "b200",
+        "name": "NVIDIA B200 SXM（HGX 配置）",
+        "vendor": "NVIDIA",
+        "segment": "数据中心",
+        "architecture": "Blackwell",
+        "form": "单 GPU SXM 模组（双计算裸片封装）；HGX B200 是 8 GPU 基板平台",
+        "stage": "已供货；官方 HGX 页明确标注 shipping now",
+        "stageDate": "2026-11-08：当前供货口径核验",
+        "memoryType": "HBM3e",
+        "capacity": "180 GB / GPU（HGX AI Factory 当前参考架构口径）",
+        "bandwidth": "最高 8 TB/s / GPU（该 HGX 参考架构）",
+        "power": "未核实统一数值；需按 HGX/OEM 版本核对单 GPU 功率",
+        "whatChanged": "从单片 Hopper 转向双裸片、单一 CUDA GPU 的封装，并提供 FP4 路径与第五代 NVLink。",
+        "whyItMatters": "算力增长开始要求封装内跨裸片通信、更多 HBM 与机内互连协同；软件看见的一个 GPU 并不等于一块计算裸片。",
+        "comparisonCaveat": "本表采用已读取 HGX 参考架构的 180GB。其他官方 Blackwell 材料中的 192GB 可能对应不同物理/可用容量或配置；本次未统一其差异。B200 GPU、GB200 Superchip 与 GB200 NVL72 不是同一层级。",
+        "sourceIds": [
+          "model-hgx-components",
+          "model-hgx",
+          "model-blackwell-ultra"
+        ]
+      },
+      {
+        "id": "b300",
+        "name": "NVIDIA B300 SXM（HGX 配置）",
+        "vendor": "NVIDIA",
+        "segment": "数据中心",
+        "architecture": "Blackwell Ultra",
+        "form": "单 GPU SXM 模组（双计算裸片封装）；HGX B300 为 8 GPU 基板平台",
+        "stage": "已供货；官方 HGX 页明确标注 shipping now",
+        "stageDate": "2025-08-22：架构详解发布；2026-11-08：当前供货核验",
+        "memoryType": "HBM3e",
+        "capacity": "288 GB / GPU（HGX AI Factory 参考架构）",
+        "bandwidth": "最高 8 TB/s / GPU",
+        "power": "未核实统一数值；需按 HGX/OEM 版本核对",
+        "whatChanged": "相对本表 HGX B200 的 180GB 提高容量，并加强 attention 所用的特定执行路径；HBM 峰值带宽仍为 8 TB/s。",
+        "whyItMatters": "更多容量与更多带宽是不同收益：可放下更多 KV cache 或更大模型，不代表每秒搬运数据的上限同步翻倍。",
+        "comparisonCaveat": "B300 不等于 GB300 NVL72。不要把架构博客的 GB300/特定配置 192GB 基线与本表 HGX B200 180GB 直接混算容量增幅。",
+        "sourceIds": [
+          "model-hgx-components",
+          "model-hgx",
+          "model-blackwell-ultra"
+        ]
+      },
+      {
+        "id": "rubin",
+        "name": "NVIDIA Rubin GPU",
+        "vendor": "NVIDIA",
+        "segment": "数据中心",
+        "architecture": "Rubin",
+        "form": "单 GPU 双计算裸片封装；用于 HGX Rubin / Vera Rubin 平台",
+        "stage": "已商业化：当前 Vera Rubin NVL72 页标为 Available Now；具体伙伴与区域另核",
+        "stageDate": "2026-05-31：官方宣布扩大系统量产；2026-07-21：架构详解；2026-11-08：当前供货页核验",
+        "memoryType": "HBM4",
+        "capacity": "最高 288 GB / GPU",
+        "bandwidth": "最高 22 TB/s（架构正文与 HGX 单 GPU 表）；NVL72 页单 GPU 列为 19.2 TB/s，存在口径差异",
+        "power": "未核实单 GPU 功率；需按平台/OEM 与冷却配置",
+        "whatChanged": "采用 HBM4、更宽接口与新内存控制器，并把 NVLink 推进到第六代。",
+        "whyItMatters": "同为 288GB，HBM4 的主要新机会是更高的数据供给上限；长上下文与多 GPU 推理仍需同时检查通信和软件实际利用率。",
+        "comparisonCaveat": "22 与 19.2 TB/s 为两个当前官方页面的不同表述，原因未核实，不择一伪装为统一量产值。单 Rubin GPU、2 GPU Vera Rubin Superchip、72 GPU NVL72、100MW AI factory 必须分开。",
+        "sourceIds": [
+          "model-rubin-architecture",
+          "model-hgx",
+          "model-rubin-nvl72",
+          "model-rubin-production"
+        ]
+      },
+      {
+        "id": "rtx4090",
+        "name": "GeForce RTX 4090",
+        "vendor": "NVIDIA",
+        "segment": "消费显卡",
+        "architecture": "Ada Lovelace",
+        "form": "桌面 PCIe 显卡；本表为 Founders Edition / 参考规格",
+        "stage": "已发布并商业化；在此作为上一代消费级基线",
+        "stageDate": "2026-11-08：官方产品页与 RTX Blackwell 白皮书交叉核验",
+        "memoryType": "GDDR6X",
+        "capacity": "24 GB / 显卡",
+        "bandwidth": "1,008 GB/s（官方白皮书对照表）",
+        "power": "450 W TGP（参考设计）",
+        "whatChanged": "Ada 代消费旗舰使用 24GB GDDR6X、第四代 Tensor Cores 和第三代 RT Cores。",
+        "whyItMatters": "适合观察桌面显卡如何在图形、光追、媒体和本地 AI 之间分配面积与功耗；其显存容量和通信能力不能等同数据中心 GPU。",
+        "comparisonCaveat": "消费显卡的 AI TOPS、光追 TFLOPS、游戏帧率属于不同负载口径；非公版、地区衍生型号及笔记本版本另核。",
+        "sourceIds": [
+          "model-rtx4090",
+          "model-rtx-blackwell-whitepaper"
+        ]
+      },
+      {
+        "id": "rtx5090",
+        "name": "GeForce RTX 5090",
+        "vendor": "NVIDIA",
+        "segment": "消费显卡",
+        "architecture": "RTX Blackwell",
+        "form": "桌面 PCIe 显卡；Founders Edition / 参考规格",
+        "stage": "已商业化；官方 2025-01-30 文章确认上市",
+        "stageDate": "2025-01-30：上市；2026-11-08：规格核验",
+        "memoryType": "GDDR7",
+        "capacity": "32 GB / 显卡",
+        "bandwidth": "1,792 GB/s（512-bit、28 Gbps 规格）",
+        "power": "575 W TGP（参考设计）；1,000 W 为官方示例整机电源建议",
+        "whatChanged": "相对 RTX 4090，显存从 24GB GDDR6X 变为 32GB GDDR7，并增加 FP4 支持与新光追单元。",
+        "whyItMatters": "更大容量提高本地模型和内容创作的可行范围，带宽提升有利于数据密集场景；仍要核对具体软件是否支持所需精度路径。",
+        "comparisonCaveat": "RTX Blackwell 与数据中心 Blackwell 共享代际名称，但不是同一 GPU、显存或系统。DLSS 多帧生成图表不能当作原生渲染或训练性能。",
+        "sourceIds": [
+          "model-rtx5090",
+          "model-rtx5090-launch",
+          "model-rtx-blackwell-whitepaper"
+        ]
+      },
+      {
+        "id": "rtxpro6000",
+        "name": "RTX PRO 6000 Blackwell Workstation Edition",
+        "vendor": "NVIDIA",
+        "segment": "工作站",
+        "architecture": "RTX Blackwell",
+        "form": "桌面 PCIe 工作站显卡；本行限定 Workstation Edition",
+        "stage": "已商业化；官方产品页开放购买入口",
+        "stageDate": "2026-11-08：当前规格与产品形态核验",
+        "memoryType": "GDDR7，支持 ECC",
+        "capacity": "96 GB / 显卡",
+        "bandwidth": "1,792 GB/s",
+        "power": "600 W（官方最大功耗）",
+        "whatChanged": "在工作站显卡上提供 96GB ECC 显存，与消费旗舰的 32GB 形成明显容量分层。",
+        "whyItMatters": "其价值可来自在单卡内完成更大场景或模型、专业应用支持与可靠性需求；同带宽并不代表同容量或同产品定位。",
+        "comparisonCaveat": "Workstation、Max-Q Workstation 与 Server Edition 是不同版本；600 W 不适用于整个系列，96GB GDDR7 也不能当作 HBM/NVLink 平台。",
+        "sourceIds": [
+          "model-rtxpro6000"
+        ]
+      },
+      {
+        "id": "mi300x",
+        "name": "AMD Instinct MI300X",
+        "vendor": "AMD",
+        "segment": "数据中心",
+        "architecture": "CDNA 3",
+        "form": "单 GPU OAM 模组（多 chiplet 封装）；另有 8 GPU 平台",
+        "stage": "已商业化；成熟的 CDNA 3 / HBM3 对照基线",
+        "stageDate": "2023-12-06：官方产品页列示发布日",
+        "memoryType": "HBM3",
+        "capacity": "192 GB / GPU",
+        "bandwidth": "最高 5.3 TB/s / GPU",
+        "power": "750 W Peak（官方 TBP 字段）",
+        "whatChanged": "用多 chiplet 与 192GB HBM3 面向大模型和 HPC；与同族带 CPU 的 MI300A 属不同产品。",
+        "whyItMatters": "容量可影响需要几张卡才能装下权重和状态，进而改变分片与通信需求；但能装下模型不等于已经达到高利用率。",
+        "comparisonCaveat": "MI300X 是 GPU；MI300A 是 APU。192GB 为单 GPU，本表未把 8 GPU 基板总容量写成单卡容量。",
+        "sourceIds": [
+          "model-mi300x"
+        ]
+      },
+      {
+        "id": "mi325x",
+        "name": "AMD Instinct MI325X",
+        "vendor": "AMD",
+        "segment": "数据中心",
+        "architecture": "CDNA 3",
+        "form": "单 GPU OAM 模组；沿用同代服务器基板思路",
+        "stage": "已商业化；AMD Accelerator Cloud 当前列出 MI325X 集群",
+        "stageDate": "2024-10-10：正式发布；当时计划 Q4 生产出货、2025Q1 广泛系统供货",
+        "memoryType": "HBM3E",
+        "capacity": "256 GB / GPU（正式产品规格）",
+        "bandwidth": "最高 6 TB/s / GPU",
+        "power": "1,000 W Peak（官方 TBP 字段）",
+        "whatChanged": "沿用 CDNA 3，把 MI300X 的 192GB HBM3 提升为 256GB HBM3E。",
+        "whyItMatters": "与 H100→H200 类似，它帮助隔离内存子系统升级的价值：容量门槛与带宽改善可以先于全新计算架构出现。",
+        "comparisonCaveat": "采用正式发布与当前规格的 256GB。2024年6月早期路线图曾写288GB，不能沿用为量产规格；云帮助页把类型简写为HBM3，本表以产品页HBM3E为准。",
+        "sourceIds": [
+          "model-mi325x",
+          "model-mi325x-launch",
+          "model-amd-cloud"
+        ]
+      },
+      {
+        "id": "mi350x",
+        "name": "AMD Instinct MI350X",
+        "vendor": "AMD",
+        "segment": "数据中心",
+        "architecture": "CDNA 4",
+        "form": "单 GPU OAM 模组；官方列示 Passive OAM 冷却",
+        "stage": "已发布并进入伙伴部署；2025 年发布时宣布系列已在部署",
+        "stageDate": "2025-06-12：发布；2026-11-08：当前单 GPU 规格核验",
+        "memoryType": "HBM3E",
+        "capacity": "288 GB / GPU",
+        "bandwidth": "最高 8 TB/s / GPU",
+        "power": "1,000 W TBP",
+        "whatChanged": "从 CDNA 3 进入 CDNA 4，增加 MXFP4/MXFP6 等低精度支持，同时提高 HBM 容量和带宽。",
+        "whyItMatters": "架构、数据格式与存储系统同时变化；判断收益时要分清是更小数据格式、更高计算峰值，还是减少显存和互连压力。",
+        "comparisonCaveat": "MI350X 与 MI355X 显存容量/带宽相同，但频率、计算峰值和功耗不同；系列级宣传倍数不能直接赋给每一型号或负载。",
+        "sourceIds": [
+          "model-mi350x",
+          "model-mi350-launch"
+        ]
+      },
+      {
+        "id": "mi355x",
+        "name": "AMD Instinct MI355X",
+        "vendor": "AMD",
+        "segment": "数据中心",
+        "architecture": "CDNA 4",
+        "form": "单 GPU OAM 模组；冷却及系统配置按 OEM 版本",
+        "stage": "已商业化；AMD Accelerator Cloud 当前列出 MI355X 集群",
+        "stageDate": "2025-06-12：发布；2026-11-08：当前部署与规格核验",
+        "memoryType": "HBM3E",
+        "capacity": "288 GB / GPU",
+        "bandwidth": "最高 8 TB/s / GPU",
+        "power": "1,400 W TBP",
+        "whatChanged": "相对 MI350X，在相同 288GB / 8TB/s 存储配置上采用更高计算性能与功率档。",
+        "whyItMatters": "同架构和同显存也能因功率与散热档位分化；若工作负载主要受 HBM 限制，更高计算峰值不保证同比例收益。",
+        "comparisonCaveat": "1,400 W 是单模组 TBP，并非8 GPU服务器或整柜功耗。MXFP4、FP8与BF16应分别评估，不能混排一个算力榜。",
+        "sourceIds": [
+          "model-mi355x",
+          "model-mi350-launch",
+          "model-amd-cloud"
+        ]
+      },
+      {
+        "id": "mi455x",
+        "name": "AMD Instinct MI455X",
+        "vendor": "AMD",
+        "segment": "数据中心",
+        "architecture": "CDNA 5",
+        "form": "Enhanced Accelerator Module（EAM）；面向 Helios 伙伴系统",
+        "stage": "已发布；官方称 Helios 平台已投产；逐个 OEM 的全面供货未核实",
+        "stageDate": "2026-07-23：官方发布/投产声明；当前产品页仍称预计 2026H2 批量部署",
+        "memoryType": "HBM4",
+        "capacity": "432 GB / GPU",
+        "bandwidth": "最高 23.3 TB/s / GPU（官方峰值理论规格）",
+        "power": "未核实；需按 EAM / OEM 液冷系统版本",
+        "whatChanged": "推进到 CDNA 5 和 HBM4，增加每 GPU 容量、内存带宽，并面向机柜级互连设计。",
+        "whyItMatters": "更高单 GPU 容量可能减少模型切分，但收益还受互连拓扑、算子与软件部署状态约束；机柜平台成熟度应与芯片规格并看。",
+        "comparisonCaveat": "Helios 是 AMD 的参考设计，由 OEM/ODM 销售系统；72 GPU 机柜的31TB与1.7PB/s不是单 GPU。官方“投产”和“预计批量部署”都保留，不能自动改成全面现货。",
+        "sourceIds": [
+          "model-mi400",
+          "model-mi455x-specs",
+          "model-mi400-launch"
+        ]
+      },
+      {
+        "id": "rx9070xt",
+        "name": "AMD Radeon RX 9070 XT",
+        "vendor": "AMD",
+        "segment": "消费显卡",
+        "architecture": "RDNA 4",
+        "form": "桌面 PCIe 显卡；参考规格，板卡伙伴设计可不同",
+        "stage": "已发布并商业化；官方初始供货计划为 2025-03-06",
+        "stageDate": "2025-02-28：发布；2025-03-06：当时宣布的伙伴供货起点",
+        "memoryType": "GDDR6",
+        "capacity": "16 GB / 显卡",
+        "bandwidth": "最高 640 GB/s（256-bit）",
+        "power": "304 W TBP（参考规格）",
+        "whatChanged": "引入 RDNA 4、改进光追与第二代 AI 加速器，同时仍采用 GDDR6。",
+        "whyItMatters": "与数据中心的 CDNA 路线并列看，能理解同一家厂商如何围绕图形、本地 AI、成本和功耗安排不同产品。",
+        "comparisonCaveat": "64MB Infinity Cache 不是额外16GB显存；所谓有效带宽、插帧帧率与物理GDDR带宽不是同一指标。",
+        "sourceIds": [
+          "model-rx9070xt",
+          "model-rdna4-launch"
+        ]
+      },
+      {
+        "id": "r9700",
+        "name": "AMD Radeon AI PRO R9700",
+        "vendor": "AMD",
+        "segment": "工作站",
+        "architecture": "RDNA 4",
+        "form": "双槽桌面 PCIe 工作站显卡；具体散热与输出按板卡伙伴",
+        "stage": "已商业化；伙伴工作站自 2025-07-23 起推出",
+        "stageDate": "2025-07-17：官方供货公告；2025-07-23：伙伴预装工作站起点",
+        "memoryType": "GDDR6；ECC 官方列为仅 Linux 支持",
+        "capacity": "32 GB / 显卡",
+        "bandwidth": "640 GB/s（256-bit）",
+        "power": "300 W TBP",
+        "whatChanged": "与同代消费卡相比，把显存容量扩至 32GB，并围绕本地 AI 和多卡工作站布局。",
+        "whyItMatters": "RX9070 XT 与 R9700 的容量不同、带宽相同，说明“能不能装下”和“装下后搬得多快”应分两步判断。",
+        "comparisonCaveat": "AMD 明确将 Radeon PRO / AI PRO 定位于工作站；ECC 的系统支持有条件。预装工作站起点不等于裸卡同日全面供货。",
+        "sourceIds": [
+          "model-r9700",
+          "model-r9700-launch"
+        ]
+      },
+      {
+        "id": "gaudi3",
+        "name": "Intel Gaudi 3（OAM，非GPU对照）",
+        "vendor": "Intel",
+        "segment": "专用AI加速器对照",
+        "architecture": "Gaudi 3 专用 AI 加速架构（TPC + MME）",
+        "form": "单 AI 加速器 OAM 模组；另有功率不同的 PCIe 版本",
+        "stage": "已商业化；Intel 2025-05-19 公告确认通过 Dell AI Factory 提供",
+        "stageDate": "2024-09-24：发布；2025-05-19：Dell 平台供货公告",
+        "memoryType": "HBM2e",
+        "capacity": "128 GB / OAM 加速器",
+        "bandwidth": "3.7 TB/s 峰值 HBM 带宽 / 加速器",
+        "power": "900 W（技术白皮书 OAM 对照表）；PCIe 版本另核",
+        "whatChanged": "相对 Gaudi 2 增加 HBM 与片上 SRAM，并以 64 TPC、8 MME 及片上以太网提供专用 AI 路线。",
+        "whyItMatters": "提供 GPU 之外的比较参照：相同的训练/推理目标可采用不同计算与网络组织，软件迁移和模型支持与内存数字同样关键。",
+        "comparisonCaveat": "Gaudi 3 是专用 AI 加速器，不是通用图形 GPU；128GB HBM 与96MB片上SRAM不能相加为统一显存。900W仅限定OAM版本。",
+        "sourceIds": [
+          "model-gaudi3",
+          "model-gaudi3-launch",
+          "model-gaudi3-availability"
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "hopper",
+        "title": "H100 → H200：同一 Hopper，为何换显存仍值得单独一代？",
+        "paragraphs": [
+          "先把形态固定为 SXM。H100 与 H200 当前官网列出的主要矩阵峰值相同，H200 却把每GPU容量从80GB升为141GB，HBM带宽从3.35升为4.8TB/s。容量约为1.76倍，带宽约为1.43倍，两者不是同一种提升。",
+          "推演：当原任务因显存不足而必须切到更多GPU或卸载到CPU时，新增容量可以改变整个执行方案；当任务已装得下但主要等待HBM，带宽更直接。若已由矩阵计算或跨卡通信限制，不能据显存规格承诺同倍加速。"
+        ],
+        "modelIds": [
+          "h100",
+          "h200"
+        ],
+        "columns": [
+          "同形态比较",
+          "H100 SXM",
+          "H200 SXM",
+          "读数的含义"
+        ],
+        "rows": [
+          [
+            "架构",
+            "Hopper",
+            "Hopper",
+            "隔离显存升级的作用"
+          ],
+          [
+            "每GPU容量",
+            "80GB HBM3",
+            "141GB HBM3e",
+            "容量决定驻留与批量空间"
+          ],
+          [
+            "每GPU峰值带宽",
+            "3.35TB/s",
+            "4.8TB/s",
+            "带宽约1.43倍，实际收益看瓶颈"
+          ],
+          [
+            "最高TDP",
+            "700W，可配置",
+            "700W，可配置",
+            "相同功率上限也不等于相同实测能耗"
+          ]
+        ]
+      },
+      {
+        "id": "hgx",
+        "title": "B200 → B300 → Rubin：容量和带宽交替成为升级重点",
+        "paragraphs": [
+          "本组固定单GPU观察，不把HGX的8卡总量或NVL72的整柜总量放进同一列。HGX参考架构的B200为180GB，B300为288GB，而两者HBM带宽都列最高8TB/s：B300先增加驻留空间。",
+          "Rubin最高288GB与B300相同，架构正文则将HBM带宽提高到最高22TB/s，指向数据供给能力的变化。但当前NVL72页又把单GPU带宽写为19.2TB/s，故保留冲突，待具体SKU和供应商资料解释。",
+          "推演：更多容量可能减少分片，更多带宽可能加快逐token读取；双裸片、HBM4与更快互连也增加封装、供电、冷却和调度依赖。任何一项峰值都不足以给整个机柜排名。"
+        ],
+        "modelIds": [
+          "b200",
+          "b300",
+          "rubin"
+        ],
+        "columns": [
+          "单GPU口径",
+          "B200（HGX）",
+          "B300（HGX）",
+          "Rubin"
+        ],
+        "rows": [
+          [
+            "内存",
+            "180GB HBM3e",
+            "288GB HBM3e",
+            "最高288GB HBM4"
+          ],
+          [
+            "HBM峰值带宽",
+            "最高8TB/s",
+            "最高8TB/s",
+            "架构/HGX22TB/s；NVL72表19.2TB/s"
+          ],
+          [
+            "值得追问",
+            "180/192GB口径差异",
+            "新增容量能否减少切分",
+            "具体SKU采用哪一带宽口径"
+          ],
+          [
+            "系统层级",
+            "8GPU HGX另算",
+            "8GPU HGX另算",
+            "Superchip、NVL72、AI工厂另算"
+          ]
+        ]
+      },
+      {
+        "id": "instinct",
+        "title": "MI300X → MI325X → MI350：先换内存，再换计算架构",
+        "paragraphs": [
+          "MI300X与MI325X同为CDNA3，容量从192GB HBM3升至256GB HBM3E，带宽从5.3升至6TB/s。MI350X/MI355X进入CDNA4后，再将容量和带宽提高到288GB与8TB/s，并新增低精度路径。",
+          "MI350X与MI355X的显存相同，TBP却分别为1000W和1400W。推演：若任务主要受HBM带宽限制，不能只凭MI355X更高计算峰值就假定更高性能；若低精度矩阵路径成为瓶颈，计算档位才更可能发挥作用。",
+          "MI325X早期路线图的288GB与最终256GB是一次真实的规格收敛。对2026年的MI455X也应同时记录当前规格与平台部署阶段，不能把路线图或投产公告直接当成全面供货。"
+        ],
+        "modelIds": [
+          "mi300x",
+          "mi325x",
+          "mi350x",
+          "mi355x",
+          "mi455x"
+        ],
+        "columns": [
+          "单GPU",
+          "架构",
+          "内存容量 / 峰值带宽",
+          "功率字段"
+        ],
+        "rows": [
+          [
+            "MI300X",
+            "CDNA3",
+            "192GB HBM3 / 5.3TB/s",
+            "750W Peak TBP"
+          ],
+          [
+            "MI325X",
+            "CDNA3",
+            "256GB HBM3E / 6TB/s",
+            "1000W Peak TBP"
+          ],
+          [
+            "MI350X",
+            "CDNA4",
+            "288GB HBM3E / 8TB/s",
+            "1000W TBP"
+          ],
+          [
+            "MI355X",
+            "CDNA4",
+            "288GB HBM3E / 8TB/s",
+            "1400W TBP"
+          ],
+          [
+            "MI455X",
+            "CDNA5",
+            "432GB HBM4 / 最高23.3TB/s",
+            "未核实；EAM/OEM版本另核"
+          ]
+        ]
+      },
+      {
+        "id": "graphics",
+        "title": "消费显卡和工作站：同带宽，也可能是完全不同的容量门槛",
+        "paragraphs": [
+          "RTX5090和RTX PRO6000 Workstation都列1792GB/s，容量分别为32GB与96GB。RX9070XT和R9700也都列640GB/s，容量分别为16GB与32GB。显存型号相同、带宽相同，并不代表可以承载同样大的工作负载。",
+          "推演：先算模型权重、KV cache、激活、运行时与预留空间能否驻留，再判断带宽和矩阵路径。刚好跨过显存门槛的工作站卡，价值可能来自避免卸载或减少切分；不能把这种结果推广为所有渲染、游戏或AI任务的速度倍数。",
+          "跨阵营、跨定位时还要核对应用与驱动、所需精度、ECC条件、散热和卡间通信。这里的物理显存带宽只描述数据供给上限，不是游戏帧率、可训练模型规模或总拥有成本排名。"
+        ],
+        "modelIds": [
+          "rtx4090",
+          "rtx5090",
+          "rtxpro6000",
+          "rx9070xt",
+          "r9700"
+        ],
+        "columns": [
+          "桌面型号",
+          "容量",
+          "物理显存带宽",
+          "参考功率"
+        ],
+        "rows": [
+          [
+            "RTX4090",
+            "24GB GDDR6X",
+            "1008GB/s",
+            "450W TGP"
+          ],
+          [
+            "RTX5090",
+            "32GB GDDR7",
+            "1792GB/s",
+            "575W TGP"
+          ],
+          [
+            "RTX PRO6000 Workstation",
+            "96GB GDDR7 ECC",
+            "1792GB/s",
+            "600W最大功耗"
+          ],
+          [
+            "RX9070XT",
+            "16GB GDDR6",
+            "最高640GB/s",
+            "304W TBP"
+          ],
+          [
+            "R9700",
+            "32GB GDDR6；ECC仅Linux",
+            "640GB/s",
+            "300W TBP"
+          ]
+        ]
+      }
+    ],
+    "readingGuide": [
+      {
+        "question": "我要判断一个模型能否装进单卡，先读什么？",
+        "how": "先看限定形态后的容量，再估计权重、KV cache、激活、运行时与预留空间；8卡总显存不自动成为无需分片的单一地址池。",
+        "links": [
+          {
+            "label": "H100 与 H200 的容量变化",
+            "url": "models.html#compare-hopper"
+          },
+          {
+            "label": "桌面与工作站的容量门槛",
+            "url": "models.html#compare-graphics"
+          },
+          {
+            "label": "内存层级与数据移动",
+            "url": "gpu.html#architecture-map"
+          }
+        ]
+      },
+      {
+        "question": "型号后面有 HGX、DGX、GB 或 NVL72，数字怎么读？",
+        "how": "先定位GPU、模组、基板、整机或机柜层级；逐一确认数字是每GPU值还是聚合值，再做比较。",
+        "links": [
+          {
+            "label": "B200 / B300 / Rubin 的口径",
+            "url": "models.html#compare-hgx"
+          },
+          {
+            "label": "官方 HGX 参考架构",
+            "url": "https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/components.html"
+          }
+        ]
+      },
+      {
+        "question": "看到新一代几倍性能，如何判断对我有用？",
+        "how": "核对负载、精度、稀疏性、并发、输入输出长度、GPU数量与功率；只把相同条件下的结果放在一起。",
+        "links": [
+          {
+            "label": "MI350X / MI355X 相同显存为何仍不同",
+            "url": "models.html#compare-instinct"
+          },
+          {
+            "label": "算力与数据供给的瓶颈",
+            "url": "bottlenecks.html"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "model-a100",
+        "title": "NVIDIA A100 官方规格",
+        "url": "https://www.nvidia.com/en-us/data-center/a100/",
+        "published": "未标日期（动态产品页）",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "80GB SXM / PCIe 的容量、HBM2e、带宽、TDP及CTS功率例外。"
+      },
+      {
+        "id": "model-a100-launch",
+        "title": "NVIDIA A100 80GB 发布公告",
+        "url": "https://nvidianews.nvidia.com/news/nvidia-doubles-down-announces-a100-80gb-gpu-supercharging-worlds-most-powerful-gpu-for-ai-supercomputing",
+        "published": "2020-11-16",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "80GB版本发布；当时系统出货预期；HBM2e及容量升级。"
+      },
+      {
+        "id": "model-h100",
+        "title": "NVIDIA H100 官方规格",
+        "url": "https://www.nvidia.com/en-us/data-center/h100/",
+        "published": "未标日期（动态产品页）",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "当前H100 SXM与H100 NVL分栏；单GPU容量、带宽、TDP、NVLink；稀疏脚注。"
+      },
+      {
+        "id": "model-hopper-launch",
+        "title": "NVIDIA Hopper 量产公告",
+        "url": "https://nvidianews.nvidia.com/news/nvidia-hopper-in-full-production",
+        "published": "2022-09-20",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "量产不等于同日伙伴供货；当时计划2022年10月开始推出。"
+      },
+      {
+        "id": "model-hopper-memory",
+        "title": "NVIDIA H200 CFD 技术文章",
+        "url": "https://developer.nvidia.com/blog/taking-computational-fluid-dynamics-to-the-next-level-with-the-nvidia-h200-tensor-core-gpu/",
+        "published": "2024-12-20",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "正文Table 1明确A100/H100/H200 SXM的HBM代际及容量、带宽；不照搬文章个别140GB写法。"
+      },
+      {
+        "id": "model-h200",
+        "title": "NVIDIA H200 官方规格",
+        "url": "https://www.nvidia.com/en-us/data-center/h200/",
+        "published": "未标日期（动态产品页）",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "Now available；SXM与NVL分栏，141GB、4.8TB/s和功耗差别；保留初步规格脚注。"
+      },
+      {
+        "id": "model-hgx-components",
+        "title": "NVIDIA HGX AI Factory Components 参考架构",
+        "url": "https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/components.html",
+        "published": "未标日期（动态技术文档）",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "Table 1列H200/B200/B300单GPU与节点容量；B200为180GB，B300为288GB，后两者最高8TB/s。"
+      },
+      {
+        "id": "model-hgx",
+        "title": "NVIDIA HGX 官方规格与供货",
+        "url": "https://www.nvidia.com/en-us/data-center/hgx/",
+        "published": "未标日期（动态产品页）",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "Rubin单GPU表22TB/s；B200/B300系统列明8xSXM且shipping now；不将系统算力当单GPU。"
+      },
+      {
+        "id": "model-blackwell-ultra",
+        "title": "Inside NVIDIA Blackwell Ultra",
+        "url": "https://developer.nvidia.com/blog/inside-nvidia-blackwell-ultra-the-chip-powering-the-ai-factory-era/",
+        "published": "2025-08-22",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "正文双裸片与NV-HBI架构、288GB HBM3E、8TB/s；架构/GB300口径与HGX B200180GB保持分开。"
+      },
+      {
+        "id": "model-rubin-architecture",
+        "title": "Inside NVIDIA Rubin GPU Architecture",
+        "url": "https://developer.nvidia.com/blog/inside-nvidia-rubin-gpu-architecture-powering-the-era-of-agentic-ai/",
+        "published": "2026-07-21",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "正文确认双计算裸片、HBM4、最高288GB与22TB/s；非只读取AI生成摘要。"
+      },
+      {
+        "id": "model-rubin-nvl72",
+        "title": "NVIDIA Vera Rubin NVL72 当前产品页",
+        "url": "https://www.nvidia.com/en-us/data-center/vera-rubin-nvl72/",
+        "published": "未标日期（动态产品页）",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "Available Now；规格表区分72GPU机柜、2GPU Superchip、1GPU；单GPU带宽为19.2TB/s，与架构文档不同。"
+      },
+      {
+        "id": "model-rubin-production",
+        "title": "NVIDIA Vera Rubin 扩大量产公告",
+        "url": "https://nvidianews.nvidia.com/news/vera-rubin-full-production-agentic-ai-factory",
+        "published": "2026-05-31",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "平台量产与供应链扩张阶段；不据此推断所有伙伴均已全面供货。"
+      },
+      {
+        "id": "model-rtx4090",
+        "title": "GeForce RTX 4090 官方产品页",
+        "url": "https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4090/",
+        "published": "未标日期（动态产品页）",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "Ada、24GB GDDR6X、450W TGP、参考卡设计与非公版差异。"
+      },
+      {
+        "id": "model-rtx5090",
+        "title": "GeForce RTX 5090 官方产品页",
+        "url": "https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5090/",
+        "published": "未标日期（动态产品页）",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "32GB GDDR7、575W TGP及1,000W示例电源建议；忽略站内价格/日期模板占位符。"
+      },
+      {
+        "id": "model-rtx5090-launch",
+        "title": "GeForce RTX 5090 / 5080 上市公告",
+        "url": "https://www.nvidia.com/en-us/geforce/news/rtx-5090-5080-out-now/",
+        "published": "2025-01-30",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "正文确认上市，区别于预告发布日期。"
+      },
+      {
+        "id": "model-rtx-blackwell-whitepaper",
+        "title": "NVIDIA RTX Blackwell GPU Architecture V1.1",
+        "url": "https://images.nvidia.com/aem-dam/Solutions/geforce/blackwell/nvidia-rtx-blackwell-gpu-architecture.pdf",
+        "published": "未标完整发布日期（V1.1）",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "正文对照表及Appendix A：RTX4090 1008GB/s、RTX5090 1792GB/s，以及显存/TGP。"
+      },
+      {
+        "id": "model-rtxpro6000",
+        "title": "RTX PRO 6000 Blackwell Workstation Edition 官方规格",
+        "url": "https://www.nvidia.com/en-us/products/workstations/professional-desktop-gpus/rtx-pro-6000/",
+        "published": "未标日期（动态产品页）",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "限定Workstation Edition：96GB GDDR7 ECC、1792GB/s、600W。"
+      },
+      {
+        "id": "model-mi300x",
+        "title": "AMD Instinct MI300X 官方规格",
+        "url": "https://www.amd.com/en/products/accelerators/instinct/mi300/mi300x.html",
+        "published": "2023-12-06（产品页Launch Date）",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "CDNA3、OAM、192GB HBM3、5.3TB/s、750W Peak。"
+      },
+      {
+        "id": "model-mi325x",
+        "title": "AMD Instinct MI325X 官方规格",
+        "url": "https://www.amd.com/en/products/accelerators/instinct/mi300/mi325x.html",
+        "published": "未标页面更新日期",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "正式256GB HBM3E、6TB/s、1000W Peak；不沿用早期288GB路线图。"
+      },
+      {
+        "id": "model-mi325x-launch",
+        "title": "AMD MI325X 正式发布公告",
+        "url": "https://ir.amd.com/news-events/press-releases/detail/1220/amd-delivers-leadership-ai-performance-with-amd-instinct-mi325x-accelerators",
+        "published": "2024-10-10",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "256GB HBM3E；当时计划Q4生产出货、2025Q1广泛系统供货。"
+      },
+      {
+        "id": "model-mi350x",
+        "title": "AMD Instinct MI350X 官方规格",
+        "url": "https://www.amd.com/en/products/accelerators/instinct/mi350/mi350x.html",
+        "published": "2025-06-12（系列发布；页面更新日期未标）",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "CDNA4、OAM、288GB HBM3E、8TB/s、1000W TBP、Passive OAM。"
+      },
+      {
+        "id": "model-mi355x",
+        "title": "AMD Instinct MI355X 官方规格",
+        "url": "https://www.amd.com/en/products/accelerators/instinct/mi350/mi355x.html",
+        "published": "2025-06-12（产品页Launch Date）",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "CDNA4、OAM、288GB HBM3E、8TB/s、1400W TBP、MXFP4/MXFP6。"
+      },
+      {
+        "id": "model-mi350-launch",
+        "title": "AMD Advancing AI 2025 官方发布",
+        "url": "https://ir.amd.com/news-events/press-releases/detail/1255/amd-unveils-vision-for-an-open-ai-ecosystem-detailing-new-silicon-software-and-systems-at-advancing-ai-2025",
+        "published": "2025-06-12",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "系列由MI350X/MI355X组成；当时已开始伙伴部署、计划2025H2广泛供货。"
+      },
+      {
+        "id": "model-amd-cloud",
+        "title": "AMD Accelerator Cloud 集群说明",
+        "url": "https://aac.amd.com/help/bare-metal/clusters/",
+        "published": "未标日期（动态技术文档）",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "当前集群列出MI325X/MI355X与每GPU容量，支持已有部署判断；其HBM3简写不覆盖产品页HBM3E规格。"
+      },
+      {
+        "id": "model-mi400",
+        "title": "AMD Instinct MI400 Series 官方产品页",
+        "url": "https://www.amd.com/en/products/accelerators/instinct/mi400.html",
+        "published": "未标日期（动态产品页）",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "MI455X CDNA5、432GB HBM4、23.3TB/s；Helios参考设计性质与预计2026H2批量部署。"
+      },
+      {
+        "id": "model-mi455x-specs",
+        "title": "AMD Accelerator Specifications 汇总表",
+        "url": "https://www.amd.com/en/products/specifications/accelerators.html",
+        "published": "2026-07-23（MI455X Launch Date）",
+        "accessed": "2026-11-08",
+        "status": "核验入口",
+        "scope": "当前官方检索索引显示MI455X EAM、432GB HBM4、23.3TB/s；本次未读取该汇总页正文，规格另由MI400正文交叉支持。"
+      },
+      {
+        "id": "model-mi400-launch",
+        "title": "AMD Advancing AI 2026 官方发布",
+        "url": "https://ir.amd.com/news-events/press-releases/detail/1294/aai-2026-amd-delivers-full-stack-compute-for-the-agentic-ai-era",
+        "published": "2026-07-23",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "MI400与Helios发布，宣布平台now in production；不等同逐个OEM系统全面供货。"
+      },
+      {
+        "id": "model-rx9070xt",
+        "title": "AMD Radeon RX 9070 XT 官方规格",
+        "url": "https://www.amd.com/en/products/graphics/desktops/radeon/9000-series/amd-radeon-rx-9070xt.html",
+        "published": "未标日期（动态产品页）",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "16GB GDDR6、256-bit、最高640GB/s、304W；64MB Infinity Cache另列。"
+      },
+      {
+        "id": "model-rdna4-launch",
+        "title": "AMD RDNA 4 / RX9000 发布公告",
+        "url": "https://ir.amd.com/news-events/press-releases/detail/1238/amd-unveils-next-generation-amd-rdna-4-architecture-with-the-launch-of-amd-radeon-rx-9000-series-graphics-cards",
+        "published": "2025-02-28",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "RDNA4及RX9070XT发布；当时宣布2025-03-06起伙伴供货。"
+      },
+      {
+        "id": "model-r9700",
+        "title": "AMD Radeon AI PRO R9700 官方规格",
+        "url": "https://www.amd.com/en/products/graphics/workstations/radeon-ai-pro/ai-9000-series/amd-radeon-ai-pro-r9700.html",
+        "published": "未标日期（动态产品页）",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "RDNA4、32GB GDDR6、640GB/s、300W TBP、ECC仅Linux支持、双槽工作站定位。"
+      },
+      {
+        "id": "model-r9700-launch",
+        "title": "AMD R9700 伙伴工作站供货公告",
+        "url": "https://www.amd.com/en/blogs/2025/amd-radeon-ai-pro-r9700-to-be-available-in-workstation.html",
+        "published": "2025-07-17",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "2025-07-23为预装工作站起点；裸卡原计划稍后Q3推出；不要混成同日裸卡全面上市。"
+      },
+      {
+        "id": "model-gaudi3",
+        "title": "Intel Gaudi 3 Technical Paper，2025-07 V1 Rev.3",
+        "url": "https://cdrdv2-public.intel.com/817486/gaudi-3-ai-accelerator-white-paper.pdf",
+        "published": "2025-07（V1 Rev.3）",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "双计算裸片、TPC/MME、OAM与HBM2e128GB、3.7TB/s、900W；96MB SRAM单列。"
+      },
+      {
+        "id": "model-gaudi3-launch",
+        "title": "Intel Xeon 6 / Gaudi 3 发布公告",
+        "url": "https://www.intel.com/content/www/us/en/newsroom/news/next-generation-ai-solutions-xeon-6-gaudi-3.html",
+        "published": "2024-09-24",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "Gaudi3发布、64TPC/8MME、OAM与PCIe形态差异。"
+      },
+      {
+        "id": "model-gaudi3-availability",
+        "title": "Intel Gaudi 3 Dell 平台供货公告",
+        "url": "https://www.intel.com/content/www/us/en/newsroom/news/artificial-intelligence/intel-gaudi-3-expands-availability-drive-ai-innovation-scale.html",
+        "published": "2025-05-19",
+        "accessed": "2026-11-08",
+        "status": "已读取正文",
+        "scope": "通过Dell AI Factory提供；8加速器XE9680与单加速器HBM参数分清。"
+      }
+    ]
+  },
+  "bottlenecks": {
+    "intro": [
+      "先确定任务，再判断瓶颈。同一颗 GPU 跑训练、长文档预填充、逐 Token 解码或科学计算时，限制可能落在不同位置；型号表中的峰值只能说明边界，不能替代实际工作负载的测量。",
+      "这张难点地图按因果链阅读：任务需要什么 → 哪一层资源受限 → 用户会看到什么 → 用什么指标定位 → 有哪些解决路径及代价。一次优化还可能把瓶颈转移到下一层，例如加大批量提高计算利用率，也会增加显存占用和排队延迟。",
+      "下文的症状和情景均为教学判断，不是某款产品的实测结论。已核验的型号规格会单独标明；从通用原理推导的可能影响也会明确标为机制推断。原专题中的 2026 年厂商发布、送样和量产状态未在此全面复核，不作为这张地图的新事实。"
+    ],
+    "items": [
+      {
+        "id": "compute-utilization",
+        "title": "有计算单元，却没有足够合适的工作可做",
+        "question": "为什么更高的 矩阵算力，未必换来更快的训练或推理？",
+        "mechanism": [
+          "任务要先被拆成适合并行执行的算子。小批量、形状不合适的矩阵、连续的小算子或串行依赖，都会让计算单元等待；寄存器与共享内存的占用，又会限制同时驻留的工作数量。模型支持某种低精度，也不意味着每个算子都能进入对应的高速计算路径。",
+          "因此，理论峰值与端到端速度之间隔着任务形状、执行路径和调度。提高并行度能摊薄启动成本，但批量扩大后还要承担更大的工作集与排队时间。占用率也只是诊断线索，不能把占用率提高的百分比直接当成性能增幅。"
+        ],
+        "symptoms": [
+          "同一模型的小批量吞吐较低，批量增加后单位请求开销下降。",
+          "GPU 时间线上存在空隙，或大量很短的 kernel 夹杂频繁同步。",
+          "更换计算峰值更高的设备后，端到端耗时改善有限。"
+        ],
+        "metrics": [
+          "固定模型、精度与输入形状下的迭代时间或 Token/s，同时记录首 Token 与尾延迟。",
+          "算子时间占比、Tensor 执行路径、并行计算组活动情况（NVIDIA称SM）与 kernel 启动间隙。",
+          "寄存器/共享内存用量、驻留限制与分支或同步等待；不把单一 GPU 利用率读数当作答案。"
+        ],
+        "approaches": [
+          {
+            "route": "调整矩阵分块、批量和算子实现",
+            "gain": "提供更多适合并行计算的工作，减少计算单元等待。",
+            "cost": "更大的显存工作集；批处理可能增加排队延迟，最优配置随任务改变。"
+          },
+          {
+            "route": "融合小算子，复用可捕获的执行图",
+            "gain": "减少主机启动与同步开销，缩短计算之间的空档。",
+            "cost": "动态形状、控制流和调试更复杂；融合还可能增加单个 kernel 的资源压力。"
+          },
+          {
+            "route": "在精度验证后使用适配的低精度路径",
+            "gain": "可能同时降低计算与数据搬运需求。",
+            "cost": "需要检查精度、校准和算子覆盖，收益不能由宣传峰值直接推算。"
+          }
+        ],
+        "appliesTo": "涉及计算裸片、编译器、算子库与框架。H200/Hopper 是原章节的架构示例；其他矩阵加速 GPU 也可能遇到类似问题，具体低精度路径与资源限制须按型号核查。",
+        "chainLink": "工作负载 → 框架/编译器 → 算子形状与调度 → 并行计算组和矩阵执行单元；随后可能转向显存容量或带宽限制。",
+        "verify": "机制依据：CUDA 与 TensorRT 官方文档说明并行度、驻留资源、批处理和启动开销的影响。本条未给出任何型号的实际利用率或加速倍数；要证明某款卡受此限制，需提供其算子剖析及同条件对照。",
+        "links": [
+          {
+            "label": "SM 内的执行分工",
+            "url": "gpu.html#sm"
+          },
+          {
+            "label": "Tensor Core 与矩阵形状",
+            "url": "gpu.html#tensor"
+          },
+          {
+            "label": "SFU 与非矩阵工作",
+            "url": "gpu.html#sfu"
+          },
+          {
+            "label": "缓存和数据搬运",
+            "url": "gpu.html#cache"
+          }
+        ],
+        "sourceIds": [
+          "bottle-cuda-bp",
+          "bottle-trt-opt"
+        ]
+      },
+      {
+        "id": "memory-capacity",
+        "title": "任务的活跃数据，超过可用显存",
+        "question": "模型权重明明能装下，为什么长上下文或增加并发后仍然失败？",
+        "mechanism": [
+          "任务需要同时驻留的不只是权重。训练还有激活、梯度和优化器状态；自回归推理还有随上下文与活跃请求增长的 KV Cache，以及工作区、运行时保留和内存管理开销。标称容量不是全部可供模型自由使用的空间。",
+          "容量不足会迫使任务缩小批量、切分到多卡，或把部分数据移到主机内存。扩容解决的是能否容纳工作集；如果每一步仍要搬运大量数据，迁移链路和显存带宽会继续限制速度，不能把更多 GB 直接换算成更多 Token/s。"
+        ],
+        "symptoms": [
+          "加载能成功，但更长输入、更多并发或训练反向阶段出现显存不足。",
+          "为容纳任务降低批量后，吞吐下降或排队增加。",
+          "开启主机卸载后任务能够运行，但延迟出现明显波动。"
+        ],
+        "metrics": [
+          "峰值已分配与已保留显存，并按权重、状态/KV、激活和工作区拆分。",
+          "可服务的上下文长度与并发组合，以及该组合下的延迟和吞吐。",
+          "内存碎片、KV 淘汰/命中、主机卸载流量与迁移时间。"
+        ],
+        "approaches": [
+          {
+            "route": "量化、精简状态，或在语义允许时管理 KV 的保留与复用",
+            "gain": "降低每个模型或请求的显存需求，增加可容纳的工作量。",
+            "cost": "量化需要准确性验证；KV 复用依赖可匹配的前缀与访问模式。"
+          },
+          {
+            "route": "训练采用重计算，服务限制或分块调度活跃请求",
+            "gain": "用计算或调度换取峰值容量空间。",
+            "cost": "重计算增加工作量；调度限制可能增加等待时间。"
+          },
+          {
+            "route": "增加显存、跨卡分片，或卸载到主机内存",
+            "gain": "让更大的工作集得以运行。",
+            "cost": "增加设备成本与通信；主机容量层不能按本地显存的访问速度使用。"
+          }
+        ],
+        "appliesTo": "涉及板卡/模组显存配置、模型运行时、主机内存和多卡部署。型号证据：查询时 NVIDIA 官方 H200 页列出 H200 SXM 的 141 GB HBM3E；这只证明该规格边界，不证明任意模型的可用容量或可服务并发。",
+        "chainLink": "模型与请求 → 活跃工作集 → 显存配置/分配器 → 主机卸载或多卡分片 → 链路通信。",
+        "verify": "已核验型号规格与通用机制分开使用。H200 产品页仍附有规格可能调整的说明；实际可用显存须在目标环境查询。KV 复用/卸载的机制由官方运行时文档支持，训练与其他框架的收益需另外测量。",
+        "links": [
+          {
+            "label": "不同存储层的职责",
+            "url": "memory.html#types"
+          },
+          {
+            "label": "显存与模块层次",
+            "url": "gpu.html#anatomy"
+          },
+          {
+            "label": "分层内存的迁移问题",
+            "url": "trends.html#tiering"
+          },
+          {
+            "label": "多 GPU 不是无代价共享内存",
+            "url": "gpu.html#system"
+          }
+        ],
+        "sourceIds": [
+          "bottle-h200",
+          "bottle-kv-cache",
+          "bottle-cuda-bp"
+        ]
+      },
+      {
+        "id": "memory-bandwidth",
+        "title": "数据搬得比计算单元消耗得慢",
+        "question": "显存没有满，为什么计算单元仍然在等数据？",
+        "mechanism": [
+          "某些任务每完成一份有效计算，就要从片外显存读取或写回较多字节。如果数据复用不足，执行时间会更多地受搬运限制。逐 Token 解码在较小批量下可能呈现这种特征；它是工作负载判断，不能推广为所有模型、批量和解码实现的固定结论。",
+          "理论带宽来自接口的物理上限；实际访问还受连续性、缓存、冗余流量和读写组合影响。程序申请的有效字节与硬件实际搬运的字节也不同。减少一次不必要的显存往返，往往同时节省时间、容量压力和能量。"
+        ],
+        "symptoms": [
+          "显存容量仍有余量，但增加计算峰值难以明显缩短热点算子时间。",
+          "访问不连续或中间张量频繁写回时，带宽效率较差。",
+          "分块、融合或复用缓存后，速度改善大于增加算术操作数带来的影响。"
+        ],
+        "metrics": [
+          "热点算子的有效读写字节/时间，并与硬件 DRAM 实际流量对照。",
+          "每字节对应的有效计算量、缓存命中情况和访存等待。",
+          "固定输入与批量下的 Token/s、Token/J；比较带宽时统一 GB/s 与 GiB/s、单堆栈与整设备口径。"
+        ],
+        "approaches": [
+          {
+            "route": "分块、缓存复用与 IO 感知的算子实现",
+            "gain": "减少重复片外读写；FlashAttention 是这一思路的已有算法例子。",
+            "cost": "受片上存储与形状约束，需要实现和验证；收益随任务变化。"
+          },
+          {
+            "route": "改善数据布局并合并访问，避免不必要的中间张量",
+            "gain": "让实际传输中更多字节服务于有效工作。",
+            "cost": "格式转换可能抵消收益，必须检查端到端时间。"
+          },
+          {
+            "route": "采用更高有效带宽的显存方案，或在延迟允许时增大批量",
+            "gain": "扩大数据供给，或让权重读取服务于更多请求。",
+            "cost": "显存与封装成本、功耗和容量需求增加；延迟目标可能限制批量。"
+          }
+        ],
+        "appliesTo": "涉及 GDDR 显卡和 HBM 加速器的数据通路、缓存及内核实现。H200 官方页列出的 4.8 TB/s 是显存规格，不是任意应用的有效带宽；不同型号的实际瓶颈须在同一工作负载下判定。",
+        "chainLink": "算法数据复用 → 寄存器/片上存储 → 片外显存流量 → 显存接口 → 功耗与封装。",
+        "verify": "有效/实际带宽的区别由 CUDA 官方指南支持；FlashAttention 论文支持减少 HBM 与 SRAM 间访问的机制。小批量解码的带宽倾向属于机制推断，本条没有声称任何型号已被某一具体模型跑满。",
+        "links": [
+          {
+            "label": "理论带宽与实际带宽",
+            "url": "memory.html#bandwidth"
+          },
+          {
+            "label": "缓存、TMA 与 FlashAttention",
+            "url": "gpu.html#cache"
+          },
+          {
+            "label": "GDDR 与 HBM 的物理取舍",
+            "url": "memory.html#gddr"
+          },
+          {
+            "label": "减少数据移动的研究方向",
+            "url": "trends.html#pim"
+          }
+        ],
+        "sourceIds": [
+          "bottle-cuda-bp",
+          "bottle-flashattention",
+          "bottle-h200"
+        ]
+      },
+      {
+        "id": "interconnect-communication",
+        "title": "加了更多 GPU，却把时间花在交换数据",
+        "question": "为什么单卡快，扩到多卡或跨节点后却难以按卡数加速？",
+        "mechanism": [
+          "分布式训练需要同步状态或梯度，模型分片推理也会在计算阶段之间交换数据。把任务切得更细，可以降低每卡工作量，却可能增加通信次数或比例；小消息还会受到启动与同步延迟影响。远端显存因此不能按本地显存的代价访问。",
+          "实际通信路径由设备互连、拓扑、网络和软件配置共同决定。链路标称速率不等于某次集合通信的有效吞吐；同一批卡也可能因放置位置或直通路径不同而表现不同。是否能将通信隐藏在计算背后，同样取决于数据依赖和并行策略。"
+        ],
+        "symptoms": [
+          "增加 GPU 后总吞吐有改善，但每卡吞吐下降，甚至整体变慢。",
+          "时间线中集合通信或同步等待占比上升。",
+          "同卡数的不同节点或拓扑组合，完成时间差异明显。"
+        ],
+        "metrics": [
+          "固定总任务或固定每卡任务下的扩展效率，明确采用哪种口径。",
+          "通信时间、消息大小分布、计算/通信重叠比例与慢设备等待。",
+          "GPU 间和 GPU 到网卡的实际带宽/延迟、P2P 可达性、拓扑及网络拥塞。"
+        ],
+        "approaches": [
+          {
+            "route": "调整数据、张量或流水线并行的切分与放置",
+            "gain": "减少关键路径上的远端访问，匹配近端和跨节点资源。",
+            "cost": "内存均衡、调度与负载不均问题更复杂。"
+          },
+          {
+            "route": "合并适合的消息，并将可重叠通信与计算流水化",
+            "gain": "摊薄通信启动成本，减少显露在关键路径上的等待。",
+            "cost": "需要额外缓冲和正确的依赖管理，可能延迟部分数据的发送。"
+          },
+          {
+            "route": "核对直通路径并升级匹配的互连或网络",
+            "gain": "排除配置绕路，或扩大必要通信的传输能力。",
+            "cost": "涉及服务器、网卡、交换设备与运维；仍不能消除算法自身的通信量。"
+          }
+        ],
+        "appliesTo": "涉及多 GPU 服务器、NVLink/PCIe 等机内连接、GPU 到网卡路径与跨节点网络。H200 等支持互连的设备是否有效受益，还取决于实际系统形态；不能由 GPU 型号推定整机拓扑。",
+        "chainLink": "并行策略 → 服务器拓扑 → GPU 互连/网卡 → 交换网络 → 集群调度与通信库。",
+        "verify": "NCCL 官方文档支持拓扑、P2P 与 GPU Direct 配置会影响通信的机制。扩展效率下降只是线索，也可能来自数据加载或负载不均；本条没有多卡型号排名或实测加速比。",
+        "links": [
+          {
+            "label": "从单卡到多卡和集群",
+            "url": "gpu.html#system"
+          },
+          {
+            "label": "系统互连的产业分工",
+            "url": "ecosystem.html#companies"
+          },
+          {
+            "label": "系统关键指标",
+            "url": "ecosystem.html#metrics"
+          },
+          {
+            "label": "分层存储与远端访问",
+            "url": "trends.html#tiering"
+          }
+        ],
+        "sourceIds": [
+          "bottle-nccl",
+          "bottle-cuda-bp"
+        ]
+      },
+      {
+        "id": "packaging-yield",
+        "title": "能把芯片连起来，还要能稳定产出合格模组",
+        "question": "为什么有 GPU 裸片、有 HBM 堆栈，仍不等于有可交付加速器？",
+        "mechanism": [
+          "任务对容量和带宽的要求，会转化为更多存储裸片、堆栈与高密度连接。HBM 层内堆叠和 GPU+HBM 的系统级封装是不同工艺链，最终必须一起通过连接、热与功能验证；任何阶段的缺陷都可能把已投入的昂贵部件变成损失。",
+          "因此，先进封装需要同时考虑连接密度、材料形变、可测试性和生产节拍。已知良品裸片可以降低把坏芯片装入系统的风险，却不能证明后续键合和组装不会产生新缺陷。更多中间测试能提前拦截问题，也会增加测试时间与制造成本。"
+        ],
+        "symptoms": [
+          "器件样品达到目标，但合格模组的稳定产出或成本仍不理想。",
+          "单部件测试通过，组装后的带宽、连接或热可靠性测试失败。",
+          "产出受限于堆叠、基板、系统封装或测试中的某一道工序。"
+        ],
+        "metrics": [
+          "分别记录裸片、堆栈、组装和最终测试的良率，写明分母与筛选阶段。",
+          "每小时合格产出、设备节拍、测试覆盖/时间、返工与报废成本。",
+          "每个合格模组的成本及热循环/连接可靠性；不使用假设良率乘积代替真实产线数据。"
+        ],
+        "approaches": [
+          {
+            "route": "采用已知良品与分阶段测试，保留缺陷追踪",
+            "gain": "尽早拦截问题，减少后段昂贵组件的连带报废。",
+            "cost": "测试设备、时间、设计接口与处理步骤增加。"
+          },
+          {
+            "route": "协同选择中介层、RDL、局部硅桥等连接结构",
+            "gain": "在连接密度、封装尺寸与制造条件间寻找可行方案。",
+            "cost": "需要重新验证信号、电源、机械与热设计，不能只按工艺名称排序。"
+          },
+          {
+            "route": "优化堆叠、键合、材料与热路径",
+            "gain": "降低连接缺陷和热机械压力，改善合格产出。",
+            "cost": "新工艺需要设备、过程控制与可靠性验证；研究路线不等于量产能力。"
+          }
+        ],
+        "appliesTo": "直接涉及 HBM 厂商、先进封装、基板、设备、检测与模组环节。H200 官方确认采用 HBM3E，可作为集成产品的入口；本条不披露也不推定 H200 或任何新型号的真实封装良率、供应商分配与产能。",
+        "chainLink": "DRAM/逻辑裸片 → HBM 堆叠 → GPU+HBM 系统封装 → 模组测试 → 服务器验证。",
+        "verify": "TSMC 官方页支持多 SoC/HBM 集成与不同互连结构；SK hynix 官方研究页列出容量、堆叠、热和可靠性的共同约束；Amkor 白皮书支持多阶段测试的必要性。本条的产出瓶颈是机制分析，不是对某条 2026 年产线的调查结论。",
+        "links": [
+          {
+            "label": "两个封装层级",
+            "url": "packaging.html#overview"
+          },
+          {
+            "label": "CoWoS 的结构取舍",
+            "url": "packaging.html#cowos"
+          },
+          {
+            "label": "HBM 堆叠工序",
+            "url": "packaging.html#stack"
+          },
+          {
+            "label": "良率与测试",
+            "url": "packaging.html#yield"
+          },
+          {
+            "label": "混合键合的条件",
+            "url": "packaging.html#bond"
+          }
+        ],
+        "sourceIds": [
+          "bottle-cowos",
+          "bottle-hbm-package",
+          "bottle-amkor-test",
+          "bottle-h200"
+        ]
+      },
+      {
+        "id": "power-thermal",
+        "title": "瞬时能跑得快，供电与热量未必允许长期维持",
+        "question": "为什么同一任务刚启动很快，持续运行后却降速？",
+        "mechanism": [
+          "持续计算与访存需要电源不断供能，并把热量经封装、散热界面和系统冷却排出。低压大电流带来供电路径与转换损耗；局部热点和材料界面热阻，会使机房空气温度之外的条件也影响器件温度。",
+          "功率限制、温度控制或系统电源约束都可能降低运行频率。它们需要与任务剖析一起解释：低功耗可能来自等待数据，也可能来自限频；高功耗则不保证高有效吞吐。模块 TDP、实际模块功率和整机/冷却能耗属于不同口径。"
+        ],
+        "symptoms": [
+          "长时间运行的频率与吞吐低于短时测量，且伴随功率或温度限制事件。",
+          "同一节点内设备表现不齐，需要排查风道、接触与冷却分布。",
+          "扩大机柜配置后，电力或冷却条件先于 GPU 数量成为部署约束。"
+        ],
+        "metrics": [
+          "在相同采样时间线上记录吞吐、频率、实际功率、温度和限频原因。",
+          "区分模块功率上限、模块实耗、整机与设施用电，评估 Token/J 或任务/J。",
+          "持续稳定阶段的性能、供电余量和冷却条件，而非只测启动时峰值。"
+        ],
+        "approaches": [
+          {
+            "route": "减少无效数据搬运，按有效吞吐调优频率与功率配置",
+            "gain": "改善单位任务能耗，并可能减少热压力。",
+            "cost": "功率收紧可能降低峰值性能，需要以实际业务目标比较。"
+          },
+          {
+            "route": "协同优化供电网络、封装热路径与散热界面",
+            "gain": "减少电压损失和热点对可持续性能的限制。",
+            "cost": "增加材料、结构设计与可靠性验证成本。"
+          },
+          {
+            "route": "让服务器和机柜冷却、电源配置匹配持续负载",
+            "gain": "提高长时间运行的稳定性与部署密度。",
+            "cost": "涉及设施投入、维护与安装条件，不能仅按单卡价格比较。"
+          }
+        ],
+        "appliesTo": "涉及所有高负载 GPU 的裸片、HBM/GDDR、封装、模组电源与机柜冷却。已核验例子：H200 官方页把 SXM 模组最高可配置 TDP 列为 700 W；这不是裸片单独耗电、所有任务实耗或服务器总功耗。",
+        "chainLink": "算子活动 → 器件功耗 → 模组供电/封装热阻 → 服务器冷却 → 机柜与设施。",
+        "verify": "NVIDIA 管理工具文档区分功率、热与外部电源导致的时钟限制。瓶颈诊断仍须同步测量，不能由温度或功率单点值断言原因；本条没有某型号的显存功耗比例或持续性能实测。",
+        "links": [
+          {
+            "label": "功耗应按什么口径看",
+            "url": "gpu.html#power"
+          },
+          {
+            "label": "供电与信号完整性",
+            "url": "packaging.html#power"
+          },
+          {
+            "label": "翘曲、热阻与材料失配",
+            "url": "packaging.html#warpage"
+          },
+          {
+            "label": "三维集成的热挑战",
+            "url": "trends.html#zhbm"
+          }
+        ],
+        "sourceIds": [
+          "bottle-smi",
+          "bottle-hbm-package",
+          "bottle-h200"
+        ]
+      },
+      {
+        "id": "software-ecosystem",
+        "title": "硬件提供了能力，软件还要正确地用起来",
+        "question": "为什么规格相近的设备，迁移同一模型却有不同的工程成本与表现？",
+        "mechanism": [
+          "业务性能依赖驱动、编译器、框架、算子库、通信库和模型实现共同覆盖目标硬件。硬件支持的精度或指令，需要软件选择正确的执行路径；缺少适配时，可能出现不支持、回退、额外转换或调优不足。",
+          "部署又要求结果正确、版本可复现和升级可控。低精度、融合和近存计算等路径都要检查数值与语义；驱动及运行时之间的兼容也有边界。因而比较生态，应看完成既定任务所需的适配、验证与维护工作，而不是只数支持了多少名称。"
+        ],
+        "symptoms": [
+          "程序能够启动，但热点算子没有走预期的加速路径。",
+          "迁移设备或升级软件后，出现不支持的算子、编译问题或性能回退。",
+          "速度提高后，任务准确性、收敛或结果一致性未达到要求。"
+        ],
+        "metrics": [
+          "目标模型与形状的算子覆盖、回退/转换时间和端到端耗时。",
+          "在明确准确性标准下的吞吐、延迟与能耗。",
+          "可复现的软硬件版本组合、适配工时、构建部署时间与升级回归。"
+        ],
+        "approaches": [
+          {
+            "route": "固定可复现环境，核对兼容要求并建立任务基线",
+            "gain": "降低版本漂移，便于发现性能与正确性回退。",
+            "cost": "需要版本维护与升级验证，固定版本也可能暂时错过新优化。"
+          },
+          {
+            "route": "优先使用已覆盖目标任务的库，并针对热点补充适配",
+            "gain": "缩短达到可用性能的时间，把工程投入集中到关键路径。",
+            "cost": "可能形成实现依赖，跨平台需要重新核验覆盖与表现。"
+          },
+          {
+            "route": "将精度与任务结果验证纳入每次优化",
+            "gain": "确保获得的是符合业务要求的有效加速。",
+            "cost": "需要代表性数据与回归时间，某些优化会因准确性要求被舍弃。"
+          }
+        ],
+        "appliesTo": "涉及所有 GPU 平台的软件栈及应用团队。H200 可作为 CUDA 栈实例；外推到其他厂商时，本条仅给评估方法，不把某厂商软件支持情况或生态成熟度当作已核验结论。",
+        "chainLink": "硬件能力 → 驱动/编译器 → 算子与通信库 → 框架 → 模型语义与业务验收。",
+        "verify": "CUDA 兼容文档明确兼容条件与功能限制；TensorRT 文档支持执行路径、融合和形状条件会影响优化。本条没有对 NVIDIA、AMD 或 Intel 作生态排名；具体选择需要目标模型与版本的可复现验证。",
+        "links": [
+          {
+            "label": "硬件能力与真实计算路径",
+            "url": "gpu.html#tensor"
+          },
+          {
+            "label": "专用指令仍有任务依赖",
+            "url": "gpu.html#dpx"
+          },
+          {
+            "label": "新架构的生态证据",
+            "url": "trends.html#watch"
+          },
+          {
+            "label": "按解决的瓶颈判断价值",
+            "url": "ecosystem.html#judgment"
+          }
+        ],
+        "sourceIds": [
+          "bottle-compat",
+          "bottle-trt-opt"
+        ]
+      },
+      {
+        "id": "reliability-delivery",
+        "title": "跑出样品性能之后，还要持续交付正确结果",
+        "question": "为什么系统验收与长期运维，也是有效算力的一部分？",
+        "mechanism": [
+          "长期训练与在线服务需要整套系统在目标条件下稳定工作。器件通过部件测试，并不替代服务器互连、供电、冷却与应用验证；内存错误、链路异常或恢复操作都可能让正在运行的任务停顿。可靠性机制可以限制部分故障的影响，但其支持范围与恢复条件必须按设备和软件查证。",
+          "交付还要求 GPU、显存、封装、板级系统与设施按时汇合，并能维护、替换和恢复。有效算力因此应按符合质量要求的结果来衡量：验收未通过、停机或需要重跑的时间，不能算作已交付的业务吞吐。这个因果框架不能用于推定某家公司当前缺货或某型号的故障率。"
+        ],
+        "symptoms": [
+          "短测试通过，长作业却出现错误、重置、重跑或不可解释的中断。",
+          "设备已经到货，但系统验证、网络或电力冷却条件尚未完成。",
+          "实验吞吐较高，计入维护、恢复和失败任务后，实际服务能力偏低。"
+        ],
+        "metrics": [
+          "任务成功率、满足质量与延迟要求的有效吞吐、可用时间。",
+          "可纠正/不可纠正错误及恢复事件，结合厂商定义解释，不把计数直接等同于故障率。",
+          "检查点与恢复耗时、重跑工作量、整机验收通过率和各交付环节的就绪状态。"
+        ],
+        "approaches": [
+          {
+            "route": "按目标任务进行系统验收与持续监测",
+            "gain": "发现部件测试未覆盖的系统问题，把错误与性能变化联系起来。",
+            "cost": "占用验收时间和设备资源，需要保留可分析的运行记录。"
+          },
+          {
+            "route": "为长作业设置检查点，为服务准备隔离和恢复路径",
+            "gain": "降低单次异常造成的业务损失。",
+            "cost": "增加存储、冗余资源与恢复工程开销；不能消除底层故障。"
+          },
+          {
+            "route": "以合格系统为单位协调组件、基础设施与维护资源",
+            "gain": "减少单个环节就绪、整套系统却无法投入运行的落差。",
+            "cost": "需要跨供应商协调、兼容验证和备用资源，交付能力不能只看晶圆或显存产能。"
+          }
+        ],
+        "appliesTo": "涉及 GPU 厂商、HBM/封装测试、服务器集成商、集群运维和设施团队。官方内存错误文档说明部分 NVIDIA 架构具有相应恢复机制；是否适用于某款卡及何种故障，须核对支持列表，不能推广到全部 GPU。",
+        "chainLink": "部件合格 → 整机与集群验收 → 监测/故障隔离 → 任务恢复 → 持续业务交付。",
+        "verify": "Amkor 白皮书支持部件、最终及系统级测试的区别；NVIDIA 文档说明行重映射等错误管理的机制与重置条件。关于最终交付受多个环节制约的表述是系统工程推断，不含 2026 年交期、产能或故障率的新断言。",
+        "links": [
+          {
+            "label": "从裸片到整机的测试",
+            "url": "packaging.html#yield"
+          },
+          {
+            "label": "供应链需要多环节汇合",
+            "url": "ecosystem.html#chain"
+          },
+          {
+            "label": "制造与系统指标的边界",
+            "url": "ecosystem.html#metrics"
+          },
+          {
+            "label": "从样品到部署要看哪些证据",
+            "url": "trends.html#watch"
+          }
+        ],
+        "sourceIds": [
+          "bottle-amkor-test",
+          "bottle-ras",
+          "bottle-nccl"
+        ]
+      }
+    ],
+    "scenarios": [
+      {
+        "title": "教学情景：长文档问答，增加上下文或并发后装不下",
+        "observations": [
+          "假设权重加载成功，短请求运行正常。",
+          "假设更长的输入或更多活跃请求导致显存分配失败，或触发卸载。"
+        ],
+        "reasoning": "先检查容量链：权重之外的 KV 与临时工作集可能超过余量。若卸载后能运行但变慢，再检查迁移流量与链路；不能仅凭显存不足就判断计算单元不够，也不能把换大显存后的吞吐改善当成带宽实测。",
+        "firstChecks": [
+          "固定模型、精度和请求长度，逐项记录峰值显存及 KV/工作区占用。",
+          "在不同上下文与并发组合下观察失败边界、排队和延迟。",
+          "确认是否发生主机卸载，记录复制流量与等待时间。"
+        ],
+        "links": [
+          {
+            "label": "容量瓶颈",
+            "url": "#memory-capacity"
+          },
+          {
+            "label": "分层存储",
+            "url": "trends.html#tiering"
+          }
+        ]
+      },
+      {
+        "title": "教学情景：预填充较顺畅，逐 Token 输出仍然慢",
+        "observations": [
+          "假设同一模型的预填充与解码阶段表现不同。",
+          "假设低并发时每 Token 延迟偏高，适度合并请求后总吞吐改善。"
+        ],
+        "reasoning": "先把阶段分开：预填充能够提供较大矩阵工作，解码的矩阵形状、数据复用和启动成本不同。低批量解码可能受显存流量限制，也可能由小算子启动或依赖主导。必须同时看数据流与执行时间线；这是定性假设，不是所有模型的固定规律。",
+        "firstChecks": [
+          "分别统计首 Token 时间、每 Token 时间和两阶段的热点算子。",
+          "比较 DRAM 流量、Tensor 活动与 kernel 间隙，辨认等待来自哪里。",
+          "在同一延迟目标下改变批量，记录吞吐、显存和排队代价。"
+        ],
+        "links": [
+          {
+            "label": "计算利用",
+            "url": "#compute-utilization"
+          },
+          {
+            "label": "显存带宽",
+            "url": "#memory-bandwidth"
+          },
+          {
+            "label": "缓存与 IO 优化",
+            "url": "gpu.html#cache"
+          }
+        ]
+      },
+      {
+        "title": "教学情景：分布式训练增加节点，速度却没有随之增长",
+        "observations": [
+          "假设单节点结果稳定，跨节点后每轮等待变长。",
+          "假设增加卡数后，每卡计算量下降，而同步时间占比上升。"
+        ],
+        "reasoning": "这符合通信或同步成为关键路径的机制，也需要排除输入管道、负载不均和异常设备。先明确是固定总任务还是固定每卡任务，再比较；否则扩展效率的分母不同，结论没有可比性。",
+        "firstChecks": [
+          "记录每轮计算、集合通信、输入与等待时间。",
+          "核对实际拓扑、P2P/GPU 到网卡路径，测量对应消息规模的通信。",
+          "比较不同并行切分及节点放置，观察通信是否可被计算覆盖。"
+        ],
+        "links": [
+          {
+            "label": "互连与通信",
+            "url": "#interconnect-communication"
+          },
+          {
+            "label": "系统层级",
+            "url": "gpu.html#system"
+          }
+        ]
+      },
+      {
+        "title": "教学情景：短时测试很快，持续服务后变慢或重跑",
+        "observations": [
+          "假设任务形状保持不变，运行一段时间后吞吐下降。",
+          "假设部分作业出现恢复事件，或设备之间持续表现不齐。"
+        ],
+        "reasoning": "先用同步记录区分功率/热限制、输入变化和故障恢复。若频率下降同时出现限频原因，可沿供电与冷却链检查；若有错误或重置，则沿可靠性链分析。不能只用温度高或一条错误日志解释全部慢请求。",
+        "firstChecks": [
+          "将吞吐、频率、功率、温度和限制事件放到同一时间线。",
+          "核对错误类别、发生设备及恢复动作，计算丢失和重跑的工作量。",
+          "比较稳定阶段的有效吞吐与任务能耗，并复核整机验收条件。"
+        ],
+        "links": [
+          {
+            "label": "供电与散热",
+            "url": "#power-thermal"
+          },
+          {
+            "label": "可靠性与交付",
+            "url": "#reliability-delivery"
+          },
+          {
+            "label": "功耗口径",
+            "url": "gpu.html#power"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "bottle-cuda-bp",
+        "title": "NVIDIA CUDA C++ Best Practices Guide",
+        "url": "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/",
+        "published": "未标注（持续更新文档）",
+        "accessed": "2026-11-08",
+        "status": "已读官方原文：并行评估、有效带宽、内存传输与占用率章节",
+        "scope": "支持通用性能诊断机制；不提供本专题具体型号的应用实测。"
+      },
+      {
+        "id": "bottle-trt-opt",
+        "title": "NVIDIA TensorRT — Optimizing TensorRT Performance",
+        "url": "https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/optimization.html",
+        "published": "未标注（持续更新文档）",
+        "accessed": "2026-11-08",
+        "status": "已读官方原文：批处理、执行图、融合与 Tensor Core 路径",
+        "scope": "支持软件实现与形状对性能的影响、优化代价；不把当前文档功能视为所有版本均支持。"
+      },
+      {
+        "id": "bottle-kv-cache",
+        "title": "NVIDIA TensorRT LLM — KV Cache System",
+        "url": "https://nvidia.github.io/TensorRT-LLM/features/kvcache.html",
+        "published": "未标注（持续更新文档）",
+        "accessed": "2026-11-08",
+        "status": "已读官方原文：分块、复用、内存分配与主机卸载",
+        "scope": "支持 KV 管理与迁移机制；不在正文复述可变默认参数，不保证其他运行时实现相同。"
+      },
+      {
+        "id": "bottle-flashattention",
+        "title": "Dao et al. — FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness",
+        "url": "https://arxiv.org/abs/2205.14135",
+        "published": "2022-05-27；所读 v2 修订于 2022-06-23",
+        "accessed": "2026-11-08",
+        "status": "已读论文摘要与版本记录",
+        "scope": "支持 IO 感知分块减少 HBM/SRAM 读写的算法原理；未将论文旧基准倍数转用于新型号。"
+      },
+      {
+        "id": "bottle-nccl",
+        "title": "NVIDIA NCCL User Guide — GPU troubleshooting",
+        "url": "https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/troubleshooting/gpu_troubleshooting.html",
+        "published": "未标注（持续更新文档）",
+        "accessed": "2026-11-08",
+        "status": "已读官方原文：GPU Direct、P2P、拓扑与配置诊断",
+        "scope": "支持实际通信路径会受系统配置影响；页面平台处置建议需按现场条件核对，本图不转录系统修改命令。"
+      },
+      {
+        "id": "bottle-cowos",
+        "title": "TSMC — CoWoS",
+        "url": "https://3dfabric.tsmc.com/english/dedicatedFoundry/technology/cowos.htm",
+        "published": "未标注（技术概览页）",
+        "accessed": "2026-11-08",
+        "status": "已读官方原文：多 SoC/HBM 集成、S/R/L 互连结构",
+        "scope": "支持封装结构和协同集成概念；不据此认定具体 GPU 供应关系、产能、良率或交期。"
+      },
+      {
+        "id": "bottle-hbm-package",
+        "title": "SK hynix — Advanced Memory Package Architecture",
+        "url": "https://research.skhynix.com/research-areas/advanced-package/advanced-memory-package-architecture",
+        "published": "未标注（研究方向页）",
+        "accessed": "2026-11-08",
+        "status": "已读官方原文：堆叠、互连、热路径与可靠性共同优化",
+        "scope": "支持通用封装约束；研究方向不能视为具体 HBM 型号已量产采用的工艺。"
+      },
+      {
+        "id": "bottle-amkor-test",
+        "title": "Gerard John / Amkor — Test Flow for Advanced Packages (2.5D/SLIM/3D)",
+        "url": "https://amkor.com/kr/wp-content/uploads/2017/12/Test_Flow_for_Advanced_Packages_WhitePaper_1115.pdf",
+        "published": "正文未标注发布日期（历史白皮书）",
+        "accessed": "2026-11-08",
+        "status": "已读官方白皮书：测试插入点、多部件合格产出与全速测试挑战",
+        "scope": "支持通用测试经济性和系统验证原理；不把历史设备参数当作当前 HBM/GPU 工艺规格。"
+      },
+      {
+        "id": "bottle-smi",
+        "title": "NVIDIA System Management Interface — nvidia-smi",
+        "url": "https://docs.nvidia.com/deploy/nvidia-smi/",
+        "published": "未标注（持续更新文档）",
+        "accessed": "2026-11-08",
+        "status": "已读官方原文：时钟限制原因、功率/温度事件及监测口径",
+        "scope": "支持功率、热和外部电源可能限制频率；不同产品可读指标不同，不保证所有设备支持全部字段。"
+      },
+      {
+        "id": "bottle-compat",
+        "title": "NVIDIA CUDA Compatibility — Minor Version Compatibility",
+        "url": "https://docs.nvidia.com/deploy/cuda-compatibility/minor-version-compatibility.html",
+        "published": "未标注（持续更新文档）",
+        "accessed": "2026-11-08",
+        "status": "已读官方原文：兼容条件、功能限制及库依赖",
+        "scope": "支持软件版本兼容存在边界；正文不复述当前驱动版本表，也不推断其他厂商的兼容规则。"
+      },
+      {
+        "id": "bottle-ras",
+        "title": "NVIDIA GPU Memory Error Management — Row Remapping",
+        "url": "https://docs.nvidia.com/deploy/a100-gpu-mem-error-mgmt/row-remapping.html",
+        "published": "页面最后更新于 2026-11-04",
+        "accessed": "2026-11-08",
+        "status": "已读官方原文：劣化位置替换、备份行与重置生效条件",
+        "scope": "支持特定架构内存错误管理的机制；不推断型号故障率，不声称恢复机制可覆盖所有错误。"
+      },
+      {
+        "id": "bottle-h200",
+        "title": "NVIDIA H200 GPU — 官方产品与规格页",
+        "url": "https://www.nvidia.com/en-us/data-center/h200/",
+        "published": "未标注（产品页）",
+        "accessed": "2026-11-08",
+        "status": "已读官方规格表；页面保留 Preliminary specifications / may be subject to change 提示",
+        "scope": "仅用于 H200 SXM 的 HBM3E、141 GB、4.8 TB/s 与最高可配置 700 W 规格示例；不采用营销性能倍数，不把规格当作应用实测。"
+      }
+    ]
+  },
+  "context": {
+    "architecture": {
+      "title": "先沿系统层次，再追一遍数据路径",
+      "intro": [
+        "型号告诉你买到什么，架构解释它为何快、又会在哪里等待。先区分计算裸片、GPU 与显存封装、模组、服务器节点、机柜五层；下文用 H200 / Hopper 拆解前几层，它是 NVIDIA 个案，不能代表所有 GPU 的内部命名与组织。",
+        "把一次任务串起来：数据从存储或主机内存进入设备，工作集驻留 HBM，经缓存、片上暂存与寄存器供给执行单元，结果写回；并行任务还要在 GPU、节点之间交换数据。这是研究路径，不是每次访问都必经的固定流水线。先问数据停在哪一层，再看算力峰值。"
+      ],
+      "steps": [
+        {
+          "title": "1 · 计算裸片：谁执行，数据怎样复用？",
+          "what": "沿 SM / CU、矩阵单元、缓存、共享暂存与寄存器理解指令和数据流。下文 SM、Tensor Core、SFU、DPX 与 TMA 以 Hopper 为例；DPX 指特定融合指令能力。",
+          "link": {
+            "label": "进入 Hopper 执行单元",
+            "url": "#sm"
+          }
+        },
+        {
+          "title": "2 · 封装：计算芯片怎样连接显存？",
+          "what": "GPU 裸片或芯粒与 HBM 堆栈通过封装互连协作。HBM 容量、带宽和封装布线属于不同约束；显存不是计算裸片里的 SRAM，封装也不等于整张卡。",
+          "link": {
+            "label": "核对 H200 的部件层次",
+            "url": "#anatomy"
+          }
+        },
+        {
+          "title": "3 · 模组或板卡：怎样供电、散热与接入？",
+          "what": "在封装之外加入电路板、供电和连接器，形成 SXM、PCIe 等具体产品形态。核对规格时要同时读形态、功率范围和冷却条件，不能把模组功率当成裸片功率。",
+          "link": {
+            "label": "读功耗的测量边界",
+            "url": "#power"
+          }
+        },
+        {
+          "title": "4 · 服务器节点：主机与多 GPU 如何协作？",
+          "what": "CPU、主机 DDR、PCIe、GPU 互连及网卡组成节点。检查数据装载、GPU 间通信与并行策略；节点的显存容量总和，不代表每块 GPU 都能以本地带宽访问全部显存。",
+          "link": {
+            "label": "查看单卡到系统的变化",
+            "url": "#system"
+          }
+        },
+        {
+          "title": "5 · 机柜与集群：计算怎样变成可交付吞吐？",
+          "what": "机柜集成节点、交换、供电和冷却，跨节点再受网络拓扑与软件调度约束。机柜内的连接域依具体系统而定；增加 GPU 数量，需要重新检查通信时间与功率预算。",
+          "link": {
+            "label": "把结构对应到产业交付",
+            "url": "ecosystem.html#chain"
+          }
+        }
+      ],
+      "vocabulary": [
+        {
+          "generic": "并行执行与调度组织",
+          "nvidia": "SM（Streaming Multiprocessor）",
+          "amd": "CU（Compute Unit，依 CDNA / RDNA 架构理解）",
+          "boundary": "二者可作职责层面的对照，结构、每周期工作量与计数口径不同；不能按 SM 数与 CU 数直接判断强弱。"
+        },
+        {
+          "generic": "矩阵乘加加速",
+          "nvidia": "Tensor Core",
+          "amd": "Matrix Core / MFMA 相关执行能力",
+          "boundary": "比较指定数据格式、稠密或稀疏、累加精度与实测任务；单元数量不是跨厂商等价单位。"
+        },
+        {
+          "generic": "动态规划相关融合指令",
+          "nvidia": "Hopper DPX 指令",
+          "amd": "按具体架构的 ISA 与软件实现核实",
+          "boundary": "DPX 是 NVIDIA 的具体能力名称，不能给其他 GPU 套用，也不宜画成一排独立 DPX 核心。"
+        },
+        {
+          "generic": "计算单元附近的片上暂存",
+          "nvidia": "Shared Memory（共享内存）",
+          "amd": "LDS（Local Data Share）",
+          "boundary": "可比较用途与容量约束，访问规则随架构而变；它们与 HBM 外部显存分属不同层次。"
+        }
+      ],
+      "researchLinks": [
+        {
+          "label": "型号：把参数放回具体产品形态",
+          "url": "models.html"
+        },
+        {
+          "label": "难点：判断算力、带宽还是通信先卡住",
+          "url": "bottlenecks.html"
+        },
+        {
+          "label": "显存：容量与带宽分别解决什么",
+          "url": "memory.html"
+        },
+        {
+          "label": "时间线：分清架构发布与产品交付",
+          "url": "timeline.html"
+        }
+      ],
+      "sourceLinks": [
+        {
+          "title": "NVIDIA · Hopper Architecture In-Depth",
+          "url": "https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/",
+          "scope": "Hopper 的 SM、Tensor Core、DPX 与数据搬运；作为本页 NVIDIA 个案依据。"
+        },
+        {
+          "title": "AMD · HIP Hardware Implementation",
+          "url": "https://rocmdocs.amd.com/projects/HIP/en/latest/understand/hardware_implementation.html",
+          "scope": "AMD CU、Matrix Core、LDS 与 CDNA / RDNA 区别；用于界定跨厂商术语。"
+        },
+        {
+          "title": "NVIDIA · HGX AI Factory Components",
+          "url": "https://docs.nvidia.com/enterprise-reference-architectures/hgx-ai-factory/latest/components.html",
+          "scope": "区分每 GPU、基板与节点；核对 CPU、系统内存、互连和网卡的系统位置。"
+        }
+      ]
+    },
+    "industry": {
+      "title": "沿交付物看产业链，沿约束找瓶颈",
+      "intro": [
+        "研究产业链先标出每一环节交付什么：设计、逻辑裸片、合格 HBM 堆栈、完成封装的器件，还是能运行任务的节点与机柜。逻辑芯片和 HBM 可并行制造，最终按规格、良率与交期汇合；单项扩产不能直接换算成可交付 GPU 数量。",
+        "下表把环节与观察指标对应起来，厂商名称只说明角色。Fabless 是设计经营模式，晶圆厂负责制造；HBM 是存储器，CoWoS 是 TSMC 的封装平台。OSAT 表示委外封装测试服务，具体 GPU 的供应关系仍须有对应产品、工序与认证证据。"
+      ],
+      "stages": [
+        {
+          "role": "芯片与系统设计",
+          "input": "任务需求、软件栈、接口与制造设计规则",
+          "output": "架构、芯片设计及系统规格",
+          "players": "NVIDIA、AMD 等设计厂商",
+          "watch": "应用吞吐、能效与软件适配；设计变更能否通过验证并进入制造。",
+          "boundary": "Fabless 不等于拥有晶圆制造能力；设计厂商的产品名称，也不能单独证明其每道工序由谁承接。"
+        },
+        {
+          "role": "逻辑晶圆制造",
+          "input": "经验证的设计、晶圆、设备与工艺材料",
+          "output": "可进入后续筛选与封装的逻辑裸片",
+          "players": "TSMC、Samsung Foundry、Intel Foundry 等制造角色",
+          "watch": "工艺匹配、晶圆良率和有效裸片产出；它们约束计算芯片交付。",
+          "boundary": "逻辑制程产能不是 DRAM 产能，也不是先进封装产能；列出晶圆厂不代表确认某型号采用其工艺。"
+        },
+        {
+          "role": "DRAM 制造与 HBM 堆叠",
+          "input": "DRAM 裸片、堆栈所需基底与 TSV / 键合工序",
+          "output": "满足容量、速率与可靠性要求的 HBM 堆栈",
+          "players": "SK hynix、Samsung、Micron 等存储厂商",
+          "watch": "堆叠良率、测试、热特性与客户认证；合格堆栈数量约束可装配数量。",
+          "boundary": "HBM 堆叠与 GPU 加 HBM 的系统封装是两道环节；某代产品公告不能外推所有客户均已量产采用。"
+        },
+        {
+          "role": "先进封装与基板",
+          "input": "合格逻辑裸片、HBM、中介层或桥接互连、封装基板",
+          "output": "完成高密度互连的 GPU 与显存封装器件",
+          "players": "TSMC CoWoS 等封装平台；基板与材料厂商按工序另查",
+          "watch": "面积、布线、翘曲、封装良率与基板交期；材料和设备节拍共同影响有效交付。",
+          "boundary": "CoWoS 是特定平台名称，不能代指全部先进封装；封装平台、基板制造商、键合设备商分别交付不同对象。"
+        },
+        {
+          "role": "筛选、封装测试与可靠性验证",
+          "input": "晶圆、裸片、封装器件及对应测试程序",
+          "output": "通过相应测试与分档的器件或模组",
+          "players": "封装平台及 ASE 等封测服务商（能力示例）",
+          "watch": "测试覆盖、测试时间与失效率；测试能力和前序良率会限制合格品放行。",
+          "boundary": "测试贯穿多个阶段，并非只在最后一次完成；OSAT 身份或公开能力不自动证明它承接某款 GPU。"
+        },
+        {
+          "role": "模组、节点与机柜集成",
+          "input": "GPU 器件、板卡、CPU、网络、电源、冷却与软件",
+          "output": "通过整机验证、可部署运行的节点或机柜",
+          "players": "系统厂商、ODM 与网络、供电、冷却供应商",
+          "watch": "系统联调、互连、功率与冷却预算；最终以可运行任务的交付和实际吞吐衡量。",
+          "boundary": "GPU 器件充足不保证机柜按期交付；节点、机柜和集群的容量与带宽统计口径须分别核对。"
+        }
+      ],
+      "researchLinks": [
+        {
+          "label": "型号：先锁定研究对象与产品形态",
+          "url": "models.html"
+        },
+        {
+          "label": "难点：把性能和交付约束对应起来",
+          "url": "bottlenecks.html"
+        },
+        {
+          "label": "封装：HBM 堆叠与系统封装的区别",
+          "url": "packaging.html"
+        },
+        {
+          "label": "本页指标：从产能走到有效产出",
+          "url": "#metrics"
+        },
+        {
+          "label": "时间线：核对送样、认证和量产阶段",
+          "url": "timeline.html"
+        }
+      ],
+      "sourceLinks": [
+        {
+          "title": "TSMC · Dedicated IC Foundry",
+          "url": "https://www.tsmc.com/english/dedicatedFoundry",
+          "scope": "纯晶圆代工的制造角色；区别设计经营模式与晶圆制造。"
+        },
+        {
+          "title": "Samsung · HBM 产品介绍",
+          "url": "https://semiconductor.samsung.com/dram/hbm/",
+          "scope": "HBM 的 DRAM 与 TSV 堆叠属性；不用于判断市场份额或具体 GPU 供货。"
+        },
+        {
+          "title": "TSMC · CoWoS 平台",
+          "url": "https://3dfabric.tsmc.com/english/dedicatedFoundry/technology/cowos.htm",
+          "scope": "逻辑与 HBM 的异构集成，以及 CoWoS-S / R / L 的互连差别；不用于推断客户分配。"
+        },
+        {
+          "title": "ASE · Test Services",
+          "url": "https://ase.aseglobal.com/test-services/",
+          "scope": "晶圆探针、封装终测与系统级测试的服务范围；仅证明公开能力。"
+        }
+      ]
+    }
+  },
+  "timelineAdditions": [
+    {
+      "date": "2026-05-31",
+      "year": 2026,
+      "type": "product",
+      "vendor": "NVIDIA",
+      "title": "Vera Rubin 平台扩大系统量产声明",
+      "status": "production",
+      "info": "NVIDIA 宣布 Vera Rubin 平台进入扩大系统量产阶段。它是平台阶段声明，不自动证明全部地区、伙伴系统或单GPU料号均已可买。",
+      "src": "https://nvidianews.nvidia.com/news/vera-rubin-full-production-agentic-ai-factory",
+      "modelId": "rubin"
+    },
+    {
+      "date": "2026-07-23",
+      "year": 2026,
+      "type": "product",
+      "vendor": "AMD",
+      "title": "Helios 平台投产声明",
+      "status": "production",
+      "info": "AMD 发布材料称 Helios 已投产；当前 MI400 产品页仍保留预计2026年下半年批量部署的描述。逐个 OEM 全面供货仍须另核，Helios机柜也不等于单个MI455X。",
+      "src": "https://ir.amd.com/news-events/press-releases/detail/1294/aai-2026-amd-delivers-full-stack-compute-for-the-agentic-ai-era",
+      "modelId": "mi455x"
+    }
+  ]
+}

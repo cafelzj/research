@@ -9,6 +9,7 @@ from playwright.sync_api import expect, sync_playwright
 
 BASE = (sys.argv[1] if len(sys.argv)>1 else 'http://127.0.0.1:8000/').rstrip('/')+'/'
 PAGES = sorted(p.name for p in Path('gpu-memory').glob('*.html'))
+DATA = __import__('json').loads(Path('gpu-memory/assets/research-map.json').read_text())
 
 with sync_playwright() as p:
     browser = p.chromium.launch(executable_path=os.environ.get('ATLAS_BROWSER'),
@@ -28,13 +29,46 @@ with sync_playwright() as p:
     for origin in ('daily.html','washoku.html','chinese-menu.html'):
         page.goto(BASE+origin)
         page.get_by_role('link', name='GPU 与显存技术', exact=True).click()
-        expect(page.locator('h1')).to_contain_text('技术知识网络')
+        expect(page.locator('h1')).to_contain_text('读懂架构与产业链')
+    expect(page.locator('#research-main .ia-main-card')).to_have_count(5)
+    page.locator('#research-main a[href="models.html"]').click()
+    expect(page.locator('h1')).to_have_text('GPU型号与代际')
+    expect(page.locator('[data-model-vendor]')).to_have_count(len(DATA['models']['models']))
+    page.locator('#model-query').fill('H200')
+    expect(page.locator('#model-h200')).to_be_visible()
+    assert page.locator('[data-model-vendor]:visible').count()<len(DATA['models']['models'])
+    page.locator('#model-vendor').select_option('Intel')
+    expect(page.locator('#model-count')).to_contain_text('显示 0')
+    page.locator('a[href="#model-h200"]').first.click()
+    expect(page.locator('#model-query')).to_have_value('')
+    expect(page.locator('#model-h200')).to_be_visible()
+    expect(page.locator('#model-h200 details')).to_have_attribute('open','')
+    page.locator('#model-vendor').select_option('AMD')
+    expect(page.locator('#model-h200')).not_to_be_visible()
+    page.locator('#search-trigger').click()
+    page.locator('#global-search').fill('H200')
+    expect(page.locator('#search-results a').first).to_have_attribute('href','models.html#model-h200')
+    page.locator('#search-results a').first.click()
+    expect(page.locator('#search-modal')).not_to_be_visible()
+    expect(page.locator('#model-vendor')).to_have_value('')
+    expect(page.locator('#model-h200')).to_be_visible()
+    page.reload()
+    expect(page.locator('#model-h200 details')).to_have_attribute('open','')
+    page.locator('.ia-reading-next a[href="gpu.html"]').click()
+    expect(page.locator('#architecture-map')).to_be_visible()
+    page.locator('.ia-reading-next a[href="bottlenecks.html"]').click()
+    expect(page.locator('#bottleneck-map .ia-bottleneck-grid a')).to_have_count(len(DATA['bottlenecks']['items']))
+    page.locator('#bottleneck-map a[href="#memory-capacity"]').click()
+    expect(page.locator('#memory-capacity')).to_be_visible()
     for width in (1440,390,320):
         page.set_viewport_size({'width':width,'height':900})
         for name in PAGES:
             response = page.goto(BASE+'gpu-memory/'+name)
             assert response.status==200, name
             expect(page.locator('h1')).to_have_count(1)
+            expect(page.locator('.top-nav a')).to_have_count(5)
+            expect(page.locator('#sidebar .group')).to_have_count(3)
+            expect(page.locator('#sidebar [aria-current="page"]')).to_have_count(1)
             expect(page.locator('.research-return a')).to_have_attribute('href','../daily.html')
             assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'), (name,width)
         if width==320:
@@ -45,6 +79,7 @@ with sync_playwright() as p:
     page.set_viewport_size({'width':1440,'height':1000})
     page.goto(BASE+'gpu-memory/index.html')
     expect(page.locator('#knowledge-graph [role="button"]')).to_have_count(15)
+    page.locator('.ia-network > summary').click()
     node = page.locator('#knowledge-graph [data-id="tensor"]')
     node.focus();node.press('Enter')
     expect(page.locator('#graph-detail h3')).to_have_text('Tensor Core')
@@ -66,7 +101,7 @@ with sync_playwright() as p:
     page.keyboard.press('Escape')
     expect(page.locator('#search-modal')).not_to_be_visible()
     page.goto(BASE+'gpu-memory/timeline.html')
-    expect(page.locator('.milestone')).to_have_count(21)
+    expect(page.locator('.milestone')).to_have_count(21+len(DATA['timelineAdditions']))
     page.locator('#filter-vendor').select_option('Samsung')
     page.locator('#filter-type').select_option('memory')
     page.locator('#filter-period').select_option('2026')
@@ -95,6 +130,6 @@ with sync_playwright() as p:
     assert not errors, errors
     assert not failed, failed
     browser.close()
-print('PASS GPU atlas: three daily-topic entries, all ten pages at 1440/390/320px, '
+    print('PASS GPU atlas: five research axes, model filters and deep links, three daily-topic entries, all pages at 1440/390/320px, '
       'mobile navigation, graph/anchor links, search, timeline, glossary, bandwidth/power '
       'calculators, return to daily map and operation with blocked storage')

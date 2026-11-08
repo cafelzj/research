@@ -58,7 +58,7 @@ FDA研发流程与临床分期科普正文已读取，其余监管、登记、�
 
 ### GPU 与显存技术
 
-[GPU 与显存技术知识网络](https://cafelzj.github.io/research/gpu-memory/index.html)已接入日常研究专题导航。来自用户上传的静态站，保留GPU架构、显存、先进封装、时间线、未来架构、产业链和技术词典，以及知识图谱、搜索、筛选和计算工具。部署及来源说明见 [gpu-memory-atlas.md](docs/gpu-memory-atlas.md)。
+[GPU 研究地图](https://cafelzj.github.io/research/gpu-memory/index.html)已接入日常研究专题导航。围绕型号与代际、内部架构、技术难点、产业链、时间线五条主线，连接型号筛选、代际比较、因果瓶颈与验证指标；显存、封装、前沿路线作为技术深读。保留词典、图谱和计算工具，来源、形态与产品阶段分别注明。维护及来源说明见 [gpu-memory-atlas.md](docs/gpu-memory-atlas.md)。
 
 ### 中餐预制菜避雷
 

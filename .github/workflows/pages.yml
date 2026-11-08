@@ -25,6 +25,8 @@ jobs:
           python3 scripts/check_sw_research.py
           python3 scripts/check_appliances.py
           python3 scripts/build_appliances.py --check
+          python3 scripts/check_gpu_research.py
+          python3 scripts/build_gpu_research.py --check
       - name: Use preinstalled Chrome for reader checks
         run: |
           python3 -m pip install playwright
