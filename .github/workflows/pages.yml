@@ -27,9 +27,6 @@ jobs:
           python3 scripts/build_appliances.py --check
           python3 scripts/check_gpu_research.py
           python3 scripts/build_gpu_research.py --check
-          python3 scripts/collect_llm_research.py --check
-          python3 scripts/build_llm_research.py --check
-          python3 scripts/check_llm_research.py
       - name: Use preinstalled Chrome for reader checks
         run: |
           python3 -m pip install playwright
@@ -45,7 +42,6 @@ jobs:
           python3 scripts/test_appliances.py
           python3 scripts/test_gpu_memory.py
           python3 scripts/test_site_structure.py
-          python3 scripts/test_llm_research.py
   deploy:
     needs: validate-sw
     if: github.ref == 'refs/heads/main'
@@ -74,7 +70,6 @@ jobs:
           cp industry-dashboard.html appliances.html indicator-guide.html indicators.html index.html atlas.html data.html studio.html intelli.html daily.html washoku.html chinese-menu.html _site/
           cp -R assets _site/assets
           cp -R gpu-memory _site/gpu-memory
-          cp -R llm _site/llm
       - name: Upload website
         uses: actions/upload-pages-artifact@v3
         with:
@@ -96,4 +91,3 @@ jobs:
           python3 scripts/test_appliances.py "$SITE_URL"
           python3 scripts/test_gpu_memory.py "$SITE_URL"
           python3 scripts/test_site_structure.py "$SITE_URL"
-          python3 scripts/test_llm_research.py "$SITE_URL"
