@@ -17,6 +17,7 @@ def verify(base_url, attempts=12, delay=10):
     files = ["industry-dashboard.html", "appliances.html", "indicator-guide.html", "indicators.html", "index.html", "atlas.html", "data.html", "studio.html", "intelli.html", "daily.html", "washoku.html", "chinese-menu.html"]
     files.extend(str(path.relative_to(root)) for path in sorted((root / "assets").rglob("*")) if path.is_file())
     files.extend(str(path.relative_to(root)) for path in sorted((root / "gpu-memory").rglob("*")) if path.is_file())
+    files.extend(str(path.relative_to(root)) for path in sorted((root / "llm").rglob("*")) if path.is_file())
     pending = {name: (root / name).read_bytes() for name in files}
     for attempt in range(attempts):
         for name, expected in list(pending.items()):

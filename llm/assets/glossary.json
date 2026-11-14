@@ -1,0 +1,2630 @@
+{
+  "asOf": "2026-11-14",
+  "terms": [
+    {
+      "id": "token",
+      "term": "词元",
+      "english": "Token",
+      "aliases": [
+        "token",
+        "Token",
+        "词元单位"
+      ],
+      "category": "基础",
+      "plain": "模型处理文字或其他序列时使用的离散编号单位。",
+      "mechanism": "文本经分词器变为词元ID，再映射成向量。同一个汉字、数字串或英文单词可能占一个或多个词元；图像与音频也可能使用不同的表示单位，因此跨模型的词元数不能直接等同字符数。",
+      "example": "比较三款模型读同一份财报时，先按各自分词器计算输入量。",
+      "misconception": "一个token不固定等于一个汉字，也不固定等于一个英文单词。",
+      "related": [
+        "tokenizer",
+        "embedding",
+        "context-window"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#attention-basics"
+        }
+      ],
+      "sources": [
+        {
+          "title": "子词分词原论文",
+          "url": "https://arxiv.org/abs/1508.07909"
+        }
+      ]
+    },
+    {
+      "id": "tokenizer",
+      "term": "分词器",
+      "english": "Tokenizer",
+      "aliases": [
+        "Tokenizer",
+        "分词",
+        "BPE",
+        "子词分词"
+      ],
+      "category": "基础",
+      "plain": "把文字与模型词元编号相互转换的规则和程序。",
+      "mechanism": "子词方法用有限词表表示常见片段，陌生词可拆为更多片段。规范化、字节处理、词表与特殊标记一起影响结果；相同文字在不同模型中可能有不同长度，聊天模板还会额外加入角色标记。",
+      "example": "核对API账单时，把系统提示、工具说明与角色模板也计入输入。",
+      "misconception": "分词变化不是理解能力提升的直接证据；减少词元也不保证任务更便宜。",
+      "related": [
+        "token",
+        "embedding",
+        "task-cost"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "methods.html#cost"
+        }
+      ],
+      "sources": [
+        {
+          "title": "子词分词原论文",
+          "url": "https://arxiv.org/abs/1508.07909"
+        }
+      ]
+    },
+    {
+      "id": "embedding",
+      "term": "嵌入向量",
+      "english": "Embedding",
+      "aliases": [
+        "Embedding",
+        "词嵌入",
+        "向量表示"
+      ],
+      "category": "基础",
+      "plain": "把离散编号转换成模型可计算的一串数。",
+      "mechanism": "最基本的词元嵌入由可训练矩阵查表得到，随后随上下文与层级处理形成新的表示。向量坐标由训练共同决定，没有天然的财务或行业标签；视觉与音频特征也可投影到兼容维度。",
+      "example": "理解“净利润”不是查到一个字典释义，而是起始向量继续与上下文交互。",
+      "misconception": "嵌入表不是可逐条溯源的知识库；相近向量也不证明事实等价。",
+      "related": [
+        "token",
+        "hidden-state",
+        "conditional-memory"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "compute.html#conditional-memory"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeek-V3技术报告",
+          "url": "https://arxiv.org/html/2412.19437v2"
+        }
+      ]
+    },
+    {
+      "id": "hidden-state",
+      "term": "隐藏状态",
+      "english": "Hidden State",
+      "aliases": [
+        "hidden state",
+        "隐状态",
+        "表征"
+      ],
+      "category": "基础",
+      "plain": "某个词元经过网络某一阶段后的内部向量表示。",
+      "mechanism": "同一词元在不同位置、上下文和层上会有不同隐藏状态。注意力与FFN不断变换它，残差路径保留和混合已有结果；它是本次计算的中间状态，与固定权重和历史KV缓存的生命周期不同。",
+      "example": "一份公告中的“增长”会结合比较基期、业务和否定词形成不同状态。",
+      "misconception": "隐藏状态不是模型永久记下了用户资料，也不是可直接读出的思维内容。",
+      "related": [
+        "embedding",
+        "residual",
+        "kv-cache"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "depth.html#residual-basics"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeek-V3技术报告",
+          "url": "https://arxiv.org/html/2412.19437v2"
+        }
+      ]
+    },
+    {
+      "id": "transformer",
+      "term": "Transformer骨干",
+      "english": "Transformer",
+      "aliases": [
+        "Transformer",
+        "变换器",
+        "解码器骨干"
+      ],
+      "category": "基础",
+      "plain": "用注意力与特征变换层组织序列计算的一类网络。",
+      "mechanism": "典型块包含注意力、逐位置FFN、归一化与残差连接。不同模型会改变注意力、专家或残差结构；自回归解码器还加因果约束。称为Transformer并不能确定是否稠密注意力、MoE或多模态。",
+      "example": "阅读模型卡时，把每个模块的改动放回整条计算路径。",
+      "misconception": "Transformer不是某一个聊天产品，也不意味着所有模型结构完全相同。",
+      "related": [
+        "attention-softmax",
+        "ffn",
+        "residual"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#attention-basics"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Transformer原论文",
+          "url": "https://arxiv.org/abs/1706.03762"
+        }
+      ]
+    },
+    {
+      "id": "autoregressive",
+      "term": "自回归生成",
+      "english": "Autoregressive Generation",
+      "aliases": [
+        "自回归",
+        "AR",
+        "下一词元预测",
+        "NTP"
+      ],
+      "category": "基础",
+      "plain": "依据已知前缀，逐步决定后续输出的生成方式。",
+      "mechanism": "训练通常并行计算各位置的下一词元条件概率，使用因果mask防止看未来；生成时则把已产生的词元接回前缀。投机方法可并行验证草稿，但最终仍要维护目标条件分布与前缀依赖。",
+      "example": "模型写收入分析时，后一句会受到已生成数字与前文论点影响。",
+      "misconception": "训练能并行处理整段文字，不等于推理时未来词元彼此独立。",
+      "related": [
+        "causal-mask",
+        "decode",
+        "speculative-decoding"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "decoding.html#speculative"
+        }
+      ],
+      "sources": [
+        {
+          "title": "自回归语言建模技术报告",
+          "url": "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf"
+        }
+      ]
+    },
+    {
+      "id": "context-window",
+      "term": "上下文窗口",
+      "english": "Context Window",
+      "aliases": [
+        "上下文",
+        "context",
+        "长上下文",
+        "1M上下文"
+      ],
+      "category": "基础",
+      "plain": "一次请求中模型允许处理的上下文容量上限。",
+      "mechanism": "窗口容纳系统指令、历史对话、工具结果及按接口规则计入的输出。标称可接收长度只说明容量，实际跨文档理解、远端证据召回、成本与延迟仍需测试；压缩和滑窗还会改变内部保留方式。",
+      "example": "用一百万词元放入财报后，仍测它能否准确配对公司、年份与脚注。",
+      "misconception": "支持1M上下文不代表能无损记住每一条事实，更不等于免费。",
+      "related": [
+        "token",
+        "kv-cache",
+        "sparse-attention"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#kv-budget"
+        }
+      ],
+      "sources": [
+        {
+          "title": "GLM-5.3官方规格",
+          "url": "https://docs.z.ai/guides/llm/glm-5.3"
+        }
+      ]
+    },
+    {
+      "id": "parameters",
+      "term": "总参数量",
+      "english": "Total Parameters",
+      "aliases": [
+        "参数量",
+        "总参",
+        "权重规模",
+        "B参数"
+      ],
+      "category": "基础",
+      "plain": "模型所有可训练数值的数量，反映容量的一种口径。",
+      "mechanism": "参数包含嵌入、注意力、FFN或专家、输出头及其他模块。总数取决于是否计入视觉编码器、MTP或记忆表；部署还要存量化scale、缓存和工作区，不能仅按宣传数字推算设备数量。",
+      "example": "比较744B与753B时，先核是否使用相同的嵌入与辅助模块统计口径。",
+      "misconception": "总参数大不保证效果一定更强；参数字节也不是整机显存需求。",
+      "related": [
+        "active-parameters",
+        "moe",
+        "quantization"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "compute.html#moe"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeekMoE论文",
+          "url": "https://arxiv.org/html/2401.06066v1"
+        }
+      ]
+    },
+    {
+      "id": "active-parameters",
+      "term": "激活参数量",
+      "english": "Active Parameters",
+      "aliases": [
+        "激活参数",
+        "每token激活",
+        "A参数"
+      ],
+      "category": "计算与记忆",
+      "plain": "单个词元的一次前向中参与主要计算的参数规模。",
+      "mechanism": "MoE只为某个词元选择少数路由专家，但注意力、共享专家等也要计算。不同模型计数约定不一；一批词元可能触及很多不同专家，全部权重仍须在设备或存储层可取得。",
+      "example": "分析320B-A18B时，分别计算总权重驻留与单token执行负担。",
+      "misconception": "激活18B不表示只需装载18B权重，也不直接等于完整FLOPs。",
+      "related": [
+        "parameters",
+        "moe",
+        "flops"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "compute.html#moe"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeekMoE论文",
+          "url": "https://arxiv.org/html/2401.06066v1"
+        }
+      ]
+    },
+    {
+      "id": "flops",
+      "term": "浮点运算量",
+      "english": "Floating-Point Operations",
+      "aliases": [
+        "FLOPs",
+        "算量",
+        "浮点计算",
+        "TFLOPS"
+      ],
+      "category": "计算与记忆",
+      "plain": "统计计算工作量的指标，须区别于硬件每秒速率。",
+      "mechanism": "FLOPs通常指运算次数，FLOP/s指每秒吞吐；乘加如何计数、是否含反传和不同精度加权须注明。实际延迟还受带宽、通信、并发和内核效率影响，局部算量减少未必变成同倍整网提速。",
+      "example": "核对报告中的注意力FLOPs是否被误当成整任务GPU成本。",
+      "misconception": "FLOPs降低四倍，不代表运行时间或云账单必然降低四倍。",
+      "related": [
+        "active-parameters",
+        "tps",
+        "task-cost"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "methods.html#cost"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeek-V4技术报告",
+          "url": "https://arxiv.org/html/2606.19348v1"
+        }
+      ]
+    },
+    {
+      "id": "qkv",
+      "term": "查询、键与值",
+      "english": "Query / Key / Value",
+      "aliases": [
+        "QKV",
+        "Q/K/V",
+        "Query",
+        "Key",
+        "Value"
+      ],
+      "category": "注意力",
+      "plain": "查询表达要找什么，键供匹配，值承载被聚合的内容。",
+      "mechanism": "在典型注意力中，隐藏状态经不同投影得到Q、K、V；Q与K的打分经归一化形成权重，再聚合V。它们是学习表示，不是人为写好的数据库字段；索引器的Q/K与主注意力Q/K也可能不同。",
+      "example": "查询“2025年研发费”时，需区分用于筛选位置的索引键和精读的主KV。",
+      "misconception": "Q是问题全文、K是关键词、V是原文答案，这种逐字对应只是粗糙比喻。",
+      "related": [
+        "attention-softmax",
+        "kv-cache",
+        "indexer"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#attention-basics"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Transformer原论文",
+          "url": "https://arxiv.org/abs/1706.03762"
+        }
+      ]
+    },
+    {
+      "id": "kv-cache",
+      "term": "键值缓存",
+      "english": "Key–Value Cache",
+      "aliases": [
+        "KV",
+        "KV缓存",
+        "K/V缓存",
+        "上下文缓存"
+      ],
+      "category": "注意力",
+      "plain": "复用已处理历史的键值或压缩表示，避免每步重算。",
+      "mechanism": "自回归生成时，历史位置的逐层KV可保存下来，新位置只追加自己的状态并读取可见历史。容量随长度、层数、并发和精度变化；MLA、共享、压缩等改变常数或来源，前缀复用还需状态一致。",
+      "example": "评估长财报问答时，把权重显存与每路请求的KV显存分开列账。",
+      "misconception": "有缓存不表示无需读取历史；KV也不是模型训练学到的永久知识表。",
+      "related": [
+        "prefill",
+        "decode",
+        "mla"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#kv-budget"
+        }
+      ],
+      "sources": [
+        {
+          "title": "PagedAttention与KV缓存论文",
+          "url": "https://arxiv.org/abs/2309.06180"
+        }
+      ]
+    },
+    {
+      "id": "prefill",
+      "term": "预填充",
+      "english": "Prefill",
+      "aliases": [
+        "prefill",
+        "输入处理",
+        "提示词预填充"
+      ],
+      "category": "训练与推理",
+      "plain": "把已知输入前缀批量处理并建立生成所需状态。",
+      "mechanism": "输入词元已全部可知，因此可在因果约束下并行计算多个位置。工作量与序列长度、注意力结构及缓存命中有关；它通常影响首词延迟，但排队、分词、视觉编码与网络也可能占用时间。",
+      "example": "同样输出一百字，读五百页PDF的首词等待可能远高于短问题。",
+      "misconception": "Prefill不是训练；缓存命中也不保证整段输入处理全部消失。",
+      "related": [
+        "decode",
+        "ttft",
+        "kv-cache"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "compute.html#ced"
+        }
+      ],
+      "sources": [
+        {
+          "title": "PagedAttention与KV缓存论文",
+          "url": "https://arxiv.org/abs/2309.06180"
+        }
+      ]
+    },
+    {
+      "id": "decode",
+      "term": "解码生成",
+      "english": "Decode",
+      "aliases": [
+        "decode",
+        "生成阶段",
+        "逐token生成"
+      ],
+      "category": "训练与推理",
+      "plain": "依据当前前缀不断产生新词元并更新状态的阶段。",
+      "mechanism": "每次生成后，前缀和动态缓存随之增长；注意力读取历史，FFN或选中专家处理新状态。批处理、投机验证和模型结构会改变每步工作，单用户生成速率与整机吞吐因此并非同一指标。",
+      "example": "比较研究报告生成速度时，固定输入长度和输出长度再测稳态速率。",
+      "misconception": "解码快不代表首词快，也不能用单用户TPS直接推服务器总容量。",
+      "related": [
+        "prefill",
+        "tps",
+        "speculative-decoding"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "decoding.html#speculative"
+        }
+      ],
+      "sources": [
+        {
+          "title": "PagedAttention与KV缓存论文",
+          "url": "https://arxiv.org/abs/2309.06180"
+        }
+      ]
+    },
+    {
+      "id": "attention-softmax",
+      "term": "Softmax注意力",
+      "english": "Softmax Attention",
+      "aliases": [
+        "自注意力",
+        "全注意力",
+        "稠密注意力",
+        "softmax attention"
+      ],
+      "category": "注意力",
+      "plain": "为可见历史位置分配权重，再汇总其内容的机制。",
+      "mechanism": "典型计算用缩放QK打分，沿可见位置做softmax，再加权V。全注意力允许每个query直接比较全部可见位置；稀疏注意力改候选集合，线性注意力则改历史表示与计算方式，不能混成同一优化。",
+      "example": "追溯一项减值金额时，模型可重新给远处脚注位置打分。",
+      "misconception": "允许访问全部位置不保证模型读对所有事实，注意力权重也不是因果解释。",
+      "related": [
+        "qkv",
+        "causal-mask",
+        "linear-attention"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#attention-basics"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Transformer原论文",
+          "url": "https://arxiv.org/abs/1706.03762"
+        }
+      ]
+    },
+    {
+      "id": "causal-mask",
+      "term": "因果遮罩",
+      "english": "Causal Mask",
+      "aliases": [
+        "causal mask",
+        "因果mask",
+        "下三角mask"
+      ],
+      "category": "注意力",
+      "plain": "限制当前位置不能读到尚未发生的未来位置。",
+      "mechanism": "对位置t通常只允许访问不晚于t的信息；训练时即使整段文本并行放入，也须屏蔽未来。多模态或OCR可有专用可见性规则，因此必须查看具体mask，不能仅根据编码器名称判断是否双向。",
+      "example": "读投机验证流程时，检查草稿位置是否保持与目标生成一致的前缀。",
+      "misconception": "因果mask不是模型已经证明因果关系；它约束的是信息可见方向。",
+      "related": [
+        "autoregressive",
+        "qkv",
+        "ced"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#attention-basics"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeek-V3技术报告",
+          "url": "https://arxiv.org/html/2412.19437v2"
+        }
+      ]
+    },
+    {
+      "id": "rope",
+      "term": "旋转位置编码",
+      "english": "Rotary Position Embedding",
+      "aliases": [
+        "RoPE",
+        "旋转编码",
+        "位置编码"
+      ],
+      "category": "注意力",
+      "plain": "通过旋转查询和键的部分通道，传入相对位置信息。",
+      "mechanism": "RoPE令向量旋转角度随位置变化，使QK内积可包含位置差；具体维度、频率及长序列扩展策略因模型而异。有些循环层通过状态转移携带顺序，不代表所有层都必须用同一RoPE。",
+      "example": "比较长上下文扩展时，核对是否只是改频率而没有相应训练。",
+      "misconception": "删除RoPE不等于模型完全没有顺序信息；扩长位置表也不保证长文能力。",
+      "related": [
+        "qkv",
+        "context-window",
+        "kda"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#attention-basics"
+        }
+      ],
+      "sources": [
+        {
+          "title": "RoFormer位置编码论文",
+          "url": "https://arxiv.org/abs/2104.09864"
+        }
+      ]
+    },
+    {
+      "id": "flashattention",
+      "term": "FlashAttention",
+      "english": "FlashAttention",
+      "aliases": [
+        "Flash Attention",
+        "融合注意力"
+      ],
+      "category": "注意力",
+      "plain": "用更省显存读写的计算安排实现精确注意力。",
+      "mechanism": "通过分块、融合和在线softmax避免显式保存完整注意力矩阵，减少HBM与片上存储间搬运。它主要优化实现与IO，不把全注意力自动改成稀疏或线性；性能取决于序列、设备和内核版本。",
+      "example": "看到训练显存减少时，区分是计算实现改善还是历史内容被压缩。",
+      "misconception": "FlashAttention中的Flash不是某厂商Flash小模型，也不意味着只看部分token。",
+      "related": [
+        "attention-softmax",
+        "sparse-attention",
+        "flops"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#attention-basics"
+        }
+      ],
+      "sources": [
+        {
+          "title": "FlashAttention原论文",
+          "url": "https://arxiv.org/abs/2205.14135"
+        }
+      ]
+    },
+    {
+      "id": "gqa",
+      "term": "分组查询注意力",
+      "english": "Grouped-Query Attention",
+      "aliases": [
+        "GQA",
+        "MQA",
+        "多查询注意力"
+      ],
+      "category": "注意力",
+      "plain": "让多组查询头共享较少的键值头，压低KV存储。",
+      "mechanism": "MHA中各查询头有各自KV；GQA让一组查询头共用KV，MQA是所有查询头共用一组的特例。查询仍可不同，历史位置通常仍逐项保存；节省的是KV头数，不是取消序列长度增长。",
+      "example": "估算十万token服务内存时，使用KV头数而不是查询头数。",
+      "misconception": "头共享不是跨层共享，也不代表所有查询头产生完全相同的输出。",
+      "related": [
+        "qkv",
+        "kv-cache",
+        "mla"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#kv-budget"
+        }
+      ],
+      "sources": [
+        {
+          "title": "GQA原论文",
+          "url": "https://arxiv.org/abs/2305.13245"
+        }
+      ]
+    },
+    {
+      "id": "mla",
+      "term": "多头潜在注意力",
+      "english": "Multi-head Latent Attention",
+      "aliases": [
+        "MLA",
+        "潜在KV",
+        "低秩KV"
+      ],
+      "category": "注意力",
+      "plain": "把每个历史位置的KV压到较窄潜在向量以节省缓存。",
+      "mechanism": "MLA用低秩联合压缩保存主KV潜在表示，并将部分解压操作与查询或输出投影结合；位置相关部分可另行处理。它主要压缩每位置宽度，仍需保留历史位置，区别于把整段历史合成固定状态。",
+      "example": "区分一百万位置各存小向量，与只存一个固定大小记忆矩阵的资源账。",
+      "misconception": "MLA不是线性注意力，也不等于把多个相邻token平均成一个槽。",
+      "related": [
+        "kv-cache",
+        "gqa",
+        "linear-attention"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#kv-budget"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeek-V2与MLA",
+          "url": "https://arxiv.org/abs/2405.04434"
+        }
+      ]
+    },
+    {
+      "id": "linear-attention",
+      "term": "线性注意力",
+      "english": "Linear Attention",
+      "aliases": [
+        "线性attention",
+        "循环注意力",
+        "递推状态"
+      ],
+      "category": "注意力",
+      "plain": "用可递推状态等方式避免每步完整扫描历史的一类机制。",
+      "mechanism": "不同方法以特征映射、状态矩阵或门控递推组织历史，固定维度时主计算可随序列长度线性增长。定义并非所有实现都相同；有限状态会有干扰和遗忘，混合模型仍可能保留长度相关的全局层。",
+      "example": "评估百万token问答时，除吞吐还测试久远数字与否定条件的保留。",
+      "misconception": "线性不是权重矩阵只能做线性变换，也不表示无限上下文零成本。",
+      "related": [
+        "delta-rule",
+        "gdn",
+        "kda"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#linear-attention"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Transformers are RNNs",
+          "url": "https://arxiv.org/abs/2006.16236"
+        }
+      ]
+    },
+    {
+      "id": "delta-rule",
+      "term": "差量更新规则",
+      "english": "Delta Rule",
+      "aliases": [
+        "Delta rule",
+        "差量规则",
+        "关联纠偏"
+      ],
+      "category": "注意力",
+      "plain": "先估计已有记忆，再只写入新值与估计之间的差额。",
+      "mechanism": "给定key，状态先预测其对应value，再按写入强度将残差沿key方向写回；与不断累加完整外积不同，可降低重复写入干扰。相似key仍会相互影响，纠偏的是向量关联，不是判断公告真假。",
+      "example": "以教学状态100、新值120说明更新趋向新值，而非累加成220。",
+      "misconception": "Delta纠错不是事实核查，也不是推理时永久微调模型参数。",
+      "related": [
+        "gdn",
+        "kda",
+        "hidden-state"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#linear-attention"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Gated DeltaNet论文",
+          "url": "https://arxiv.org/html/2412.06464v3"
+        }
+      ]
+    },
+    {
+      "id": "gdn",
+      "term": "门控DeltaNet",
+      "english": "Gated DeltaNet",
+      "aliases": [
+        "GDN",
+        "Gated DeltaNet",
+        "门控德尔塔网络"
+      ],
+      "category": "注意力",
+      "plain": "把整体衰减和定向差量改写结合的循环注意力。",
+      "mechanism": "每头标量遗忘门先衰减旧矩阵状态，再以delta规则更新当前key方向。遗忘门控制保留时长，写入门控制改写幅度；输出门还有独立作用。固定状态有容量边界，通常与全局注意力混合使用。",
+      "example": "阅读Qwen混合模型时，分别看循环层负责状态加工、全局层负责回读。",
+      "misconception": "多个gate不能都解释成忘掉无用信息；矩阵状态也非完整历史数据库。",
+      "related": [
+        "delta-rule",
+        "kda",
+        "hybrid-attention"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#linear-attention"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Gated DeltaNet论文",
+          "url": "https://arxiv.org/html/2412.06464v3"
+        }
+      ]
+    },
+    {
+      "id": "kda",
+      "term": "Kimi差量注意力",
+      "english": "Kimi Delta Attention",
+      "aliases": [
+        "KDA",
+        "Kimi Delta Attention"
+      ],
+      "category": "注意力",
+      "plain": "把遗忘控制从每头标量细化到key通道的差量注意力。",
+      "mechanism": "KDA先用向量门按通道衰减状态，再用衰减后的关联预测计算delta更新；两步一般不可交换。更细的门允许不同特征保留不同时间，但原方案写入强度仍有约束，不是任意读写所有历史。",
+      "example": "同一状态中长期公司身份与临时草稿可有不同保留轨迹；这是机制示意。",
+      "misconception": "KDA不保证每个通道有可命名的事实含义，也不能无损保存无限记录。",
+      "related": [
+        "gdn",
+        "delta-rule",
+        "hybrid-attention"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#linear-attention"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Kimi Linear与KDA论文",
+          "url": "https://arxiv.org/html/2510.26692v1"
+        }
+      ]
+    },
+    {
+      "id": "hybrid-attention",
+      "term": "混合注意力",
+      "english": "Hybrid Attention",
+      "aliases": [
+        "混合架构",
+        "混合线性注意力"
+      ],
+      "category": "注意力",
+      "plain": "在同一骨干中交替使用不同历史处理机制。",
+      "mechanism": "常见设计用多数循环或线性层降低处理成本，少数全局层重新访问逐位置历史。具体比例与全局层类型决定计算和缓存；若仍有稠密全局层，整网长度主项不因此成为严格线性。",
+      "example": "比较3比1混合模型时，确认那1层究竟是全注意力、MLA还是QSA。",
+      "misconception": "混合不代表两种机制的优点无条件相加，也不能只看线性层数量估算成本。",
+      "related": [
+        "linear-attention",
+        "qsa",
+        "mla"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#linear-attention"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Kimi Linear与KDA论文",
+          "url": "https://arxiv.org/html/2510.26692v1"
+        }
+      ]
+    },
+    {
+      "id": "sparse-attention",
+      "term": "稀疏注意力",
+      "english": "Sparse Attention",
+      "aliases": [
+        "稀疏attention",
+        "稀疏精读"
+      ],
+      "category": "注意力",
+      "plain": "让主注意力只访问被选中的部分历史位置或槽。",
+      "mechanism": "候选可由固定窗口、分块规则或可学习索引器决定。稀疏读取减少主attention计算与访存，但候选打分、Top-k和非连续读取也有开销；未选中内容本次不能直接被该主注意力读取。",
+      "example": "追踪长报告脚注时，测试索引能否选中罕见数字而非只测主干段落。",
+      "misconception": "主注意力只读2K位置，不等于所有其他KV都已删除或全模型只记得2K。",
+      "related": [
+        "indexer",
+        "dsa",
+        "qsa"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#sparse-compressed"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeek-V3.2与DSA",
+          "url": "https://arxiv.org/abs/2512.02556"
+        }
+      ]
+    },
+    {
+      "id": "qsa",
+      "term": "Qwen稀疏注意力",
+      "english": "Qwen Sparse Attention",
+      "aliases": [
+        "QSA",
+        "Qwen Sparse Attention"
+      ],
+      "category": "注意力",
+      "plain": "用压缩块目录先选位置，再读原始逐位置KV的机制。",
+      "mechanism": "Flash-Next的索引key按4位置平均池化，选至多512块后展开约2048个原位置，另补未满尾组。主KV没有被四合一；教师重要性目标使用max pooling，别与索引key均值混写。",
+      "example": "在多份公告中先定位相关小块，再精读块内金额和单位。",
+      "misconception": "压缩的是检索目录，不是所有主KV；选位预算也不等于整网可记忆长度。",
+      "related": [
+        "indexer",
+        "indexpool",
+        "sparse-attention"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#sparse-compressed"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Qwen3.8-Flash-Next技术报告",
+          "url": "https://arxiv.org/html/2608.30320v1"
+        }
+      ]
+    },
+    {
+      "id": "dsa",
+      "term": "DeepSeek稀疏注意力",
+      "english": "DeepSeek Sparse Attention",
+      "aliases": [
+        "DSA",
+        "Lightning Indexer",
+        "闪电索引器"
+      ],
+      "category": "注意力",
+      "plain": "轻量索引器选择历史位置，主注意力再对其精读。",
+      "mechanism": "索引器用较便宜的Q/K相关性打分和Top-k筛位置；主注意力仍有独立向量与softmax。主读取变稀疏后，索引器扫描全历史的成本仍可能随长度增长，因而需要池化或跨层复用等后续优化。",
+      "example": "研究长文成本时，把轻量索引扫描与重型KV精读分开计时。",
+      "misconception": "DSA不是CSA同义词，也不是让每个历史token完全不占存储。",
+      "related": [
+        "indexer",
+        "indexcache",
+        "csa"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#sparse-compressed"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeek-V3.2与DSA",
+          "url": "https://arxiv.org/abs/2512.02556"
+        }
+      ]
+    },
+    {
+      "id": "csa",
+      "term": "压缩稀疏注意力",
+      "english": "Compressed Sparse Attention",
+      "aliases": [
+        "CSA",
+        "压缩稀疏attention"
+      ],
+      "category": "注意力",
+      "plain": "先压缩历史KV槽，再从这些槽中选择一部分读取。",
+      "mechanism": "DeepSeek-V4的CSA在序列维度把邻近KV按可学习门控合并，再由索引器选压缩槽。压缩减少保留槽数，稀疏选择减少读取槽数，两者分工不同；本地SWA另保留最近细节。",
+      "example": "用百万位置、4比1压缩的教学例区分25万候选槽与512个选中槽。",
+      "misconception": "压缩不是简单截断；读512槽也不代表整个缓存只剩512槽。",
+      "related": [
+        "dsa",
+        "hca",
+        "csa2"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#sparse-compressed"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeek-V4技术报告",
+          "url": "https://arxiv.org/html/2606.19348v1"
+        }
+      ]
+    },
+    {
+      "id": "hca",
+      "term": "重压缩注意力",
+      "english": "Heavily Compressed Attention",
+      "aliases": [
+        "HCA",
+        "重度压缩注意力"
+      ],
+      "category": "注意力",
+      "plain": "把历史压成更少的槽，再读取全部这些压缩槽。",
+      "mechanism": "DeepSeek-V4将HCA与CSA交替：HCA用更大的压缩比，不再靠Top-k丢弃部分全局槽，而是对压缩后的全局序列做注意力；本地滑窗仍补近处信息，远端细节可能已在压缩时损失。",
+      "example": "对比一百多词元合一槽与4词元合一槽的容量和精确引用风险。",
+      "misconception": "读取全部压缩槽不是读取全部原始token，也不是索引检索完全无损。",
+      "related": [
+        "csa",
+        "swa",
+        "kv-cache"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#sparse-compressed"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeek-V4技术报告",
+          "url": "https://arxiv.org/html/2606.19348v1"
+        }
+      ]
+    },
+    {
+      "id": "csa2",
+      "term": "第二代压缩稀疏注意力",
+      "english": "Compressed Sparse Attention 2",
+      "aliases": [
+        "CSA2",
+        "CSA 2",
+        "Full Reindex Reuse"
+      ],
+      "category": "注意力",
+      "plain": "将跨层KV共享与索引复用分开控制的压缩稀疏机制。",
+      "mechanism": "Full生成全局主KV与索引K并选位；Reindex共享这些KV/K但重新选位；Reuse连位置清单也复用。三种模式仍算本层主Q、SWA KV和新attention输出；后续分层检索还可限制候选池。",
+      "example": "检查V4.1内存收益时，分别归因KV共享省存储、位置复用省检索。",
+      "misconception": "Reuse不是跳过整层计算，Full也不表示主注意力恢复成全历史稠密。",
+      "related": [
+        "indexshare",
+        "ced",
+        "swa"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#index-reuse"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeek-V4.1-Flash技术报告",
+          "url": "https://arxiv.org/html/2609.19969v1"
+        }
+      ]
+    },
+    {
+      "id": "swa",
+      "term": "滑动窗口注意力",
+      "english": "Sliding-Window Attention",
+      "aliases": [
+        "SWA",
+        "滑窗",
+        "局部注意力"
+      ],
+      "category": "注意力",
+      "plain": "只在当前附近一段可见历史内直接读取的注意力。",
+      "mechanism": "每层本地窗口大小可固定，降低单层远端访问；多层叠加会扩大间接依赖范围。它常与全局分支搭配保留近处精细信息；缓存失效后的重建仍需考虑多层依赖，不能只按单层窗口估算。",
+      "example": "分析一项工具调用后的短新消息时，检查本地状态恢复与旧全局缓存。",
+      "misconception": "窗口128不代表整个模型只受最近128词元影响，也不保证恢复只算128步。",
+      "related": [
+        "csa",
+        "csa2",
+        "ced"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#sparse-compressed"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Mistral 7B滑窗注意力论文",
+          "url": "https://arxiv.org/abs/2310.06825"
+        },
+        {
+          "title": "DeepSeek-V4.1-Flash技术报告",
+          "url": "https://arxiv.org/html/2609.19969v1"
+        }
+      ]
+    },
+    {
+      "id": "indexer",
+      "term": "轻量索引器",
+      "english": "Lightweight Indexer",
+      "aliases": [
+        "indexer",
+        "索引器",
+        "检索代理"
+      ],
+      "category": "注意力",
+      "plain": "在主注意力精读前，用较便宜的打分筛选历史位置。",
+      "mechanism": "索引器通常有独立Q/K、较少头数和较低计算精度；其分数负责排序，而非直接充当主attention的softmax权重。是否扫描全部历史、是否分块或共享，是决定长上下文成本的另一组设计。",
+      "example": "查看“只读2K词元”的模型时，继续追问索引器先扫描了多少候选。",
+      "misconception": "索引器不是外部搜索引擎，也不保证筛出的每项都是事实证据。",
+      "related": [
+        "dsa",
+        "topk",
+        "indexpool"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#sparse-compressed"
+        }
+      ],
+      "sources": [
+        {
+          "title": "IndexCache论文",
+          "url": "https://arxiv.org/html/2603.12201v1"
+        }
+      ]
+    },
+    {
+      "id": "topk",
+      "term": "前k项选择",
+      "english": "Top-k Selection",
+      "aliases": [
+        "top-k",
+        "TopK",
+        "选位预算",
+        "前k个"
+      ],
+      "category": "注意力",
+      "plain": "按分数保留最高的k个候选，是有限预算下的硬筛选。",
+      "mechanism": "Top-k可用于注意力选位或MoE路由，两者对象不同。注意力中被漏掉的候选本次不能直接精读；k按原token、压缩槽或块计数也不同，必须看选择后是否还会展开，以及是否额外保留尾部。",
+      "example": "区分512个四位置块，与512个压缩KV槽对细节的影响。",
+      "misconception": "k相同不代表访问量相同；注意力Top-k也不是输出采样的top-k参数。",
+      "related": [
+        "indexer",
+        "sparse-attention",
+        "router"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#sparse-compressed"
+        }
+      ],
+      "sources": [
+        {
+          "title": "IndexCache作者实现",
+          "url": "https://github.com/THUDM/IndexCache"
+        }
+      ]
+    },
+    {
+      "id": "indexcache",
+      "term": "跨层索引缓存",
+      "english": "IndexCache",
+      "aliases": [
+        "IndexCache",
+        "跨层Top-k复用"
+      ],
+      "category": "注意力",
+      "plain": "保留少数层重新选位，让后续层复用这些位置编号。",
+      "mechanism": "Full索引层运行检索并保存Top-k，Shared层用最近Full的结果；各层仍算自己的主Q、主KV与注意力输出。作者有校准集贪心选层和训练蒸馏两条路线，不能把可选补丁说成所有模型出厂已启用。",
+      "example": "对比Hy4与GLM时，核对各自公开的full/shared安排和实际内核。",
+      "misconception": "该论文来自清华与Z.ai；腾讯采用它，不代表腾讯原创。它也不共享主KV。",
+      "related": [
+        "indexshare",
+        "indexer",
+        "csa2"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#index-reuse"
+        }
+      ],
+      "sources": [
+        {
+          "title": "IndexCache论文",
+          "url": "https://arxiv.org/html/2603.12201v1"
+        },
+        {
+          "title": "IndexCache作者实现",
+          "url": "https://github.com/THUDM/IndexCache"
+        }
+      ]
+    },
+    {
+      "id": "indexshare",
+      "term": "索引共享",
+      "english": "IndexShare",
+      "aliases": [
+        "IndexShare",
+        "GLM索引共享",
+        "FSSS"
+      ],
+      "category": "注意力",
+      "plain": "GLM生产模型中跨层复用注意力选位的一种实现。",
+      "mechanism": "GLM-5.2/5.3公开配置78层中21个full、57个shared；前3层独立检索，其后大致每4层更新一次选择。本层latent KV仍单独更新，主attention并未跳过，节省主要来自少做索引扫描。",
+      "example": "估算检索开销时按21个来源层计，但不要把主KV也除以四。",
+      "misconception": "索引共享不是共享整个注意力结果，也不能把这套层型套到5.3-Flash。",
+      "related": [
+        "indexcache",
+        "kv-cache",
+        "indexpool"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#index-reuse"
+        }
+      ],
+      "sources": [
+        {
+          "title": "GLM-5.2官方配置",
+          "url": "https://huggingface.co/zai-org/GLM-5.2/blob/main/config.json"
+        },
+        {
+          "title": "GLM DSA原生实现",
+          "url": "https://github.com/huggingface/transformers/blob/main/src/transformers/models/glm_moe_dsa/modeling_glm_moe_dsa.py"
+        }
+      ]
+    },
+    {
+      "id": "indexpool",
+      "term": "索引池化",
+      "english": "IndexPool",
+      "aliases": [
+        "IndexPool",
+        "KPool",
+        "index_kpool"
+      ],
+      "category": "注意力",
+      "plain": "把相邻索引key合成更少的目录项，降低候选扫描成本。",
+      "mechanism": "GLM-5.3-Flash以可学习加权把4个索引K合1，先选512池，再展开约2048个原位置供主attention读取；不完整近期尾组额外保留。压缩的是索引表示，不是把四个主KV也平均成一个。",
+      "example": "测试一处细小财报脚注能否在池化目录中被选中，再核对其原始数值。",
+      "misconception": "IndexPool不是IndexShare：前者沿序列池化，后者跨层沿用位置清单。",
+      "related": [
+        "indexer",
+        "indexshare",
+        "qsa"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "attention.html#index-reuse"
+        }
+      ],
+      "sources": [
+        {
+          "title": "GLM-5.3-Flash池化索引实现",
+          "url": "https://github.com/huggingface/transformers/blob/main/src/transformers/models/glm5_next/modeling_glm5_next.py"
+        }
+      ]
+    },
+    {
+      "id": "ced",
+      "term": "因果编码器—解码器",
+      "english": "Causal Encoder–Decoder",
+      "aliases": [
+        "CED",
+        "因果Encoder Decoder"
+      ],
+      "category": "计算与记忆",
+      "plain": "把输入建状态与输出深加工分开安排的因果骨干。",
+      "mechanism": "V4.1中前半Encoder产生Decoder全局KV的数据来源，使多数长prompt位置不必再过完整Decoder；尾部仍需初始化本地SWA。新生成token则仍过两部分，CSA2再让多个Decoder层共享全局KV。",
+      "example": "解释预填充与生成激活量不同，同时单列最后128位置的收尾工作。",
+      "misconception": "它不是传统双向seq2seq编码器，也不是每生成一词重跑整个输入。",
+      "related": [
+        "prefill",
+        "decode",
+        "csa2"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "compute.html#ced"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeek-V4.1-Flash技术报告",
+          "url": "https://arxiv.org/html/2609.19969v1"
+        }
+      ]
+    },
+    {
+      "id": "ffn",
+      "term": "前馈特征网络",
+      "english": "Feed-Forward Network",
+      "aliases": [
+        "FFN",
+        "MLP",
+        "SwiGLU",
+        "前馈层"
+      ],
+      "category": "计算与记忆",
+      "plain": "在每个词元内部变换特征的非线性模块。",
+      "mechanism": "典型FFN先升维、经激活再降维；SwiGLU等门控变体用一支激活乘另一支特征。它通常不直接跨位置读历史，但处理已混入上下文的表示；MoE把此类变换换成被选择执行的多个专家。",
+      "example": "把网络改进拆成“历史怎样读取”和“读完后特征怎样加工”两笔账。",
+      "misconception": "FFN不是简单线性层；不同词元独立过FFN也不表示它们没有上下文。",
+      "related": [
+        "moe",
+        "transformer",
+        "hidden-state"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "compute.html#moe"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Transformer原论文",
+          "url": "https://arxiv.org/abs/1706.03762"
+        }
+      ]
+    },
+    {
+      "id": "moe",
+      "term": "混合专家",
+      "english": "Mixture of Experts",
+      "aliases": [
+        "MoE",
+        "混合专家模型",
+        "稀疏专家"
+      ],
+      "category": "计算与记忆",
+      "plain": "从较大的参数库中为每个词元选择少量专家计算。",
+      "mechanism": "路由器根据当前表示打分，激活少数FFN专家并按权重合并，可另有始终参与的共享专家。增加专家库能扩大总容量而不按同倍增加单token专家算量，但总权重驻留、通信和负载均衡仍有成本。",
+      "example": "研究大模型服务器需求时，分别估总参存储、每token计算与专家并行通信。",
+      "misconception": "专家是神经网络参数块，不是互相聊天的多个Agent或预设行业分析师。",
+      "related": [
+        "router",
+        "active-parameters",
+        "shared-expert"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "compute.html#moe"
+        }
+      ],
+      "sources": [
+        {
+          "title": "稀疏门控MoE原论文",
+          "url": "https://arxiv.org/abs/1701.06538"
+        }
+      ]
+    },
+    {
+      "id": "router",
+      "term": "专家路由器",
+      "english": "Expert Router",
+      "aliases": [
+        "router",
+        "路由器",
+        "门控路由",
+        "expert gate"
+      ],
+      "category": "计算与记忆",
+      "plain": "根据当前特征选择哪些专家参与、各占多少组合权重。",
+      "mechanism": "Router通常先给专家打分，再按Top-k或分组规则选择并归一化权重。用于均衡负载的偏置可能只影响选择而不进入最终混合权重；路由依赖当前层状态，因此不能把所有未来选择提前固定。",
+      "example": "检查模型是否因少数专家过载而在真实高并发下出现尾延迟。",
+      "misconception": "Router不是按公司行业标签人工分发任务的业务规则引擎。",
+      "related": [
+        "moe",
+        "topk",
+        "load-balance"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "compute.html#moe"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeekMoE技术论文",
+          "url": "https://arxiv.org/html/2401.06066v1"
+        }
+      ]
+    },
+    {
+      "id": "shared-expert",
+      "term": "共享专家",
+      "english": "Shared Expert",
+      "aliases": [
+        "shared expert",
+        "共享FFN"
+      ],
+      "category": "计算与记忆",
+      "plain": "不随Top-k选择而关闭、为词元提供通用变换的专家。",
+      "mechanism": "共享专家与路由专家并行处理同一层表示，随后组合输出；它可承载共同模式，减轻路由专家重复学习。是否共享、数量及宽度是模型设计选择，计算和权重都要计入激活规模。",
+      "example": "估算top-8专家的工作量时，再加入始终参与的共享专家和注意力。",
+      "misconception": "“共享”不是跨用户共享私人数据，也不一定指跨层共用同一套参数。",
+      "related": [
+        "moe",
+        "router",
+        "active-parameters"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "compute.html#moe"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeekMoE技术论文",
+          "url": "https://arxiv.org/html/2401.06066v1"
+        }
+      ]
+    },
+    {
+      "id": "load-balance",
+      "term": "专家负载均衡",
+      "english": "Expert Load Balancing",
+      "aliases": [
+        "负载均衡",
+        "路由均衡",
+        "Quantile Balancing"
+      ],
+      "category": "计算与记忆",
+      "plain": "避免少数专家拥挤、另一些专家长期闲置的训练与系统策略。",
+      "mechanism": "可通过辅助损失、路由偏置或分位数规则调整选择分布。训练batch均衡与设备实时负载并非同一对象；偏置的更新频率和冻结规则也不同，均衡可能与路由质量、通信和容量限制形成取舍。",
+      "example": "看K3分位数调度时，区分训练步后的偏置调整与线上单请求调度。",
+      "misconception": "负载均衡不保证每个用户请求都严格均分专家，也不是免费提升准确率。",
+      "related": [
+        "router",
+        "latent-moe",
+        "task-cost"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "compute.html#moe"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Kimi K3技术报告",
+          "url": "https://arxiv.org/html/2607.24653"
+        }
+      ]
+    },
+    {
+      "id": "latent-moe",
+      "term": "潜在空间专家",
+      "english": "Latent MoE",
+      "aliases": [
+        "LatentMoE",
+        "Stable LatentMoE",
+        "潜空间MoE"
+      ],
+      "category": "计算与记忆",
+      "plain": "让路由专家在较窄潜在表示上工作，再投回主干维度。",
+      "mechanism": "主干特征先下投影后送路由专家，聚合后再上投影；共享专家可仍处理全宽特征。K3另用归一化、有界激活与路由均衡控制稳定性，省的是部分专家计算和传输，不是所有隐藏或KV维度。",
+      "example": "分析K3的激活参数效率时，把潜在专家和全宽共享路径分别列出。",
+      "misconception": "潜空间变窄不代表所有模型记忆都压成一半，也不能推出模型不再需要大权重库。",
+      "related": [
+        "moe",
+        "load-balance",
+        "active-parameters"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "compute.html#moe"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Kimi K3技术报告",
+          "url": "https://arxiv.org/html/2607.24653"
+        }
+      ]
+    },
+    {
+      "id": "conditional-memory",
+      "term": "条件记忆",
+      "english": "Conditional Memory",
+      "aliases": [
+        "条件查表",
+        "参数化记忆",
+        "记忆容量"
+      ],
+      "category": "计算与记忆",
+      "plain": "按输入条件取少量训练过的向量，补充主干计算。",
+      "mechanism": "与MoE选择“哪些函数来算”不同，条件记忆选择“哪些参数向量来读”；地址可来自局部词元组合，融合强度依赖上下文。表在普通推理时固定，仍需投影、门控和搬运，并非没有计算。",
+      "example": "比较同预算下扩大专家库、加宽主干或增加记忆表的实际收益。",
+      "misconception": "条件记忆不是每次聊天自动把新事实永久写入模型，也不是RAG数据库。",
+      "related": [
+        "engram",
+        "n-gram",
+        "rag"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "compute.html#conditional-memory"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Engram条件记忆论文",
+          "url": "https://arxiv.org/html/2601.07372v1"
+        }
+      ]
+    },
+    {
+      "id": "engram",
+      "term": "Engram记忆模块",
+      "english": "Engram",
+      "aliases": [
+        "Engram",
+        "条件参数记忆"
+      ],
+      "category": "计算与记忆",
+      "plain": "用局部词元组合查可学习参数表，再按上下文门控融合。",
+      "mechanism": "官方方案对短n-gram做多头hash，取行拼接后投影为Key/Value，用当前上下文计算gate，再经短因果卷积注入残差。演示代码省略了部分完整模型系统，能解释机制但不能当生产吞吐证明。",
+      "example": "熟悉短语可提供速记向量；遇到不同公司语境时由门控决定采用多少。",
+      "misconception": "表中向量不一定是可读事实条目；Engram不是任意输入都能无碰撞精确检索。",
+      "related": [
+        "conditional-memory",
+        "hash",
+        "offload-prefetch"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "compute.html#conditional-memory"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Engram官方演示代码",
+          "url": "https://github.com/deepseek-ai/Engram/blob/fb7f84a21f91223715394a33a1dc24bbfb7f788e/engram_demo_v1.py"
+        }
+      ]
+    },
+    {
+      "id": "n-gram",
+      "term": "连续n词元组合",
+      "english": "N-gram",
+      "aliases": [
+        "n-gram",
+        "ngram",
+        "二元组",
+        "三元组"
+      ],
+      "category": "计算与记忆",
+      "plain": "由连续n个词元构成的局部序列片段。",
+      "mechanism": "条件记忆可用结束于当前位置的短n-gram确定查表地址，多种阶数提供不同局部模式。另一些加速算法用历史重复n-gram提议后续输出，那是投机草稿策略；两者共用名字但参数和生命周期不同。",
+      "example": "“New / York / City”可作教学三元组，实际分词仍以模型词表为准。",
+      "misconception": "n-gram不是语义完整句子；用于查表与用于投机解码不能混为同一机制。",
+      "related": [
+        "hash",
+        "conditional-memory",
+        "speculative-decoding"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "compute.html#conditional-memory"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Engram官方演示代码",
+          "url": "https://github.com/deepseek-ai/Engram/blob/fb7f84a21f91223715394a33a1dc24bbfb7f788e/engram_demo_v1.py"
+        }
+      ]
+    },
+    {
+      "id": "hash",
+      "term": "哈希映射",
+      "english": "Hash Mapping",
+      "aliases": [
+        "hash",
+        "哈希",
+        "散列",
+        "多头hash"
+      ],
+      "category": "计算与记忆",
+      "plain": "把离散组合映射到有限表地址的确定性计算。",
+      "mechanism": "固定规则将n-gram映射到一个或多个桶，再读取对应可训练向量。多头hash可降低单次碰撞的影响，但有限表仍可能让不同组合共用部分行；它不需要扫描整张表，语义判断则由后续上下文融合完成。",
+      "example": "看到数百亿参数记忆表时，检查每个词元实际读取几行和碰撞处理。",
+      "misconception": "哈希不是按语义相似度排序的向量检索，也不自动保证无碰撞。",
+      "related": [
+        "n-gram",
+        "engram",
+        "rag"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "compute.html#conditional-memory"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Engram官方演示代码",
+          "url": "https://github.com/deepseek-ai/Engram/blob/fb7f84a21f91223715394a33a1dc24bbfb7f788e/engram_demo_v1.py"
+        }
+      ]
+    },
+    {
+      "id": "offload-prefetch",
+      "term": "卸载与预取",
+      "english": "Offloading and Prefetching",
+      "aliases": [
+        "offload",
+        "prefetch",
+        "CPU卸载",
+        "主存查表",
+        "HBM"
+      ],
+      "category": "计算与记忆",
+      "plain": "把部分状态放到较便宜存储，并在需要前开始取用。",
+      "mechanism": "卸载用主存或其他层级换取HBM容量；若地址已由已知词元确定，可与前序计算重叠预取。未能及时取完仍须等待，随机读、互联带宽和NUMA会影响尾延迟；统一内存设备的容量账又不同。",
+      "example": "估算51B记忆表时，除裸字节还测试高并发随机访存与GPU等待。",
+      "misconception": "主存存得下不代表访问免费；未来尚未生成token的地址也不能提前知道。",
+      "related": [
+        "conditional-memory",
+        "kv-cache",
+        "task-cost"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "compute.html#conditional-memory"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Qwen主存表部署实现",
+          "url": "https://github.com/sgl-project/sglang/blob/8c7ec05287904d88854d9fb5bcbe1a5181282b5e/python/sglang/srt/models/qwen4_exp_ple_table.py"
+        }
+      ]
+    },
+    {
+      "id": "rag",
+      "term": "检索增强生成",
+      "english": "Retrieval-Augmented Generation",
+      "aliases": [
+        "RAG",
+        "外部检索",
+        "知识库检索"
+      ],
+      "category": "计算与记忆",
+      "plain": "先从外部资料找支持材料，再把材料交给生成模型。",
+      "mechanism": "检索器定位文档或片段，生成器在这些内容与提示约束下回答；知识库可独立更新并保留来源。检索质量、版本与证据覆盖影响结果，模型可能误读或编造，仍需核对引用是否真正支持结论。",
+      "example": "更新行业政策研究时，先取官方原文，再要求结论逐条关联出处。",
+      "misconception": "RAG不等于模型权重即时学会新知识，也不保证只要有引用就无幻觉。",
+      "related": [
+        "conditional-memory",
+        "context-window",
+        "harness"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "compute.html#conditional-memory"
+        }
+      ],
+      "sources": [
+        {
+          "title": "检索增强生成原论文",
+          "url": "https://arxiv.org/abs/2005.11401"
+        }
+      ]
+    },
+    {
+      "id": "residual",
+      "term": "残差连接",
+      "english": "Residual Connection",
+      "aliases": [
+        "residual",
+        "残差流",
+        "跳跃连接"
+      ],
+      "category": "信息流",
+      "plain": "把已有表示与新变换结果结合，让信息能跨层流动。",
+      "mechanism": "典型残差把子层输出加回原流，形成直接传递旧状态的路径；累加后较难单独调阅某层贡献。AttnRes、多流mHC和GR改变读写方式，处理的是深度方向信息，而不是扩大序列窗口。",
+      "example": "用草稿逐层增补的示意理解“保留旧状态”，再看不同读取机制。",
+      "misconception": "普通残差不是把旧信息全部丢掉；多路残差也不是多个Agent。",
+      "related": [
+        "prenorm",
+        "attnres",
+        "mhc"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "depth.html#residual-basics"
+        }
+      ],
+      "sources": [
+        {
+          "title": "深度残差学习论文",
+          "url": "https://arxiv.org/abs/1512.03385"
+        }
+      ]
+    },
+    {
+      "id": "prenorm",
+      "term": "预归一化与RMSNorm",
+      "english": "Pre-Norm / RMSNorm",
+      "aliases": [
+        "PreNorm",
+        "Pre-Norm",
+        "RMSNorm",
+        "均方根归一化"
+      ],
+      "category": "信息流",
+      "plain": "前者规定归一化放哪，后者规定怎样缩放向量。",
+      "mechanism": "Pre-Norm通常在子层变换前归一化输入，再加回残差；RMSNorm按均方根缩放并用可学习增益，不像LayerNorm还做均值中心化。位置与算子是两条轴，新残差结构可把归一化融进读取。",
+      "example": "比较两种残差公式时，先核对Norm是在读取、子层前还是输出后。",
+      "misconception": "Pre-Norm与RMSNorm不是同义词；归一化也不是把所有数强制截到固定范围。",
+      "related": [
+        "residual",
+        "attnres",
+        "gr"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "depth.html#residual-basics"
+        }
+      ],
+      "sources": [
+        {
+          "title": "RMSNorm原论文",
+          "url": "https://arxiv.org/abs/1910.07467"
+        },
+        {
+          "title": "Transformer归一化位置研究",
+          "url": "https://arxiv.org/abs/2002.04745"
+        }
+      ]
+    },
+    {
+      "id": "attnres",
+      "term": "注意力残差",
+      "english": "Attention Residuals",
+      "aliases": [
+        "AttnRes",
+        "Full AttnRes",
+        "Block AttnRes"
+      ],
+      "category": "信息流",
+      "plain": "让后层按内容选择早先层或块的输出，而非一律相加。",
+      "mechanism": "每层学习伪查询，对历史输出归一化后打分，沿深度来源做softmax，再加权读取原值。Full保留细粒度历史；Block先合并块内输出以降低保存和通信成本，牺牲逐子层寻址精度。",
+      "example": "分析K3时，把历史层稿件选择与沿token位置检索两种attention区分。",
+      "misconception": "AttnRes不是扩大上下文窗口；其query为训练参数，但读取权重仍随token内容变化。",
+      "related": [
+        "residual",
+        "mhc",
+        "prenorm"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "depth.html#attnres"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Attention Residuals论文",
+          "url": "https://arxiv.org/abs/2603.15031"
+        },
+        {
+          "title": "Attention Residuals官方实现",
+          "url": "https://github.com/MoonshotAI/Attention-Residuals"
+        }
+      ]
+    },
+    {
+      "id": "mhc",
+      "term": "流形约束超连接",
+      "english": "Manifold-Constrained Hyper-Connections",
+      "aliases": [
+        "mHC",
+        "MHC",
+        "HC",
+        "Hyper-Connections",
+        "多流残差"
+      ],
+      "category": "信息流",
+      "plain": "在多条残差流之间门控读写，并约束旧流混合的机制。",
+      "mechanism": "mHC以多流状态供昂贵子层读取，再写回新输出；残差混合矩阵用Sinkhorn近似双随机约束，读写门另有规则。约束改善线性混合稳定性，但多流读写、归一化和融合实现仍有开销。",
+      "example": "分开理解4条内部残差流、专家数量和并行Agent数量。",
+      "misconception": "双随机约束不保证整个非线性网络绝不爆炸，也不表示每条旧流原封不动。",
+      "related": [
+        "sinkhorn",
+        "residual",
+        "gr"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "depth.html#mhc"
+        }
+      ],
+      "sources": [
+        {
+          "title": "mHC论文",
+          "url": "https://arxiv.org/html/2512.24880v2"
+        }
+      ]
+    },
+    {
+      "id": "sinkhorn",
+      "term": "Sinkhorn归一化",
+      "english": "Sinkhorn–Knopp Normalization",
+      "aliases": [
+        "Sinkhorn",
+        "双随机矩阵",
+        "双随机约束"
+      ],
+      "category": "信息流",
+      "plain": "通过反复行列缩放，让非负矩阵接近行和列和都为一。",
+      "mechanism": "mHC对正的混合分数交替做行归一化与列归一化；有限迭代只近似满足约束。双随机矩阵对纯线性混合有稳定性质，但并不是单位矩阵，反复混合仍可能减弱不同流之间的差异。",
+      "example": "用两流平均示意说明总量保持，并不等于两份原稿细节都不变。",
+      "misconception": "行softmax只保证行和为一；它不自动保证列和也为一。",
+      "related": [
+        "mhc",
+        "gr",
+        "residual"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "depth.html#mhc"
+        }
+      ],
+      "sources": [
+        {
+          "title": "mHC论文",
+          "url": "https://arxiv.org/html/2512.24880v2"
+        }
+      ]
+    },
+    {
+      "id": "gr",
+      "term": "门控残差",
+      "english": "Gated Residual",
+      "aliases": [
+        "GR",
+        "Gated Residual",
+        "细粒度读门"
+      ],
+      "category": "信息流",
+      "plain": "让多条残差流按通道读取、按分支写回的一种结构。",
+      "mechanism": "Qwen的GR去掉显式跨流混合矩阵，按分支与通道产生sigmoid读门，再以每分支标量写门加入子层输出。读门不要求跨分支和为一，旧流仍通过共同的读取和变换间接交流。",
+      "example": "研究Flash-Next时，比较GR省去的混合步骤与仍保留的四流访存。",
+      "misconception": "GR不是mHC改名，也不能把sigmoid读门写成沿分支softmax权重。",
+      "related": [
+        "mhc",
+        "residual",
+        "attnres"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "depth.html#gated-residual"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Qwen Gated Residual论文",
+          "url": "https://arxiv.org/html/2608.30320v1#S2.SS2"
+        }
+      ]
+    },
+    {
+      "id": "early-fusion",
+      "term": "早期融合",
+      "english": "Early Fusion",
+      "aliases": [
+        "early fusion",
+        "早融合",
+        "原生多模态"
+      ],
+      "category": "多模态",
+      "plain": "让不同模态较早共同参与训练；“原生”须按厂商具体说明核对。",
+      "mechanism": "早期融合强调视觉、文本等在预训练阶段共同学习，而非只在文本模型训练完后接一个组件。它仍可保留模态专用编码器和投影器；原生并无统一结构规格，必须分别核输入路径、训练时点和输出能力。",
+      "example": "看到Qwen同时写early fusion与vision encoder时，不把两者当作矛盾。",
+      "misconception": "早融合不等于像素直接共用文字分词器，也不等于没有专用视觉模块。",
+      "related": [
+        "vision-encoder",
+        "projector",
+        "thinker-talker"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "multimodal.html#multimodal-paths"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Qwen3.5官方模型卡",
+          "url": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B-Base"
+        }
+      ]
+    },
+    {
+      "id": "vision-encoder",
+      "term": "视觉编码器",
+      "english": "Vision Encoder",
+      "aliases": [
+        "视觉encoder",
+        "ViT",
+        "patch",
+        "图像编码"
+      ],
+      "category": "多模态",
+      "plain": "把像素或视频帧转换为可供后续网络处理的特征。",
+      "mechanism": "图像常被切成patch，经视觉网络形成连续表示，再压缩或投影给语言骨干。分辨率、裁剪、帧采样和位置处理共同决定细节与词元开销；编码器存在与否，不能单独证明模型早融合或晚融合。",
+      "example": "读财报扫描件时，关注小字、跨栏和单位是否在压缩前已丢失。",
+      "misconception": "视觉特征不必先转成OCR文字；能输入视频也不代表模型本体能生成视频。",
+      "related": [
+        "projector",
+        "early-fusion",
+        "ocr"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "multimodal.html#multimodal-paths"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Qwen3.8-Omni技术报告",
+          "url": "https://arxiv.org/html/2609.25611v1"
+        }
+      ]
+    },
+    {
+      "id": "projector",
+      "term": "跨模态投影器",
+      "english": "Multimodal Projector / Adapter",
+      "aliases": [
+        "projector",
+        "adapter",
+        "投影器",
+        "patch merger"
+      ],
+      "category": "多模态",
+      "plain": "把模态特征变成后续骨干能接收的维度和组织形式。",
+      "mechanism": "最简投影是矩阵映射，实际可用MLP、attention或patch合并，兼顾维度对齐与序列压缩。压缩降低预填充和状态负担，也可能损失小字与空间信息；输出是连续特征，不一定是人能直接读出的词。",
+      "example": "比较PDF输入成本时，看高分辨率patch经merger后剩下多少视觉位置。",
+      "misconception": "投影不是自动把图像翻成文字，也不能保证不同模态信息完全无损对齐。",
+      "related": [
+        "vision-encoder",
+        "embedding",
+        "early-fusion"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "multimodal.html#multimodal-paths"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Qwen3.8-Omni技术报告",
+          "url": "https://arxiv.org/html/2609.25611v1"
+        }
+      ]
+    },
+    {
+      "id": "thinker-talker",
+      "term": "理解与发声分工",
+      "english": "Thinker–Talker",
+      "aliases": [
+        "Thinker",
+        "Talker",
+        "Thinker-Talker",
+        "思考器说话器"
+      ],
+      "category": "多模态",
+      "plain": "由理解推理路径与流式语音生成路径协同输出的结构。",
+      "mechanism": "Thinker接收多模态信息并产生文字及上下文特征，Talker据此生成语音表示，再交声学解码器。它可边接收边发声，非必先等完整答案；具体音文对齐和码本补全方法依型号变化。",
+      "example": "拆解语音问答延迟时，分别计理解、首文字、首可播放声音与播放缓冲。",
+      "misconception": "Thinker不保证每次显式长思考；Talker也不只是给完成后的全文调用外部TTS。",
+      "related": [
+        "audio-codec",
+        "early-fusion",
+        "mtp"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "multimodal.html#thinker-talker"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Qwen3.5-Omni技术报告",
+          "url": "https://arxiv.org/html/2604.15804v1"
+        }
+      ]
+    },
+    {
+      "id": "audio-codec",
+      "term": "音频编解码表示",
+      "english": "Audio Codec / Codebook",
+      "aliases": [
+        "codec",
+        "音频码本",
+        "Code2Wav",
+        "RTF"
+      ],
+      "category": "多模态",
+      "plain": "用离散码本等紧凑表示声音，再重建可播放波形。",
+      "mechanism": "多层残差码本可分担粗语义与声学细节，因果波形解码只依赖已知左侧信息，利于流式首包。码率、采样率、帧频与码本层数不是同一个量；同帧码本预测也不同于未来文本投机解码。",
+      "example": "核对97毫秒首包时，确认是哪个尺寸、帧率、引擎和输入起点。",
+      "misconception": "48kHz采样率不等于每秒48000个模型token；低首包也不保证全任务更快。",
+      "related": [
+        "thinker-talker",
+        "mtp",
+        "ttft"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "multimodal.html#thinker-talker"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Qwen3-TTS技术报告",
+          "url": "https://arxiv.org/html/2601.15621v1"
+        }
+      ]
+    },
+    {
+      "id": "ocr",
+      "term": "光学文字识别",
+      "english": "Optical Character Recognition",
+      "aliases": [
+        "OCR",
+        "文档解析",
+        "阅读顺序",
+        "DeepEncoder"
+      ],
+      "category": "多模态",
+      "plain": "从图像或扫描材料提取文字，并可能重建其结构。",
+      "mechanism": "文档系统需处理版面、表格、公式和阅读顺序，不只是识别单字。OCR2用带特殊可见性mask的视觉与查询表示重组阅读特征，再由文字解码器输出；具体SDK还可能另加版面检测与后处理。",
+      "example": "把双栏研报转Markdown后，对照原页检查脚注归属、表头和负号。",
+      "misconception": "重复率降低不是所有文字准确率提高，OCR模型也不等于完整财务事实核验器。",
+      "related": [
+        "vision-encoder",
+        "causal-mask",
+        "rag"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "multimodal.html#ocr"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeek-OCR2技术报告",
+          "url": "https://arxiv.org/html/2601.20552v1"
+        }
+      ]
+    },
+    {
+      "id": "mtp",
+      "term": "多词元预测",
+      "english": "Multi-Token Prediction",
+      "aliases": [
+        "MTP",
+        "多token预测",
+        "未来词元预测"
+      ],
+      "category": "训练与推理",
+      "plain": "训练中增加后续位置监督，推理时也可提供草稿模块。",
+      "mechanism": "DeepSeek式MTP串联附加模块，把前一级状态与对应未来词元嵌入结合继续预测；训练使用真值，推理只能使用已生成信息。额外模块可不用，或参与投机起草；音频同帧多码本MTP又是另一对象。",
+      "example": "看到新增三层MTP时，区分训练监督、部署模块和服务端实际启用方式。",
+      "misconception": "预测三个后续token不保证快3倍，MTP也不自动等于已启用无损投机验收。",
+      "related": [
+        "speculative-decoding",
+        "autoregressive",
+        "audio-codec"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "decoding.html#mtp"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeek-V3多词元预测",
+          "url": "https://arxiv.org/html/2412.19437v2#S2.SS2"
+        }
+      ]
+    },
+    {
+      "id": "speculative-decoding",
+      "term": "投机解码",
+      "english": "Speculative Decoding",
+      "aliases": [
+        "投机采样",
+        "speculative decoding",
+        "draft",
+        "草稿模型"
+      ],
+      "category": "训练与推理",
+      "plain": "先由便宜草稿提议多个词元，再让目标模型批量验收。",
+      "mechanism": "目标模型可一次计算草稿各位置的条件分布，按规则接受连续前缀；首次拒绝后的草稿失效，并生成纠正词元。收益取决于接受率、草稿耗时、验证成本及负载，不是用小模型直接替换大模型答案。",
+      "example": "比较同一目标checkpoint启用前后的准确率、首词与真实并发吞吐。",
+      "misconception": "每轮输出更多不代表每轮更便宜；低接受率时投机可能反而更慢。",
+      "related": [
+        "rejection-sampling",
+        "mtp",
+        "dspark"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "decoding.html#speculative"
+        }
+      ],
+      "sources": [
+        {
+          "title": "投机采样原论文",
+          "url": "https://proceedings.mlr.press/v202/leviathan23a.html"
+        }
+      ]
+    },
+    {
+      "id": "rejection-sampling",
+      "term": "拒绝采样校正",
+      "english": "Rejection Sampling Correction",
+      "aliases": [
+        "拒绝采样",
+        "无损验收",
+        "残差分布",
+        "bonus token"
+      ],
+      "category": "训练与推理",
+      "plain": "用目标与草稿概率修正候选，保持指定目标采样分布。",
+      "mechanism": "典型算法以min(1,p/q)接受草稿；首次拒绝处从正部分p-q归一化的残差分布取纠正词元，全接受时再取bonus。p和q必须对应实际条件及采样规则，贪心逐位匹配是另一验收口径。",
+      "example": "核对“无损”时询问目标精度、temperature、前缀状态和随机验收规则。",
+      "misconception": "分布一致不代表同一随机种子输出逐字相同，更不保证目标模型答案本来正确。",
+      "related": [
+        "speculative-decoding",
+        "dspark",
+        "pass-at-k"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "decoding.html#speculative"
+        }
+      ],
+      "sources": [
+        {
+          "title": "投机采样原论文",
+          "url": "https://proceedings.mlr.press/v202/leviathan23a.html"
+        }
+      ]
+    },
+    {
+      "id": "dspark",
+      "term": "DSpark草稿与调度",
+      "english": "DSpark",
+      "aliases": [
+        "DSpark",
+        "DeepSpec",
+        "置信度草稿"
+      ],
+      "category": "训练与推理",
+      "plain": "结合并行起草、轻量依赖校正和负载感知验收长度的方法。",
+      "mechanism": "较重草稿骨干并行产出位置特征，轻量顺序头补入已采样前缀依赖，保留真实草稿概率；置信预测与硬件曲线决定验多长。正确验收仍由目标模型完成，调度不能用未来候选做有偏挑选。",
+      "example": "读60%至85%提速时，核对目标引擎、吞吐约束与含不含bonus的接受长度。",
+      "misconception": "置信度是预计被目标接受，不是事实正确率；DSpark也不是新聊天底座。",
+      "related": [
+        "speculative-decoding",
+        "rejection-sampling",
+        "mtp"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "decoding.html#speculative"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DSpark技术论文",
+          "url": "https://arxiv.org/html/2607.05147v1"
+        },
+        {
+          "title": "DSpark官方顺序校正头",
+          "url": "https://github.com/deepseek-ai/DeepSpec/blob/main/deepspec/modeling/dspark/markov_head.py"
+        }
+      ]
+    },
+    {
+      "id": "quantization",
+      "term": "量化",
+      "english": "Quantization",
+      "aliases": [
+        "量化",
+        "PTQ",
+        "低精度",
+        "scale",
+        "反量化"
+      ],
+      "category": "训练与推理",
+      "plain": "用更少位数和缩放规则表示权重、激活或缓存。",
+      "mechanism": "量化可降低存储及搬运，并在支持的硬件内核上减少计算成本。权重量化、激活量化与KV量化作用不同；scale、分组、异常值处理和反量化也有开销，需在同任务质量门槛下比较。",
+      "example": "看到FP4 checkpoint时，查明哪些专家、注意力或缓存仍保留高精度。",
+      "misconception": "文件变小不保证所有算子都用4位乘法，也不保证相同硬件上速度同比提升。",
+      "related": [
+        "fp4",
+        "mxfp4",
+        "qat"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "decoding.html#quantization"
+        }
+      ],
+      "sources": [
+        {
+          "title": "NVIDIA TensorRT量化说明",
+          "url": "https://docs.nvidia.com/deeplearning/tensorrt/latest/inference-library/work-with-quantized-types.html"
+        }
+      ]
+    },
+    {
+      "id": "fp4",
+      "term": "四位浮点表示",
+      "english": "4-bit Floating Point",
+      "aliases": [
+        "FP4",
+        "E2M1",
+        "NVFP4",
+        "4bit浮点"
+      ],
+      "category": "训练与推理",
+      "plain": "每个基础数值只用4位的一类浮点格式，通常配合缩放。",
+      "mechanism": "常见E2M1本体表达范围和精度很有限，实际按组配scale恢复量级；组大小和scale类型因格式不同。V4.1主KV每16维配一个8位scale，平均约4.5bit，且局部SWA仍用FP8，不能统称全模型4bit。",
+      "example": "复算缓存字节时，把每组scale与未量化部分加回，而非只用参数数乘0.5。",
+      "misconception": "FP4、MXFP4与NVFP4不是完全同一格式；四位本体不等于完整存储恰好四位。",
+      "related": [
+        "mxfp4",
+        "qat",
+        "kv-cache"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "decoding.html#quantization"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeek-V4.1-Flash低精度KV",
+          "url": "https://arxiv.org/html/2609.19969v1#S2.SS4.SSS4"
+        }
+      ]
+    },
+    {
+      "id": "mxfp4",
+      "term": "微缩放四位浮点",
+      "english": "Microscaling FP4",
+      "aliases": [
+        "MXFP4",
+        "E8M0",
+        "块缩放FP4"
+      ],
+      "category": "训练与推理",
+      "plain": "用FP4数值加共享块级指数scale的一种具体格式。",
+      "mechanism": "常见MXFP4以E2M1保存数值，每32个连续值共用一个8位E8M0 scale；不计其他开销时约4.25bit每值。它与每16值配E4M3 scale的其他FP4安排不同，硬件内核和反量化路径也须匹配。",
+      "example": "对比DeepSeek路由专家权重与其主KV缓存时，分别按32与16的分组口径算账。",
+      "misconception": "同叫FP4不能直接交换量化字节；仅看模型卡FP4标签不足以确定推理内核。",
+      "related": [
+        "fp4",
+        "quantization",
+        "task-cost"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "decoding.html#quantization"
+        }
+      ],
+      "sources": [
+        {
+          "title": "NVIDIA MXFP4格式实现",
+          "url": "https://docs.nvidia.com/nemo/automodel/v0.4/nemo-automodel/nemo_automodel/components/quantization/mxfp4"
+        }
+      ]
+    },
+    {
+      "id": "qat",
+      "term": "量化感知训练",
+      "english": "Quantization-Aware Training",
+      "aliases": [
+        "QAT",
+        "假量化",
+        "fake quantization"
+      ],
+      "category": "训练与推理",
+      "plain": "在训练或微调时模拟低精度误差，让模型提前适应。",
+      "mechanism": "前向插入量化与反量化等模拟路径，权重仍可训练，反向采用适配梯度处理；训练后再转成部署格式。它可用于权重、激活或缓存相关路径，不表示训练全部物理运算都已变成低位整数或浮点。",
+      "example": "核对模型声称低精度无损时，问是否做QAT、用哪些数据和哪些退化测试。",
+      "misconception": "QAT不是直接压缩文件，也不能保证任意量化位数都不损失能力。",
+      "related": [
+        "quantization",
+        "fp4",
+        "rl"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "decoding.html#quantization"
+        }
+      ],
+      "sources": [
+        {
+          "title": "NVIDIA量化感知训练说明",
+          "url": "https://docs.nvidia.com/nemo/automodel/latest/recipes-e2e-examples/qat"
+        }
+      ]
+    },
+    {
+      "id": "sft",
+      "term": "监督微调",
+      "english": "Supervised Fine-Tuning",
+      "aliases": [
+        "SFT",
+        "监督式微调",
+        "指令微调",
+        "teacher forcing"
+      ],
+      "category": "训练与推理",
+      "plain": "用输入与目标回答、轨迹等示例继续训练模型。",
+      "mechanism": "模型在已知前缀条件下学习目标输出，常用词元级监督损失；数据可含多轮对话、工具调用和格式约束。示例质量与覆盖决定学到的行为，模仿一条正确轨迹不等于学会对所有新环境稳定探索。",
+      "example": "研究Agent进步时，分别追踪演示数据、环境反馈与后续强化学习。",
+      "misconception": "SFT不是给每位用户现场训练，也不等于监督数据里每条结论已独立核验。",
+      "related": [
+        "rl",
+        "slime",
+        "autoregressive"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "methods.html#evaluation"
+        }
+      ],
+      "sources": [
+        {
+          "title": "InstructGPT监督与反馈训练论文",
+          "url": "https://arxiv.org/abs/2203.02155"
+        }
+      ]
+    },
+    {
+      "id": "rl",
+      "term": "强化学习后训练",
+      "english": "Reinforcement Learning",
+      "aliases": [
+        "RL",
+        "RLHF",
+        "RLVR",
+        "GRPO",
+        "奖励优化"
+      ],
+      "category": "训练与推理",
+      "plain": "让模型通过生成结果与任务反馈调整策略的训练方式。",
+      "mechanism": "模型在当前策略下生成回答或交互轨迹，由规则、验证器或偏好模型给奖励，再优化参数。奖励来源、采样预算、分布偏移和投机取巧都会影响结果；RLHF只是使用人类偏好的一支，不覆盖全部RL。",
+      "example": "看代码通过率提升时，检查奖励测试是否泄露、是否只优化已知题型。",
+      "misconception": "奖励更高不自动等于事实更真，也不代表模型会在普通推理中永久自我升级。",
+      "related": [
+        "sft",
+        "slime",
+        "harness"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "methods.html#evaluation"
+        }
+      ],
+      "sources": [
+        {
+          "title": "DeepSeek-R1强化学习论文",
+          "url": "https://arxiv.org/abs/2501.12948"
+        }
+      ]
+    },
+    {
+      "id": "muon",
+      "term": "Muon优化器",
+      "english": "Muon Optimizer",
+      "aliases": [
+        "Muon",
+        "Newton–Schulz",
+        "矩阵更新正交化"
+      ],
+      "category": "训练与推理",
+      "plain": "对训练权重更新做矩阵方向处理的一类优化器。",
+      "mechanism": "Muon对动量更新进行近似正交化，常用Newton–Schulz迭代处理隐藏层二维矩阵；嵌入、输出头和偏置等通常另用AdamW或其他方案。作用在训练收敛和更新几何，不是推理图新增注意力模块。",
+      "example": "比较训练效率时，固定模型与数据预算，单独观察优化器配方和稳定性。",
+      "misconception": "采用Muon不代表推理更快，也不能把训练优化器称为缓存压缩架构。",
+      "related": [
+        "sft",
+        "rl",
+        "parameters"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "methods.html#industry"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Muon作者实现",
+          "url": "https://github.com/KellerJordan/Muon"
+        }
+      ]
+    },
+    {
+      "id": "slime",
+      "term": "Slime训练框架",
+      "english": "Slime RL Framework",
+      "aliases": [
+        "Slime",
+        "slime",
+        "异步RL框架",
+        "rollout"
+      ],
+      "category": "训练与推理",
+      "plain": "协调训练、生成数据、奖励与交互环境的RL基础设施。",
+      "mechanism": "Slime连接训练引擎、SGLang rollout与数据缓冲，使生成轨迹、工具反馈和参数同步进入同一训练流程；异步调度可减少长尾轨迹造成的空等，但仍需处理策略陈旧、数据一致性和故障恢复。",
+      "example": "判断长程Agent优化来自模型设计、环境数据还是更高效的训练系统。",
+      "misconception": "Slime不是部署模型里的一层神经网络，也不应与服务端harness混称。",
+      "related": [
+        "rl",
+        "harness",
+        "sft"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "methods.html#industry"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Slime官方训练框架",
+          "url": "https://github.com/THUDM/slime"
+        }
+      ]
+    },
+    {
+      "id": "preserved-thinking",
+      "term": "保留历史思考",
+      "english": "Preserved Thinking",
+      "aliases": [
+        "preserve_thinking",
+        "clear_thinking",
+        "reasoning_content",
+        "保留思考链"
+      ],
+      "category": "训练与推理",
+      "plain": "让后续请求继续包含先前生成的推理文本的一种上下文约定。",
+      "mechanism": "接口或聊天模板决定历史思考块是否保留；GLM示例使用clear_thinking:false并要求原顺序回传，Qwen参数名与规则另行规定。它可改善连续推理与前缀复用，也占上下文，不会把文本自动写进模型权重。",
+      "example": "多轮代码调试中记录所用模板和历史思考处理，避免版本间结果不可比。",
+      "misconception": "保留思考文本不是跨层KV共享，也不表示跨会话永久记忆或必然节省token。",
+      "related": [
+        "kv-cache",
+        "conditional-memory",
+        "harness"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "methods.html#cost"
+        }
+      ],
+      "sources": [
+        {
+          "title": "GLM思考模式官方协议",
+          "url": "https://docs.z.ai/guides/capabilities/thinking-mode"
+        },
+        {
+          "title": "Qwen保留思考官方模型卡",
+          "url": "https://huggingface.co/Qwen/Qwen3.8-27B-FP8/blob/main/README.md"
+        }
+      ]
+    },
+    {
+      "id": "ttft",
+      "term": "首词元延迟",
+      "english": "Time to First Token",
+      "aliases": [
+        "TTFT",
+        "首token延迟",
+        "首词延迟",
+        "首包等待"
+      ],
+      "category": "评测",
+      "plain": "从明确的请求起点到第一个规定输出出现的等待时间。",
+      "mechanism": "TTFT可包含排队、网络、分词、视觉处理、预填充和服务调度；服务端与客户端测量起点可能不同。推理模型还需说明首个思考词元还是首段可见答案，语音则另量首个可播放音频。",
+      "example": "对比长财报问答时，固定冷暖缓存与并发，并报告中位及尾部分位数。",
+      "misconception": "TTFT不是全任务耗时；先快速输出空洞开场也不等于真正交付更快。",
+      "related": [
+        "prefill",
+        "tps",
+        "task-cost"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "methods.html#cost"
+        }
+      ],
+      "sources": [
+        {
+          "title": "NVIDIA NIM性能指标定义",
+          "url": "https://docs.nvidia.com/nim/benchmarking/llm/metrics"
+        }
+      ]
+    },
+    {
+      "id": "tps",
+      "term": "词元生成速率",
+      "english": "Tokens per Second",
+      "aliases": [
+        "TPS",
+        "tokens/s",
+        "输出速率",
+        "吞吐"
+      ],
+      "category": "评测",
+      "plain": "单位时间产生的词元数，但必须说明统计层级与计时范围。",
+      "mechanism": "单请求速率与所有请求合计吞吐不同，是否剔除首词等待、是否统计思考token及流式分块也会改变数值。TPOT或ITL描述生成间隔，特定条件下可与速率换算；不同分词器还会影响横向比较。",
+      "example": "既测单用户写报告的等待，也测高并发下每卡总输出与p95延迟。",
+      "misconception": "最高200tokens/s不等于所有并发都达到该值，也不等于每秒200个汉字。",
+      "related": [
+        "ttft",
+        "token",
+        "task-cost"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "methods.html#cost"
+        }
+      ],
+      "sources": [
+        {
+          "title": "NVIDIA GenAI-Perf统计口径",
+          "url": "https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/perf_analyzer/genai-perf/README.html"
+        }
+      ]
+    },
+    {
+      "id": "pass-at-k",
+      "term": "多次尝试通过率",
+      "english": "Pass@k",
+      "aliases": [
+        "pass@k",
+        "pass@1",
+        "pass@10",
+        "通过率"
+      ],
+      "category": "评测",
+      "plain": "一个任务给k次候选机会，至少一次通过判定的概率指标。",
+      "mechanism": "代码评测通常依据测试用例判定成功；可从n个样本中的c个成功用组合式估计pass@k。k、采样温度、去重和测试覆盖影响结果，允许多次尝试与一次稳定交付对应不同的成本及用户体验。",
+      "example": "看到pass@10高于竞品pass@1时，先拉齐尝试预算再下结论。",
+      "misconception": "pass@k不是每次都成功，也不能把十次有一次通过写成单次成功率。",
+      "related": [
+        "harness",
+        "speculative-decoding",
+        "task-cost"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "methods.html#evaluation"
+        }
+      ],
+      "sources": [
+        {
+          "title": "代码模型评测与pass@k原论文",
+          "url": "https://arxiv.org/abs/2107.03374"
+        }
+      ]
+    },
+    {
+      "id": "harness",
+      "term": "执行与评测框架",
+      "english": "Agent / Evaluation Harness",
+      "aliases": [
+        "harness",
+        "scaffold",
+        "评测脚手架",
+        "Agent框架",
+        "benchmark"
+      ],
+      "category": "评测",
+      "plain": "把模型接到任务、工具、状态管理和评分规则上的运行系统。",
+      "mechanism": "框架规定提示模板、工具接口、上下文整理、重试、停止、预算与验收；模型相同也可能因这些设置得到不同结果。评测框架与实际Agent执行框架可有不同职责，报告必须写出版本和配置。",
+      "example": "比较两家SWE成绩时，核对工具、网络、超时、样本数与评分器是否相同。",
+      "misconception": "模型名称相同不保证结果可比；harness提高成绩也不等于底座权重改变。",
+      "related": [
+        "pass-at-k",
+        "rl",
+        "rag"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "methods.html#evaluation"
+        }
+      ],
+      "sources": [
+        {
+          "title": "EleutherAI评测框架",
+          "url": "https://github.com/EleutherAI/lm-evaluation-harness"
+        },
+        {
+          "title": "SWE-agent系统论文",
+          "url": "https://arxiv.org/abs/2405.15793"
+        }
+      ]
+    },
+    {
+      "id": "task-cost",
+      "term": "每成功任务成本",
+      "english": "Cost per Successful Task",
+      "aliases": [
+        "任务成本",
+        "单位成功成本",
+        "总拥有成本",
+        "TCO"
+      ],
+      "category": "评测",
+      "plain": "完成并通过验收的任务平均消耗多少资金与资源。",
+      "mechanism": "应合计输入、思考、输出、工具、缓存、草稿与失败重试，再结合成功率和人工接管估算。模型单价、服务器吞吐与质量门槛都可能改变结果；按固定任务集记录实际账单比只比每百万token价格更稳妥。",
+      "example": "同一批财报分析任务，统计通过核验的报告数、总API费用和人工修订时间。",
+      "misconception": "token单价便宜十倍，不保证每份合格报告成本也便宜十倍。",
+      "related": [
+        "ttft",
+        "tps",
+        "pass-at-k"
+      ],
+      "links": [
+        {
+          "label": "关联章节",
+          "href": "methods.html#cost"
+        }
+      ],
+      "sources": [
+        {
+          "title": "NVIDIA GenAI-Perf统计口径",
+          "url": "https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/perf_analyzer/genai-perf/README.html"
+        },
+        {
+          "title": "SWE-agent系统论文",
+          "url": "https://arxiv.org/abs/2405.15793"
+        }
+      ]
+    }
+  ]
+}
